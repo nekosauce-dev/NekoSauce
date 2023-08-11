@@ -1,0 +1,32 @@
+version: "3.8"
+name: "nekosauce"
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - database
+  frontend:
+    build: ./frontend
+    command: "npm start"
+    ports:
+      - "3000:3000"
+  database:
+    image: postgres:alpine
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=nekosauce
+      - POSTGRES_PASSWORD=nekosauce
+      - POSTGRES_DB=nekosauce
+    volumes:
+      - database:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-q", "-d", "nekosauce", "-U", "nekosauce"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+volumes:
+  database:
