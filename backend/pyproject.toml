@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "nekosauce"
+version = "0.1.0"
+description = ""
+authors = ["Rafael Bradley <84998222+Nekidev@users.noreply.github.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+Django = "^4.2.4"
+djangorestframework = "^3.14.0"
+gunicorn = "^21.2.0"
+uvicorn = "^0.23.2"
+psycopg2-binary = "^2.9.7"
+requests = "^2.31.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
