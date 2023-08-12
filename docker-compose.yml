@@ -3,13 +3,15 @@ name: "nekosauce"
 services:
   backend:
     build: ./backend
+    command: "/bin/sh -c \"/app/run.sh\""
     ports:
       - "8080:8080"
     depends_on:
       - database
+      - redis
   frontend:
     build: ./frontend
-    command: "npm start"
+    command: "npm run start"
     ports:
       - "3000:3000"
   database:
@@ -24,6 +26,16 @@ services:
       - database:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD", "pg_isready", "-q", "-d", "nekosauce", "-U", "nekosauce"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
       interval: 1m30s
       timeout: 30s
       retries: 5
