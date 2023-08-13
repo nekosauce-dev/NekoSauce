@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-a61@7(+227wg_4kh36e@t6bkaext*0l0#3kkxo_(85zrftx9%p"
+SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-a61@7(+227wg_4kh36e@t6bkaext*0l0#3kkxo_(85zrftx9%p")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", "False") == "True"
@@ -84,11 +84,11 @@ WSGI_APPLICATION = "nekosauce.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "nekosauce",
-        "USER": "nekosauce",
-        "PASSWORD": "nekosauce",
-        "HOST": "localhost",
-        "PORT": "5432",
+        "NAME": os.getenv("POSTGRES_NAME", "nekosauce"),
+        "USER": os.getenv("POSTGRES_USER", "nekosauce"),
+        "PASSWORD": os.getenv("POSTGRES_PASS", "nekosauce"),
+        "HOST": os.getenv("POSTGRES_HOST", "database"),
+        "PORT": os.getenv("POSTGRES_PORT", "5432"),
     }
 }
 
@@ -135,3 +135,8 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# Celery Configuration Options
+CELERY_TIMEZONE = "America/Argentina/Buenos_Aires"
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60

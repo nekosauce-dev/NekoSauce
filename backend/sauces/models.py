@@ -21,6 +21,7 @@ class Sauce(models.Model):
         "sauces.Source", on_delete=models.CASCADE, null=False, related_name="sauces"
     )
     site_id = models.CharField(max_length=255, null=False)
+    identifier = models.CharField(max_length=255, null=False)
     artist = models.ForeignKey("sauces.Artist", on_delete=models.SET_NULL, null=True)
     height = models.PositiveSmallIntegerField()
     width = models.PositiveSmallIntegerField()

@@ -1,4 +1,5 @@
-from django.db.models import Q
+from django.db.models import Q, F, IntegerField
+from django.db.models.functions import Cast
 from django.core.management.base import BaseCommand, CommandError
 
 from sauces.models import Sauce, Artist, Source
@@ -18,17 +19,32 @@ class Command(BaseCommand):
         if fetcher_class is None:
             raise CommandError(f"Invalid fetcher: {options['fetcher']}")
 
+        start_from = 0
+        if options.get("start_from", "0") == "last":
+            last_sauce = (
+                Sauce.objects.annotate(
+                    numeric_id=Cast(F("site_id"), output_field=IntegerField())
+                )
+                .order_by("-numeric_id")
+                .first()
+            )
+            start_from = f"b{last_sauce.site_id}"
+        else:
+            start_from = (
+                int(options.get("start_from", "0"))
+                if options.get("start_from", "0") is not None
+                and options.get("start_from", "0").isnumeric()
+                else options.get("start_from", 0)
+            )
+
         fetcher = fetcher_class(
-            iter_from=int(options.get("start_from", "0"))
-            if options.get("start_from", "0") is not None
-            and options.get("start_from", "0").isnumeric()
-            else options.get("start_from", 0),
+            iter_from=start_from,
             async_reqs=10,
         )
         source = Source.objects.get(name__iexact=options["fetcher"])
 
         self.stdout.write(
-            f"Fetching sauces from {source.name}, starting from page {options.get('start_from', '0')}"
+            f"Fetching sauces from {source.name}" + (", starting from page {start_from}" if start_from else "")
         )
 
         for sauce in fetcher:
@@ -49,6 +65,7 @@ class Command(BaseCommand):
                     )
 
             instance = Sauce(
+                identifier=f"{sauce.sauce_name.lower().replace(' ', '-')}:{sauce.sauce_site_id}",
                 file_url=sauce.file_url,
                 site_urls=sauce.site_urls,
                 api_urls=sauce.api_urls,
