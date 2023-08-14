@@ -5,7 +5,7 @@ import React from "react";
 
 export default function Home() {
     return (
-        <main className="flex flex-col items-center justify-center p-8 min-h-full">
+        <main className="flex flex-col items-center justify-center p-8 min-h-full selection:bg-rose-400 selection:text-white selection:rounded">
             <div className="w-full max-w-md h-full flex flex-col gap-4">
                 <h1 className="font-caturday text-6xl leading-none text-center">
                     NekoSauce
@@ -14,13 +14,13 @@ export default function Home() {
                     Find any anime/manga art's sauce!
                 </p>
                 <div className="my-12 flex flex-col gap-2 justify-self-center align-middle">
-                    <div className="flex flex-row items-center gap-2 text-xs text-neutral-500">
+                    <div className="flex flex-row items-center gap-2 text-xs text-neutral-500 select-none">
                         <div className="flex flex-row items-center gap-1">
                             <input
                                 type="checkbox"
                                 className="accent-rose-500"
                                 id="crop-resistant"
-                                checked={false}
+                                defaultValue={false}
                             />
                             <label for="crop-resistant">Crop resistant</label>
                         </div>
@@ -30,7 +30,7 @@ export default function Home() {
                                 type="checkbox"
                                 className="accent-rose-500"
                                 id="ignore-colors"
-                                checked={true}
+                                defaultValue={true}
                             />
                             <label for="ignore-colors">Ignore colors</label>
                         </div>
@@ -47,6 +47,7 @@ export default function Home() {
                                 <option value="2">Average</option>
                                 <option value="3">Diferential</option>
                             </select>
+                            <ChevronDownIcon className="w-3 h-3" />
                         </div>
                         <span>/</span>
                         <div div className="flex flex-row items-center gap-1">
@@ -54,7 +55,7 @@ export default function Home() {
                                 Bits:
                             </label>
                             <select
-                                className="border-none appearance-none p-1 -m-1 outline-none bg-transparent"
+                                className="border-none appearance-none p-1 -m-1 outline-none bg-transparent w-fit"
                                 id="bits"
                             >
                                 <option value="8">8</option>
@@ -62,6 +63,7 @@ export default function Home() {
                                 <option value="32">32</option>
                                 <option value="64">64</option>
                             </select>
+                            <ChevronDownIcon className="w-3 h-3" />
                         </div>
                     </div>
                     <div className="flex flex-row items-center gap-2">
@@ -70,7 +72,7 @@ export default function Home() {
                             type="url"
                             placeholder="Paste your image's URL"
                         />
-                        <button className="py-2 px-4 font-bold bg-rose-500 hover:bg-rose-600 text-white rounded-lg outline-none">
+                        <button className="py-2 px-4 font-bold bg-rose-500 hover:bg-rose-600 text-white rounded-lg outline-none transition">
                             Upload
                         </button>
                     </div>
@@ -111,12 +113,12 @@ function FaqItem({ title, description }) {
 
     return (
         <button
-            className="bg-neutral-100 py-2 px-2.5 rounded-lg flex flex-col gap-2 relative"
+            className="bg-neutral-100 py-2 px-2.5 rounded-lg flex flex-col gap-2 relative text-neutral-900 group"
             onClick={() => setIsOpen(!isOpen)}
         >
             <div className="flex flex-row items-center justify-between w-full">
                 <span className="font-bold">{title}</span>
-                <button className="rounded-md bg-purple-500 text-white p-1 aspect-square -m-1">
+                <button className="rounded-md bg-purple-500 group-hover:bg-purple-600 transition text-white p-1 aspect-square -m-1">
                     <ChevronDownIcon
                         className={`h-5 w-5 stroke-2 ${
                             isOpen ? "rotate-180" : ""

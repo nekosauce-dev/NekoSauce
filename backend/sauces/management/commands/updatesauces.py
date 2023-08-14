@@ -23,7 +23,7 @@ class Command(BaseCommand):
         if options.get("start_from", "0") == "last":
             last_sauce = (
                 Sauce.objects.annotate(
-                    numeric_id=Cast(F("site_id"), output_field=IntegerField())
+                    numeric_id=Cast(F("source_site_id"), output_field=IntegerField())
                 )
                 .order_by("-numeric_id")
                 .first()
@@ -49,6 +49,7 @@ class Command(BaseCommand):
 
         for sauce in fetcher:
             artist: Artist
+            uploaders: list[Uploader]
 
             if sauce.artist is not None:
                 try:

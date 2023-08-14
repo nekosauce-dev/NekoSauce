@@ -15,6 +15,7 @@ from pathlib import Path
 import os
 
 import dotenv
+
 dotenv.load_dotenv(".env.dev")
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -25,7 +26,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-a61@7(+227wg_4kh36e@t6bkaext*0l0#3kkxo_(85zrftx9%p")
+SECRET_KEY = os.getenv(
+    "SECRET_KEY", "django-insecure-a61@7(+227wg_4kh36e@t6bkaext*0l0#3kkxo_(85zrftx9%p"
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", "False") == "True"
@@ -45,6 +48,7 @@ INSTALLED_APPS = [
     "django.contrib.postgres",
     "sauces.apps.SaucesConfig",
     "users.apps.UsersConfig",
+    "polymorphic",
 ]
 
 MIDDLEWARE = [

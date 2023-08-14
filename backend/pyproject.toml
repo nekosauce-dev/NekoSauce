@@ -17,6 +17,8 @@ python-dotenv = "^1.0.0"
 validators = "^0.21.2"
 aiohttp = {extras = ["speedup"], version = "^3.8.5"}
 grequests = "^0.7.0"
+bitstring = "^4.0.2"
+django-polymorphic = "^3.1.0"
 
 
 [build-system]
