@@ -23,18 +23,20 @@ from sauces.models import (
 
 class EntityChildAdmin(PolymorphicChildModelAdmin):
     base_class = Entity
-    base_list_display = ("names",)
+    base_list_display = ("names", "tags")
 
 
 class SauceChildAdmin(PolymorphicChildModelAdmin):
     base_class = Sauce
     autocomplete_fields = ("uploaders", "hashes")
+    list_display = ("title", "source", "downloaded", "tags")
 
 
 @admin.register(Sauce)
 class SauceParentAdmin(PolymorphicParentModelAdmin):
     base_class = Sauce
     child_models = (ArtSauce, MangaSauce, AnimeSauce)
+    list_display = ("title", "source", "downloaded", "tags")
     list_filter = (PolymorphicChildModelFilter, "downloaded")
 
 
@@ -42,6 +44,7 @@ class SauceParentAdmin(PolymorphicParentModelAdmin):
 class ArtSauceAdmin(SauceChildAdmin):
     base_class = ArtSauce
     raw_id_fields = ("artist",)
+    list_display = ("title", "source", "downloaded", "artist", "tags")
 
 
 @admin.register(AnimeSauce)
@@ -53,6 +56,7 @@ class AnimeSauceAdmin(SauceChildAdmin):
 class MangaSauceAdmin(SauceChildAdmin):
     base_class = MangaSauce
     raw_id_fields = ("artist",)
+    list_display = ("title", "source", "downloaded", "artist", "tags")
 
 
 @admin.register(Entity)
@@ -79,3 +83,9 @@ class ArtistAdmin(EntityChildAdmin):
 class HashAdmin(admin.ModelAdmin):
     list_display = ("bits",)
     search_fields = ("bits", "sauces__title")
+
+
+@admin.register(Source)
+class SourceAdmin(admin.ModelAdmin):
+    list_display = ("name", "website", "api_docs")
+    search_fields = ("name",)

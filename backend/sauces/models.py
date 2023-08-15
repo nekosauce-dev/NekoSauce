@@ -56,7 +56,7 @@ class Hash(models.Model):
 
 class ArtSauce(Sauce):
     artist = models.ForeignKey(
-        "sauces.Artist", on_delete=models.CASCADE, null=False, related_name="art_sauces"
+        "sauces.Artist", on_delete=models.CASCADE, null=True, related_name="art_sauces"
     )
 
 
