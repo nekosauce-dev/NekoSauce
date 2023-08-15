@@ -1,8 +1,9 @@
+from django.db import transaction
 from django.db.models import Q, F, IntegerField
 from django.db.models.functions import Cast
 from django.core.management.base import BaseCommand, CommandError
 
-from sauces.models import Sauce, Artist, Source
+from sauces.models import Sauce, Source
 from sauces.sources import get_fetcher
 
 
@@ -11,7 +12,8 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument("fetcher", type=str)
-        parser.add_argument("--start-from", type=str)
+        parser.add_argument("--start-from", type=str, default="last")
+        parser.add_argument("--async-reqs", type=int, default=3)
 
     def handle(self, *args, **options):
         fetcher_class = get_fetcher(options["fetcher"].lower())
@@ -31,17 +33,14 @@ class Command(BaseCommand):
             start_from = f"b{last_sauce.source_site_id}"
         else:
             start_from = (
-                int(options.get("start_from", "0"))
-                if options.get("start_from", "0") is not None
-                and options.get("start_from", "0").isnumeric()
-                else options.get("start_from", 0)
-                if options.get("start_from", 0)
-                else 0
+                int(options["start_from"])
+                if options["start_from"].isnumeric()
+                else options["start_from"]
             )
 
         fetcher = fetcher_class(
             iter_from=start_from,
-            async_reqs=10,
+            async_reqs=options["async_reqs"],
         )
         source = Source.objects.get(name__iexact=options["fetcher"])
 

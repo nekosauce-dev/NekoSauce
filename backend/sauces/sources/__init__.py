@@ -6,9 +6,9 @@ import io
 import typing
 import urllib.parse
 
-import grequests
+import requests
 
-from sauces.models import Sauce, Artist, Uploader
+from sauces.models import Sauce
 
 
 def get_fetcher(name: str) -> "BaseFetcher":
@@ -120,7 +120,7 @@ class BaseFetcher:
             "You need to implement either the `get_url()` method or set the `base_url` attribute."
         )
 
-    def request(self, method, url, **kwargs) -> grequests.AsyncRequest:
+    def request(self, method, url, **kwargs) -> requests.Response:
         """Makes a request to the Sauce API.
 
         Args:
@@ -128,62 +128,9 @@ class BaseFetcher:
             url (str): URL of the post/file to download.
 
         Returns:
-            grequests.AsyncRequest: The request (not yet executed).
+            requests.Response: The request's response.
         """
-        return grequests.request(method, self.get_url(url), **kwargs)
-
-    def get_artist_request(self, id: str) -> grequests.AsyncRequest:
-        """Gets the request for the artist with the given id.
-
-        Args:
-            id (str): ID of the artist.
-
-        Returns:
-            grequests.AsyncRequest: The request (not yet executed).
-        """
-        raise NotImplementedError(
-            "You need to implement the `.get_artist_request()` method."
-        )
-
-    def get_artist(self, id: str) -> Artist:
-        """Fetches the artist with the given id.
-
-        Args:
-            id (str): ID of the artist to fetch.
-
-        Raises:
-            NotImplementedError: The requested method needs to be implemented.
-
-        Returns:
-            sauces.models.Artist: The artist.
-        """
-        raise NotImplementedError("You need to implement the `.get_artist()` method.")
-
-    def get_uploader_request(self, id: str) -> grequests.AsyncRequest:
-        """Gets the request for the uploader with the given id.
-
-        Args:
-            id (str): ID of the uploader.
-
-        Returns:
-            grequests.AsyncRequest: The request (not yet executed).
-        """
-        raise NotImplementedError(
-            "You need to implement the `.get_uploader_request()` method."
-        )
-
-    def get_uploader(self, id: str) -> Uploader:
-        """Fetches the uploaders from the given URL.
-
-        Args:
-            url (str): URL of the original post.
-
-        Returns:
-            sauces.models.Uploader: The post's uploader.
-        """
-        raise NotImplementedError(
-            "You need to implement the `.get_uploaders()` method."
-        )
+        return requests.request(method, self.get_url(url), **kwargs)
 
     def get_file_url(self, id: str) -> str:
         """Fetches the file URL from the given URL.
@@ -199,7 +146,7 @@ class BaseFetcher:
         """
         raise NotImplementedError("You need to implement the `.get_file_url()` method.")
 
-    def get_sauce_request(self, id: str) -> grequests.AsyncRequest:
+    def get_sauce_request(self, id: str) -> requests.Response:
         """Gets the request for the sauce with the given id.
 
         Args:
@@ -284,12 +231,12 @@ class BaseDownloader:
         Returns:
             io.BytesIO: The downloaded file.
         """
-        r = grequests.map([self.download_request(url)])[0]
+        r = self.download_request(url)
         r.raise_for_status()
 
         return io.BytesIO(r.content)
 
-    def download_request(self, url) -> grequests.AsyncRequest:
+    def download_request(self, url) -> requests.Response:
         """Returns a grequests request for the given URL. The returned request
         has not been executed yet.
 
@@ -302,7 +249,7 @@ class BaseDownloader:
         Returns:
             grequests.AsyncRequest: The request.
         """
-        return grequests.get(self.fetcher.get_url(url))
+        return requests.get(self.fetcher.get_url(url))
 
     def check_url(self, url) -> bool:
         """Checks if a URL can be downloaded by this downloader.
