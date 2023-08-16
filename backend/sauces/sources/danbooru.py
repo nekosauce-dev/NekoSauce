@@ -1,8 +1,10 @@
 import io
 import typing
-import urllib.parse
 
+import grequests
 import requests
+
+import urllib.parse
 
 import validators
 
@@ -15,12 +17,14 @@ class DanbooruFetcher(sources.BaseFetcher):
     base_url = "https://danbooru.donmai.us"
     source = Source.objects.get(name="Danbooru")
 
+    @property
+    def last_page(self) -> str:
+        return f"a{self.last_sauce.source_site_id}"
+
     def get_sauce_request(self, id: str) -> requests.Response:
         return self.request("GET", f"/posts/{id}.json")
 
-    def _get_sauce_from_response(
-        self, post: dict
-    ) -> Sauce:
+    def _get_sauce_from_response(self, post: dict) -> Sauce:
         site_urls = (
             [f"https://danbooru.donmai.us/posts/{post['id']}"]
             + (
@@ -46,6 +50,31 @@ class DanbooruFetcher(sources.BaseFetcher):
                 "height": post["image_height"],
                 "width": post["image_width"],
             },
+        )
+
+        return sauce
+
+    def _get_new_sauce_from_response(self, post: dict) -> Sauce:
+        site_urls = (
+            [f"https://danbooru.donmai.us/posts/{post['id']}"]
+            + (
+                [f"https://www.pixiv.net/artworks/{post['pixiv_id']}"]
+                if post["pixiv_id"]
+                else []
+            )
+            + ([post["source"]] if post["source"] else [])
+        )
+
+        sauce = Sauce(
+            title=f"Artwork from Danbooru #{post['id']} - {post['file_url'].split('/')[-1] if 'file_url' in post else 'Unknown filename'}",
+            site_urls=site_urls,
+            api_urls=[f"https://danbooru.donmai.us/posts/{post['id']}.json"],
+            file_urls=[post["file_url"] if "file_url" in post else post["source"]],
+            source=self.source,
+            source_site_id=post["id"],
+            tags=sources.get_tags(site_urls),
+            height=post["image_height"],
+            width=post["image_width"],
         )
 
         return sauce
@@ -85,23 +114,57 @@ class DanbooruFetcher(sources.BaseFetcher):
             and not sauce["is_deleted"]
         ]
 
-    def __next__(self):
-        if self.current_iter_item < len(self.loaded_iter_items):
-            self.current_iter_item += 1
-            return self.loaded_iter_items[self.current_iter_item - 1]
+    def get_iter(self, start_from) -> typing.Iterator[Sauce]:
+        if isinstance(start_from, Sauce) or not start_from.isnumeric():
+            page = (
+                f"a{start_from.source_site_id}"
+                if isinstance(start_from, Sauce)
+                else start_from
+            )
+            reqs = [
+                grequests.get(
+                    self.get_url("/posts.json?page=b{page}&limit=200".format(page=i))
+                )
+                for i in range(int(page[1:]), 7000000, 200)
+            ]
         else:
-            sauces = self.get_sauces_list(self.current_iter_page)
-            self.current_iter_page = f"b{sauces[-1].source_site_id}"
-            self.current_iter_item = 0
-            self.loaded_iter_items = sauces
-            return sauces[0]
+            page = int(start_from)
+            reqs = [
+                grequests.get(
+                    self.get_url("/posts.json?page={page}&limit=200".format(page=i))
+                )
+                for i in range(page, 100000)
+            ]
+
+        for response in grequests.imap(
+            reqs,
+            size=self.async_reqs,
+        ):
+            new_sauces = [
+                self._get_new_sauce_from_response(
+                    post,
+                )
+                for post in response.json()
+                if (
+                    "file_url" in post
+                    and post["file_url"]
+                    and not post["is_pending"]
+                    and not post["is_deleted"]
+                )
+            ]
+            Sauce.objects.bulk_create(
+                new_sauces,
+                ignore_conflicts=True,
+            )
+            yield from new_sauces
 
 
 class DanbooruDownloader(sources.BaseFetcher):
     fetcher = DanbooruFetcher
 
     def check_url(url: str) -> bool:
-        splitted_domain = urllib.parse.urlparse(url).netloc.split(".")
+        parsed_url = urllib.parse.urlparse(url)
+        splitted_domain = parsed_url.netloc.split(".")
         return f"{splitted_domain[-2]}.{splitted_domain[-1]}" == "donmai.us"
 
     def get_sauce_id(url: str) -> str:
@@ -131,3 +194,11 @@ class DanbooruTagger(sources.BaseTagger):
     get_resource = lambda self, url: url.path.split("/")[1][:-1]
     get_property = lambda self, url: "id"
     get_value = lambda self, url: url.path.split("/")[2].split(".")[0]
+
+    def check_url(self, url: str) -> bool:
+        try:
+            parsed_url = urllib.parse.urlparse(url)
+            splitted_domain = parsed_url.netloc.split(".")
+            return f"{splitted_domain[-2]}.{splitted_domain[-1]}" == "donmai.us" and parsed_url.path.startswith("/posts/")
+        except Exception as e:
+            return False

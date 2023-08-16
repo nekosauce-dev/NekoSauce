@@ -8,7 +8,7 @@ import urllib.parse
 
 import requests
 
-from sauces.models import Sauce
+from sauces.models import Sauce, Source
 
 
 def get_fetcher(name: str) -> "BaseFetcher":
@@ -92,17 +92,22 @@ class BaseFetcher:
 
     site_name: str = None
     base_url: str = None
+    source: Source = None
 
-    def __init__(self, iter_from=0, async_reqs=10):
+    def __init__(self, async_reqs: int = 10):
         self.credentials = {
             "user": os.getenv(f"SAUCE_{self.site_name.upper()}_USER"),
             "pass": os.getenv(f"SAUCE_{self.site_name.upper()}_PASS"),
         }
-        self.current_iter_page = iter_from
-        self.loaded_iter_items = []
-        self.current_iter_item = 0
-        self.iter_from = iter_from
         self.async_reqs = async_reqs
+
+    @property
+    def last_sauce(self) -> Sauce:
+        return Sauce.objects.filter(source=self.source).order_by("-created_at").first()
+
+    @property
+    def last_page(self) -> int:
+        raise NotImplementedError("You need to implement the `.last_page()` property method.")
 
     def get_url(self, path: str) -> str:
         """Returns the URL for the given path.
@@ -192,16 +197,19 @@ class BaseFetcher:
             "You need to implement the `.get_sauces_list()` method."
         )
 
-    def __iter__(self):
-        self.current_iter_page = self.iter_from
-        return self
+    def get_iter(self, start_from: int = 0) -> typing.Iterator[Sauce]:
+        """Fetches all sauces possible, starting from the given page.
 
-    def __next__(self):
-        sauces = self.get_sauces_list(
-            self.current_iter_page, reqs=self.async_reqs, async_reqs=self.async_reqs
-        )
-        self.current_iter_page += 1
-        return sauces
+        Args:
+            start_from (int, optional): The page to start from. Defaults to 0.
+
+        Raises:
+            NotImplementedError: The requested method needs to be implemented.
+
+        Returns:
+            typing.Iterator[Sauce]: The iterator.
+        """
+        raise NotImplementedError("You need to implement the `.get_iter()` method.")
 
 
 class BaseDownloader:

@@ -9,6 +9,9 @@ from sauces.utils.fields import BitField
 
 
 class Sauce(models.Model):
+    class Meta:
+        unique_together = ["source", "source_site_id"]
+
     title = models.CharField(max_length=255)
 
     site_urls = ArrayField(models.URLField(max_length=255, null=False))
@@ -26,8 +29,11 @@ class Sauce(models.Model):
     )
 
     downloaded = models.BooleanField(default=False)
-    height = models.PositiveSmallIntegerField()
-    width = models.PositiveSmallIntegerField()
+    height = models.PositiveIntegerField()
+    width = models.PositiveIntegerField()
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.title

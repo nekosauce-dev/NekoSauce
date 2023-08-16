@@ -1,3 +1,5 @@
+import grequests
+
 from django.db import transaction
 from django.db.models import Q, F, IntegerField
 from django.db.models.functions import Cast
@@ -21,35 +23,23 @@ class Command(BaseCommand):
         if fetcher_class is None:
             raise CommandError(f"Invalid fetcher: {options['fetcher']}")
 
-        start_from = 0
-        if options.get("start_from", "0") == "last":
-            last_sauce = (
-                Sauce.objects.annotate(
-                    numeric_id=Cast(F("source_site_id"), output_field=IntegerField())
-                )
-                .order_by("numeric_id")
-                .first()
-            )
-            start_from = f"b{last_sauce.source_site_id}"
-        else:
-            start_from = (
-                int(options["start_from"])
-                if options["start_from"].isnumeric()
-                else options["start_from"]
-            )
-
         fetcher = fetcher_class(
-            iter_from=start_from,
             async_reqs=options["async_reqs"],
         )
-        source = Source.objects.get(name__iexact=options["fetcher"])
+        source = fetcher.source
+
+        start_from = options["start_from"]
 
         self.stdout.write(
             f"Fetching sauces from {source.name}"
             + (f", starting from page {start_from}" if start_from else "")
         )
 
-        for sauce in fetcher:
+        for sauce in fetcher.get_iter(
+            start_from=start_from
+            if start_from and (start_from.isnumeric() or start_from[1:].isnumeric())
+            else fetcher.last_sauce,
+        ):
             self.stdout.write(
                 self.style.SUCCESS(f"ADDED")
                 + f": {sauce.source_site_id} - {sauce.title}"
