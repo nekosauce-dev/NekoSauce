@@ -35,7 +35,7 @@ class Command(BaseCommand):
             + (f", starting from page {start_from}" if start_from else "")
         )
 
-        for sauce in fetcher.get_iter(
+        for sauce in fetcher.get_sauces_iter(
             start_from=start_from
             if start_from and (start_from.isnumeric() or start_from[1:].isnumeric())
             else fetcher.last_sauce,

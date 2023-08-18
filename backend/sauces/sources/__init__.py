@@ -6,7 +6,7 @@ import io
 import typing
 import urllib.parse
 
-import requests
+import grequests
 
 from sauces.models import Sauce, Source
 
@@ -52,9 +52,11 @@ def get_tags(links: typing.List[str]) -> typing.List[str]:
         typing.List[str]: List of tags.
     """
     from sauces.sources.danbooru import DanbooruTagger
+    from sauces.sources.pixiv import PixivTagger
 
     taggers = [
         DanbooruTagger(),
+        PixivTagger(),
     ]
 
     result = []
@@ -125,7 +127,7 @@ class BaseFetcher:
             "You need to implement either the `get_url()` method or set the `base_url` attribute."
         )
 
-    def request(self, method, url, **kwargs) -> requests.Response:
+    def request(self, method, url, **kwargs) -> grequests.AsyncRequest:
         """Makes a request to the Sauce API.
 
         Args:
@@ -133,9 +135,9 @@ class BaseFetcher:
             url (str): URL of the post/file to download.
 
         Returns:
-            requests.Response: The request's response.
+            grequests.AsyncRequest: The request's response.
         """
-        return requests.request(method, self.get_url(url), **kwargs)
+        return grequests.request(method, self.get_url(url), **kwargs)
 
     def get_file_url(self, id: str) -> str:
         """Fetches the file URL from the given URL.
@@ -151,7 +153,7 @@ class BaseFetcher:
         """
         raise NotImplementedError("You need to implement the `.get_file_url()` method.")
 
-    def get_sauce_request(self, id: str) -> requests.Response:
+    def get_sauce_request(self, id: str) -> grequests.AsyncRequest:
         """Gets the request for the sauce with the given id.
 
         Args:
@@ -167,37 +169,7 @@ class BaseFetcher:
             "You need to implement the `.get_sauce_request()` method."
         )
 
-    def get_sauce(self, id: str) -> Sauce:
-        """Fetches the sauce with the given id.
-
-        Args:
-            id (str): ID of the sauce.
-
-        Raises:
-            NotImplementedError: The requested method needs to be implemented.
-
-        Returns:
-            sauces.models.Sauce: The sauce.
-        """
-        raise NotImplementedError("You need to implement the `.get_sauce()` method.")
-
-    def get_sauces_list(self, page: int = 0) -> typing.List[Sauce]:
-        """Fetches the list of sauces from the given page.
-
-        Args:
-            page (int, optional): The page to fetch. Defaults to 0.
-
-        Raises:
-            NotImplementedError: The requested method needs to be implemented.
-
-        Returns:
-            typing.List[Sauce]: The list of sauces.
-        """
-        raise NotImplementedError(
-            "You need to implement the `.get_sauces_list()` method."
-        )
-
-    def get_iter(self, start_from: int = 0) -> typing.Iterator[Sauce]:
+    def get_sauces_iter(self, start_from: int = 0) -> typing.Iterator[Sauce]:
         """Fetches all sauces possible, starting from the given page.
 
         Args:
@@ -244,8 +216,8 @@ class BaseDownloader:
 
         return io.BytesIO(r.content)
 
-    def download_request(self, url) -> requests.Response:
-        """Returns a grequests request for the given URL. The returned request
+    def download_request(self, url) -> grequests.AsyncRequest:
+        """Returns a grequests.AsyncRequest for the given URL. The returned request
         has not been executed yet.
 
         Args:
@@ -257,7 +229,7 @@ class BaseDownloader:
         Returns:
             grequests.AsyncRequest: The request.
         """
-        return requests.get(self.fetcher.get_url(url))
+        return grequests.get(self.fetcher.get_url(url))
 
     def check_url(self, url) -> bool:
         """Checks if a URL can be downloaded by this downloader.

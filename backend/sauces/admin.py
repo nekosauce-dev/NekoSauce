@@ -4,6 +4,7 @@ from sauces.models import (
     Sauce,
     Source,
     Hash,
+    Artist
 )
 
 # Register your models here.
@@ -31,3 +32,10 @@ class HashAdmin(admin.ModelAdmin):
     list_display = ("bits", "method")
     list_filter = ("method",)
     search_fields = ("bits",)
+
+
+@admin.register(Artist)
+class ArtistAdmin(admin.ModelAdmin):
+    list_display = ("names", "tags")
+    search_fields = ("names","tags")
+    horizontal_filters = ("sauces",)

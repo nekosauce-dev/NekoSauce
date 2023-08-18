@@ -1,15 +1,16 @@
 import os
 
+from gevent import monkey as curious_george
+curious_george.patch_all(thread=False, select=False)
+
 from celery import Celery
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "nekosauce.settings")
 
-app = Celery("nekosauce")
+from django.conf import settings
+
+
+app = Celery("nekosauce", broker=f"redis://{'nekosauce' if not settings.DEBUG else 'localhost'}:6379/0")
 
 app.config_from_object("django.conf:settings", namespace="CELERY")
 app.autodiscover_tasks()
-
-
-@app.task(bind=True, ignore_result=True)
-def debug_task(self):
-    print(f"Request: {self.request!r}")

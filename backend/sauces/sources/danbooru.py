@@ -1,15 +1,16 @@
 import io
 import typing
+import urllib.parse
+
+from django.models import Q
 
 import grequests
 import requests
 
-import urllib.parse
-
 import validators
 
 from sauces import sources
-from sauces.models import Sauce, Source
+from sauces.models import Sauce, Source, Artist
 
 
 class DanbooruFetcher(sources.BaseFetcher):
@@ -21,7 +22,7 @@ class DanbooruFetcher(sources.BaseFetcher):
     def last_page(self) -> str:
         return f"a{self.last_sauce.source_site_id}"
 
-    def get_sauce_request(self, id: str) -> requests.Response:
+    def get_sauce_request(self, id: str) -> grequests.AsyncRequest:
         return self.request("GET", f"/posts/{id}.json")
 
     def _get_sauce_from_response(self, post: dict) -> Sauce:
@@ -72,7 +73,51 @@ class DanbooruFetcher(sources.BaseFetcher):
             file_urls=[post["file_url"] if "file_url" in post else post["source"]],
             source=self.source,
             source_site_id=post["id"],
-            tags=sources.get_tags(site_urls),
+            tags=sources.get_tags(site_urls)
+            + (
+                [
+                    f"danbooru:artist:name:{urllib.parse.quote_plus(post['tag_string_artist'])}"
+                ]
+                if "tag_string_artist" in post and post["tag_string_artist"]
+                else []
+            )
+            + (
+                [
+                    f"danbooru:tag:name:{urllib.parse.quote_plus(tag)}"
+                    for tag in post["tag_string_general"].split(" ")
+                    if tag
+                ]
+                if "tag_string_general" in post and post["tag_string_general"]
+                else []
+            )
+            + (
+                [
+                    f"danbooru:character:name:{urllib.parse.quote_plus(tag)}"
+                    for tag in post["tag_string_character"].split(" ")
+                    if tag
+                ]
+                if "tag_string_character" in post and post["tag_string_character"]
+                else []
+            )
+            + (
+                [
+                    f"danbooru:copyright:name:{urllib.parse.quote_plus(tag)}"
+                    for tag in post["tag_string_copyright"].split(" ")
+                    if tag
+                ]
+                if "tag_string_copyright" in post and post["tag_string_copyright"]
+                else []
+            )
+            + (
+                [
+                    f"danbooru:meta-tag:name:{urllib.parse.quote_plus(tag)}"
+                    for tag in post["tag_string_meta"].split(" ")
+                    if tag
+                ]
+                if "tag_string_meta" in post and post["tag_string_meta"]
+                else []
+            ),
+            is_nsfw=post["rating"] in ["q", "e"],
             height=post["image_height"],
             width=post["image_width"],
         )
@@ -85,7 +130,7 @@ class DanbooruFetcher(sources.BaseFetcher):
         if qs.exists():
             return qs[0]
 
-        r = gevent.map(self.get_sauce_request(id))[0]
+        r = grequests.map(self.get_sauce_request(id))[0]
         post = r.json()
 
         return self._get_sauce_from_response(post)
@@ -99,22 +144,7 @@ class DanbooruFetcher(sources.BaseFetcher):
         sauce = self.get_sauce(id)
         return sauce.file_urls[0]
 
-    def get_sauces_list(self, page: int = 0) -> typing.List[Sauce]:
-        response = self.request("GET", f"/posts.json?page={page}&limit=200")
-        sauces = response.json()
-
-        return [
-            self._get_sauce_from_response(
-                sauce,
-            )
-            for sauce in sauces
-            if "file_url" in sauce
-            and sauce["file_url"]
-            and not sauce["is_pending"]
-            and not sauce["is_deleted"]
-        ]
-
-    def get_iter(self, start_from) -> typing.Iterator[Sauce]:
+    def get_sauces_iter(self, start_from) -> typing.Iterator[Sauce]:
         if isinstance(start_from, Sauce) or not start_from.isnumeric():
             page = (
                 f"a{start_from.source_site_id}"
@@ -122,16 +152,18 @@ class DanbooruFetcher(sources.BaseFetcher):
                 else start_from
             )
             reqs = [
-                grequests.get(
-                    self.get_url("/posts.json?page=b{page}&limit=200".format(page=i))
+                self.request(
+                    "GET",
+                    self.get_url("/posts.json?page=b{page}&limit=200".format(page=i)),
                 )
                 for i in range(int(page[1:]), 7000000, 200)
             ]
         else:
             page = int(start_from)
             reqs = [
-                grequests.get(
-                    self.get_url("/posts.json?page={page}&limit=200".format(page=i))
+                self.request(
+                    "GET",
+                    self.get_url("/posts.json?page={page}&limit=200".format(page=i)),
                 )
                 for i in range(page, 100000)
             ]
@@ -199,6 +231,9 @@ class DanbooruTagger(sources.BaseTagger):
         try:
             parsed_url = urllib.parse.urlparse(url)
             splitted_domain = parsed_url.netloc.split(".")
-            return f"{splitted_domain[-2]}.{splitted_domain[-1]}" == "donmai.us" and parsed_url.path.startswith("/posts/")
+            return (
+                f"{splitted_domain[-2]}.{splitted_domain[-1]}" == "donmai.us"
+                and parsed_url.path.startswith("/posts/")
+            )
         except Exception as e:
             return False

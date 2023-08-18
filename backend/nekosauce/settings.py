@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     "django.contrib.postgres",
     "sauces.apps.SaucesConfig",
     "users.apps.UsersConfig",
+    'django_celery_beat',
 ]
 
 MIDDLEWARE = [
