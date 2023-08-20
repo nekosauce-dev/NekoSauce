@@ -9,13 +9,13 @@ import urllib.parse
 import grequests
 import requests
 
-from sauces.models import Sauce, Source
+from nekosauce.sauces.models import Sauce, Source
 
 
 def get_fetcher(name: str) -> "BaseFetcher":
     match name.lower():
         case "danbooru":
-            from sauces.sources.danbooru import DanbooruFetcher
+            from nekosauce.sauces.sources.danbooru import DanbooruFetcher
 
             return DanbooruFetcher
     return None
@@ -30,7 +30,7 @@ def get_downloader(url: str) -> "BaseDownloader":
     Returns:
         _type_: Downloader
     """
-    from sauces.sources.danbooru import DanbooruDownloader
+    from nekosauce.sauces.sources.danbooru import DanbooruDownloader
 
     downloaders = [
         DanbooruDownloader,
@@ -52,8 +52,8 @@ def get_tags(links: typing.List[str]) -> typing.List[str]:
     Returns:
         typing.List[str]: List of tags.
     """
-    from sauces.sources.danbooru import DanbooruTagger
-    from sauces.sources.pixiv import PixivTagger
+    from nekosauce.sauces.sources.danbooru import DanbooruTagger
+    from nekosauce.sauces.sources.pixiv import PixivTagger
 
     taggers = [
         DanbooruTagger(),
@@ -235,8 +235,8 @@ class BaseDownloader:
             grequests.AsyncRequest: The request.
         """
         session = requests.Session()
-        adapter = requests.adapters.HTTPAdapter(max_retries = 10)
-        session.mount('http://', adapter)
+        adapter = requests.adapters.HTTPAdapter(max_retries=10)
+        session.mount("http://", adapter)
 
         return grequests.get(self.fetcher.get_url(url), session=session)
 

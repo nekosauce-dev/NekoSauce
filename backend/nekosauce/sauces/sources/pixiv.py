@@ -1,6 +1,6 @@
 import re
 
-from sauces import sources
+from nekosauce.sauces import sources
 
 
 class PixivTagger(sources.BaseTagger):
@@ -12,7 +12,9 @@ class PixivTagger(sources.BaseTagger):
     get_property = lambda self, url: "id"
     get_value = lambda self, url: re.match(self.path_pattern, url.path)[-1]
 
-    path_pattern = r"^(/[a-zA-Z]+)?/(?P<resource_name>artworks|users)/(?P<resource_id>[0-9]+)"
+    path_pattern = (
+        r"^(/[a-zA-Z]+)?/(?P<resource_name>artworks|users)/(?P<resource_id>[0-9]+)"
+    )
 
     def check_url(self, url: str) -> bool:
         try:

@@ -9,7 +9,7 @@ from PIL import Image
 
 import imagehash
 
-from sauces.utils.fields import BitField
+from nekosauce.sauces.utils.fields import BitField
 
 # Create your models here.
 
@@ -73,7 +73,7 @@ class Sauce(models.Model):
         return self.title
 
     def calc_hashes(self, save: bool = True, replace: bool = True) -> bool:
-        from sauces.sources import get_downloader
+        from nekosauce.sauces.sources import get_downloader
 
         if [0 for i in range(4)] != [
             self.hashes_8bits.count(),
@@ -165,9 +165,7 @@ class Hash8Bits(Hash):
             for algorithm in range(len(Hash.Algorithm.choices))
         ]
 
-    bits = BitField(
-        max_length=8**2, null=False, blank=False, db_index=True
-    )
+    bits = BitField(max_length=8**2, null=False, blank=False, db_index=True)
 
 
 class Hash16Bits(Hash):
@@ -183,9 +181,7 @@ class Hash16Bits(Hash):
             for algorithm in range(len(Hash.Algorithm.choices))
         ]
 
-    bits = BitField(
-        max_length=16**2, null=False, blank=False, db_index=True
-    )
+    bits = BitField(max_length=16**2, null=False, blank=False, db_index=True)
 
 
 class Hash32Bits(Hash):
@@ -201,9 +197,7 @@ class Hash32Bits(Hash):
             for algorithm in range(len(Hash.Algorithm.choices))
         ]
 
-    bits = BitField(
-        max_length=32**2, null=False, blank=False, db_index=True
-    )
+    bits = BitField(max_length=32**2, null=False, blank=False, db_index=True)
 
 
 class Hash64Bits(Hash):
@@ -219,9 +213,7 @@ class Hash64Bits(Hash):
             for algorithm in range(len(Hash.Algorithm.choices))
         ]
 
-    bits = BitField(
-        max_length=64**2, null=False, blank=False, db_index=True
-    )
+    bits = BitField(max_length=64**2, null=False, blank=False, db_index=True)
 
 
 class Source(models.Model):

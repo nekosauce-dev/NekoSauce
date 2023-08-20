@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from sauces.models import (
+from nekosauce.sauces.models import (
     Sauce,
     Source,
     Hash8Bits,

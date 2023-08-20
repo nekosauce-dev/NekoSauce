@@ -9,8 +9,8 @@ import requests
 
 import validators
 
-from sauces import sources
-from sauces.models import Sauce, Source
+from nekosauce.sauces import sources
+from nekosauce.sauces.models import Sauce, Source
 
 
 class DanbooruFetcher(sources.BaseFetcher):
@@ -43,11 +43,15 @@ class DanbooruFetcher(sources.BaseFetcher):
             file_urls=[post.get("file_url", post["source"])],
             source=self.source,
             source_site_id=post["id"],
-            tags=sources.get_tags(site_urls + (
-                [post.get("source")] if validators.url(post.get("source")) else []
-            ) + (
-                [f"https://www.pixiv.net/artworks/{post.get('pixiv_id')}"] if post.get("pixiv_id") else []
-            ))
+            tags=sources.get_tags(
+                site_urls
+                + ([post.get("source")] if validators.url(post.get("source")) else [])
+                + (
+                    [f"https://www.pixiv.net/artworks/{post.get('pixiv_id')}"]
+                    if post.get("pixiv_id")
+                    else []
+                )
+            )
             + (
                 [
                     f"danbooru:artist:name:{urllib.parse.quote_plus(post['tag_string_artist'])}"
@@ -119,7 +123,9 @@ class DanbooruFetcher(sources.BaseFetcher):
         return sauce.file_urls[0]
 
     def get_sauces_iter(self, start_from) -> typing.Iterator[Sauce]:
-        if start_from is not None and (isinstance(start_from, Sauce) or not start_from.isnumeric()):
+        if start_from is not None and (
+            isinstance(start_from, Sauce) or not start_from.isnumeric()
+        ):
             page = (
                 f"a{start_from.source_site_id}"
                 if isinstance(start_from, Sauce)
@@ -172,7 +178,9 @@ class DanbooruDownloader(sources.BaseFetcher):
     site_name = "Danbooru"
 
     def check_url(self, url: str) -> bool:
-        return url.startswith("https://danbooru.donmai.us") or url.startswith("https://cdn.donmai.us")
+        return url.startswith("https://danbooru.donmai.us") or url.startswith(
+            "https://cdn.donmai.us"
+        )
 
     def get_sauce_id(url: str) -> str:
         return urllib.parse.urlparse(url).path.split("/")[-1].split(".")[0]

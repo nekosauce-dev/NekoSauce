@@ -2,9 +2,9 @@ import time
 
 from django.core.management.base import BaseCommand, CommandError
 
-from sauces.models import Sauce
-from sauces.sources import get_fetcher
-from sauces.tasks import calc_hashes
+from nekosauce.sauces.models import Sauce
+from nekosauce.sauces.sources import get_fetcher
+from nekosauce.sauces.tasks import calc_hashes
 
 
 class Command(BaseCommand):
@@ -16,6 +16,9 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         self.stdout.write(f"Hashing sauces...")
 
-        for sauce in Sauce.objects.filter(downloaded=False)[:1000]:
+        for sauce in Sauce.objects.filter(downloaded=False).iterator():
             calc_hashes.delay(sauce.id, False)
-            self.stdout.write(self.style.SUCCESS(f"ADDING") + f": {sauce.source_site_id} - {sauce.title}")
+            self.stdout.write(
+                self.style.SUCCESS(f"ADDING")
+                + f": {sauce.source_site_id} - {sauce.title}"
+            )

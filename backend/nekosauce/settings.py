@@ -46,9 +46,10 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.postgres",
-    "sauces.apps.SaucesConfig",
-    "users.apps.UsersConfig",
-    'django_celery_beat',
+    "nekosauce.sauces.apps.SaucesConfig",
+    "nekosauce.users.apps.UsersConfig",
+    "django_celery_beat",
+    "rest_framework",
 ]
 
 MIDDLEWARE = [
@@ -148,4 +149,15 @@ CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
 CELERY_TASK_ROUTES = {
     "sauces.tasks.calc_hashes": {"queue": "default"},
+}
+
+
+REST_FRAMEWORK = {
+    "DEFAULT_PARSER_CLASSES": [
+        "rest_framework.parsers.JSONParser",
+        "rest_framework.parsers.FileUploadParser",
+    ],
+    "DEFAULT_RENDERER_CLASSES": [
+        "rest_framework.renderers.JSONRenderer",
+    ],
 }

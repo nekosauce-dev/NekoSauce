@@ -5,9 +5,9 @@ from django.db.models import Q, F, IntegerField
 from django.db.models.functions import Cast
 from django.core.management.base import BaseCommand, CommandError
 
-from sauces.models import Sauce, Source
-from sauces.sources import get_fetcher
-from sauces.tasks import calc_hashes
+from nekosauce.sauces.models import Sauce, Source
+from nekosauce.sauces.sources import get_fetcher
+from nekosauce.sauces.tasks import calc_hashes
 
 
 class Command(BaseCommand):
