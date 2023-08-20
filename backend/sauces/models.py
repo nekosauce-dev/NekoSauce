@@ -1,13 +1,30 @@
+import io
+
 from django.db import models
 from django.db.models import Func
 from django.contrib.postgres.fields import ArrayField
 from django.contrib.postgres.indexes import BTreeIndex
 
-from polymorphic.models import PolymorphicModel
+from PIL import Image
+
+import imagehash
 
 from sauces.utils.fields import BitField
 
 # Create your models here.
+
+
+def hash_to_bits(hash):
+    bits = ""
+    for row in hash.hash:
+        bits += "".join(["1" if bit else "0" for bit in row])
+    return bits
+
+
+def bit_padding(bits: str, padding: int):
+    for i in range(padding):
+        bits += "0"
+    return bits
 
 
 class Sauce(models.Model):
@@ -27,7 +44,10 @@ class Sauce(models.Model):
     api_urls = ArrayField(models.URLField(max_length=255, null=False))
     file_urls = ArrayField(models.URLField(max_length=255, null=False))
 
-    hashes = models.ManyToManyField("sauces.Hash", related_name="sauces")
+    hashes_8bits = models.ManyToManyField("sauces.Hash8Bits", related_name="sauces")
+    hashes_16bits = models.ManyToManyField("sauces.Hash16Bits", related_name="sauces")
+    hashes_32bits = models.ManyToManyField("sauces.Hash32Bits", related_name="sauces")
+    hashes_64bits = models.ManyToManyField("sauces.Hash64Bits", related_name="sauces")
 
     source = models.ForeignKey(
         "sauces.Source", on_delete=models.CASCADE, null=False, related_name="sauces"
@@ -52,9 +72,68 @@ class Sauce(models.Model):
     def __str__(self):
         return self.title
 
+    def calc_hashes(self, save: bool = True, replace: bool = True) -> bool:
+        from sauces.sources import get_downloader
+
+        if [0 for i in range(4)] != [
+            self.hashes_8bits.count(),
+            self.hashes_16bits.count(),
+            self.hashes_32bits.count(),
+            self.hashes_64bits.count(),
+        ] and not replace:
+            return False, "Hashes already exist"
+
+        downloaders = [(get_downloader(url), url) for url in self.file_urls]
+        downloaders = [d for d in downloaders if d[0] is not None]
+
+        downloader, url = downloaders[0] if downloaders else (None, None)
+
+        if downloader is None:
+            return False, "No downloader found for URLs {}".format(
+                ", ".join(self.file_urls)
+            )
+
+        img = Image.open(io.BytesIO(downloader().download(url)))
+
+        hash_model_from_bits = {
+            8: Hash8Bits,
+            16: Hash16Bits,
+            32: Hash32Bits,
+            64: Hash64Bits,
+        }
+
+        hashes = {algorithm: {} for algorithm in Hash.Algorithm}
+
+        for size in [8, 16, 32, 64]:
+            for algorithm in [
+                (Hash.Algorithm.PERCEPTUAL, imagehash.phash),
+                (Hash.Algorithm.AVERAGE, imagehash.average_hash),
+                (Hash.Algorithm.DIFERENTIAL, imagehash.dhash),
+                (Hash.Algorithm.WAVELET, imagehash.whash),
+            ]:
+                bits = hash_to_bits(algorithm[1](img, hash_size=size))
+                print(bits) if not isinstance(bits, str) else None
+                new_hash, _ = hash_model_from_bits[size].objects.update_or_create(
+                    bits=bits,
+                    algorithm=algorithm[0],
+                )
+                hashes[algorithm[0]][size] = new_hash
+
+        for algorithm in Hash.Algorithm:
+            for size in [8, 16, 32, 64]:
+                new_hash = hashes[algorithm][size]
+                getattr(self, f"hashes_{size}bits").add(new_hash)
+
+        self.downloaded = True
+
+        if save:
+            self.save()
+
+        return True, None
+
 
 class Hash(models.Model):
-    class HashingMethod(models.IntegerChoices):
+    class Algorithm(models.IntegerChoices):
         PERCEPTUAL = 0, "Perceptual"
         AVERAGE = 1, "Average"
         DIFERENTIAL = 2, "Differential"
@@ -63,25 +142,85 @@ class Hash(models.Model):
     class Meta:
         verbose_name = "Hash"
         verbose_name_plural = "Hashes"
+        abstract = True
+
+    algorithm = models.IntegerField(
+        choices=Algorithm.choices, default=Algorithm.PERCEPTUAL
+    )
+
+    def __str__(self):
+        return str(self.bits)
+
+
+class Hash8Bits(Hash):
+    class Meta:
+        verbose_name = "Hash (8^2 Bits)"
+        verbose_name_plural = "Hashes (8^2 Bits)"
         indexes = [
             BTreeIndex(
-                "bits",
-                condition=models.Q(
-                    models.Q(Func("bits", function="BIT_LENGTH") == 2 ** (i // 4 + 3))
-                    and models.Q(method=i % 4)
-                ),
-                name="hash_{}_{}_idx".format(i % 4, 2 ** (i // 4 + 3)),
+                ["bits"],
+                condition=models.Q(algorithm=algorithm),
+                name=f"hash8_{algorithm}_idx",
             )
-            for i in range(
-                4 * 4
-            )  # {amount of different hash sizes, in this case 8, 16, 32, and 64} * {amount of different hashing methods, 0, 1, 2, and 3}
+            for algorithm in range(len(Hash.Algorithm.choices))
         ]
 
     bits = BitField(
-        max_length=4096, unique=True, null=False, blank=False, primary_key=True
+        max_length=8**2, null=False, blank=False, db_index=True
     )
-    method = models.IntegerField(
-        choices=HashingMethod.choices, default=HashingMethod.PERCEPTUAL
+
+
+class Hash16Bits(Hash):
+    class Meta:
+        verbose_name = "Hash (16^2 Bits)"
+        verbose_name_plural = "Hashes (16^2 Bits)"
+        indexes = [
+            BTreeIndex(
+                ["bits"],
+                condition=models.Q(algorithm=algorithm),
+                name=f"hash16_{algorithm}_idx",
+            )
+            for algorithm in range(len(Hash.Algorithm.choices))
+        ]
+
+    bits = BitField(
+        max_length=16**2, null=False, blank=False, db_index=True
+    )
+
+
+class Hash32Bits(Hash):
+    class Meta:
+        verbose_name = "Hash (32^2 Bits)"
+        verbose_name_plural = "Hashes (32^2 Bits)"
+        indexes = [
+            BTreeIndex(
+                ["bits"],
+                condition=models.Q(algorithm=algorithm),
+                name=f"hash32_{algorithm}_idx",
+            )
+            for algorithm in range(len(Hash.Algorithm.choices))
+        ]
+
+    bits = BitField(
+        max_length=32**2, null=False, blank=False, db_index=True
+    )
+
+
+class Hash64Bits(Hash):
+    class Meta:
+        verbose_name = "Hash (64^2 Bits)"
+        verbose_name_plural = "Hashes (64^2 Bits)"
+        indexes = [
+            BTreeIndex(
+                ["bits"],
+                condition=models.Q(algorithm=algorithm),
+                name=f"hash64_{algorithm}_idx",
+            )
+            for algorithm in range(len(Hash.Algorithm.choices))
+        ]
+
+    bits = BitField(
+        max_length=64**2, null=False, blank=False, db_index=True
     )
 
 
@@ -92,23 +231,3 @@ class Source(models.Model):
 
     def __str__(self):
         return self.name
-
-
-class Artist(models.Model):
-    names = ArrayField(
-        models.CharField(max_length=255, null=False), db_index=True, blank=True
-    )
-    links = ArrayField(models.URLField(max_length=255, null=False), blank=False)
-    tags = ArrayField(
-        models.CharField(max_length=255, null=False, blank=True),
-        default=list,
-        db_index=True,
-        blank=False,
-    )
-    sauces = models.ManyToManyField("Sauce", related_name="artists", blank=True)
-
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return self.names[0]

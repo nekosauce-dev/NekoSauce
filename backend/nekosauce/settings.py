@@ -141,6 +141,11 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Celery Configuration Options
+CELERY_BROKER_URL = "redis://" + ("redis" if not DEBUG else "localhost") + ":6379"
+CELERY_RESULT_BACKEND = "redis://" + ("redis" if not DEBUG else "localhost") + ":6379"
 CELERY_TIMEZONE = "America/Argentina/Buenos_Aires"
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
+CELERY_TASK_ROUTES = {
+    "sauces.tasks.calc_hashes": {"queue": "default"},
+}

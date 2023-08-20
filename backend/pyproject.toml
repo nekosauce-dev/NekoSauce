@@ -21,6 +21,7 @@ bitstring = "^4.0.2"
 django-polymorphic = "^3.1.0"
 celery = {extras = ["redis"], version = "^5.3.1"}
 django-celery-beat = "^2.5.0"
+imagehash = "^4.3.1"
 
 
 [build-system]

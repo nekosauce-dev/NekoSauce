@@ -2,7 +2,7 @@ import io
 import typing
 import urllib.parse
 
-from django.models import Q
+from django.db.models import Q
 
 import grequests
 import requests
@@ -10,7 +10,7 @@ import requests
 import validators
 
 from sauces import sources
-from sauces.models import Sauce, Source, Artist
+from sauces.models import Sauce, Source
 
 
 class DanbooruFetcher(sources.BaseFetcher):
@@ -24,36 +24,6 @@ class DanbooruFetcher(sources.BaseFetcher):
 
     def get_sauce_request(self, id: str) -> grequests.AsyncRequest:
         return self.request("GET", f"/posts/{id}.json")
-
-    def _get_sauce_from_response(self, post: dict) -> Sauce:
-        site_urls = (
-            [f"https://danbooru.donmai.us/posts/{post['id']}"]
-            + (
-                [f"https://www.pixiv.net/artworks/{post['pixiv_id']}"]
-                if post["pixiv_id"]
-                else []
-            )
-            + ([post["source"]] if post["source"] else [])
-        )
-
-        sauce, created = Sauce.objects.get_or_create(
-            tags__overlap=[f"danbooru:post:id:{post['id']}"],
-            defaults={
-                "title": f"Artwork from Danbooru #{post['id']} - {post['file_url'].split('/')[-1] if 'file_url' in post else 'Unknown filename'}",
-                "site_urls": site_urls,
-                "api_urls": [f"https://danbooru.donmai.us/posts/{post['id']}.json"],
-                "file_urls": [
-                    post["file_url"] if "file_url" in post else post["source"]
-                ],
-                "source": self.source,
-                "source_site_id": post["id"],
-                "tags": sources.get_tags(site_urls),
-                "height": post["image_height"],
-                "width": post["image_width"],
-            },
-        )
-
-        return sauce
 
     def _get_new_sauce_from_response(self, post: dict) -> Sauce:
         site_urls = (
@@ -70,10 +40,14 @@ class DanbooruFetcher(sources.BaseFetcher):
             title=f"Artwork from Danbooru #{post['id']} - {post['file_url'].split('/')[-1] if 'file_url' in post else 'Unknown filename'}",
             site_urls=site_urls,
             api_urls=[f"https://danbooru.donmai.us/posts/{post['id']}.json"],
-            file_urls=[post["file_url"] if "file_url" in post else post["source"]],
+            file_urls=[post.get("file_url", post["source"])],
             source=self.source,
             source_site_id=post["id"],
-            tags=sources.get_tags(site_urls)
+            tags=sources.get_tags(site_urls + (
+                [post.get("source")] if validators.url(post.get("source")) else []
+            ) + (
+                [f"https://www.pixiv.net/artworks/{post.get('pixiv_id')}"] if post.get("pixiv_id") else []
+            ))
             + (
                 [
                     f"danbooru:artist:name:{urllib.parse.quote_plus(post['tag_string_artist'])}"
@@ -145,30 +119,32 @@ class DanbooruFetcher(sources.BaseFetcher):
         return sauce.file_urls[0]
 
     def get_sauces_iter(self, start_from) -> typing.Iterator[Sauce]:
-        if isinstance(start_from, Sauce) or not start_from.isnumeric():
+        if start_from is not None and (isinstance(start_from, Sauce) or not start_from.isnumeric()):
             page = (
                 f"a{start_from.source_site_id}"
                 if isinstance(start_from, Sauce)
                 else start_from
             )
+            ids = list(range(int(page[1:]) % 200, int(page[1:]), 200))
+            ids.reverse()
             reqs = [
                 self.request(
                     "GET",
-                    self.get_url("/posts.json?page=b{page}&limit=200".format(page=i)),
+                    "/posts.json?page=b{page}&limit=200".format(page=i),
                 )
-                for i in range(int(page[1:]), 7000000, 200)
+                for i in ids
             ]
         else:
-            page = int(start_from)
+            page = int(start_from) if start_from is not None else 1
             reqs = [
                 self.request(
                     "GET",
-                    self.get_url("/posts.json?page={page}&limit=200".format(page=i)),
+                    "/posts.json?page={page}&limit=200".format(page=i),
                 )
                 for i in range(page, 100000)
             ]
 
-        for response in grequests.imap(
+        for index, response in grequests.imap_enumerated(
             reqs,
             size=self.async_reqs,
         ):
@@ -193,11 +169,10 @@ class DanbooruFetcher(sources.BaseFetcher):
 
 class DanbooruDownloader(sources.BaseFetcher):
     fetcher = DanbooruFetcher
+    site_name = "Danbooru"
 
-    def check_url(url: str) -> bool:
-        parsed_url = urllib.parse.urlparse(url)
-        splitted_domain = parsed_url.netloc.split(".")
-        return f"{splitted_domain[-2]}.{splitted_domain[-1]}" == "donmai.us"
+    def check_url(self, url: str) -> bool:
+        return url.startswith("https://danbooru.donmai.us") or url.startswith("https://cdn.donmai.us")
 
     def get_sauce_id(url: str) -> str:
         return urllib.parse.urlparse(url).path.split("/")[-1].split(".")[0]
@@ -208,14 +183,14 @@ class DanbooruDownloader(sources.BaseFetcher):
 
         return grequests.get(url)
 
-    def download(self, url: str) -> io.BytesIO:
+    def download(self, url: str) -> bytes:
         if urllib.parse.urlparse(url).netloc == "danbooru.donmai.us":
             url = self.fetcher.get_file_url(DanbooruDownloader.get_sauce_id(url))
 
         r = requests.get(url)
         r.raise_for_status()
 
-        return io.BytesIO(r.content)
+        return r.content
 
 
 class DanbooruTagger(sources.BaseTagger):
@@ -228,12 +203,4 @@ class DanbooruTagger(sources.BaseTagger):
     get_value = lambda self, url: url.path.split("/")[2].split(".")[0]
 
     def check_url(self, url: str) -> bool:
-        try:
-            parsed_url = urllib.parse.urlparse(url)
-            splitted_domain = parsed_url.netloc.split(".")
-            return (
-                f"{splitted_domain[-2]}.{splitted_domain[-1]}" == "donmai.us"
-                and parsed_url.path.startswith("/posts/")
-            )
-        except Exception as e:
-            return False
+        return url.startswith("https://danbooru.donmai.us")

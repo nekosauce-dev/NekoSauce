@@ -93,7 +93,7 @@ export default function Home() {
                     <FaqItem
                         title="What are hashes, bits, and all those alien words?"
                         description={
-                            "These are things you can adjust to make the search results better or faster. Hashing methods are usually don't affect normal users so the default value should work for most use cases. Bits define how detailed the match will be; the more bits the more precise the match will be. However, more bits can also make the search take longer since more details are taken into account when making the search. Lower bit counts will return not-as-precise results but they'll be faster and it usually works better if you have lower quality images."
+                            "These are things you can adjust to make the search results better or faster. Hashing algorithms are usually don't affect normal users so the default value should work for most use cases. Bits define how detailed the match will be; the more bits the more precise the match will be. However, more bits can also make the search take longer since more details are taken into account when making the search. Lower bit counts will return not-as-precise results but they'll be faster and it usually works better if you have lower quality images."
                         }
                     />
                     <FaqItem

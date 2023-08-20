@@ -3,8 +3,10 @@ from django.contrib import admin
 from sauces.models import (
     Sauce,
     Source,
-    Hash,
-    Artist
+    Hash8Bits,
+    Hash16Bits,
+    Hash32Bits,
+    Hash64Bits,
 )
 
 # Register your models here.
@@ -15,8 +17,13 @@ class SauceAdmin(admin.ModelAdmin):
     list_display = ("title", "source", "downloaded", "height", "width")
     list_filter = ("downloaded", "source")
     search_fields = ("title", "source")
-    autocomplete_fields = ["hashes"]
-    
+    autocomplete_fields = [
+        "hashes_8bits",
+        "hashes_16bits",
+        "hashes_32bits",
+        "hashes_64bits",
+    ]
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.readonly_fields = [f.name for f in self.model._meta.get_fields()]
@@ -27,15 +34,13 @@ class SourceAdmin(admin.ModelAdmin):
     list_display = ("name", "website", "api_docs")
 
 
-@admin.register(Hash)
 class HashAdmin(admin.ModelAdmin):
-    list_display = ("bits", "method")
-    list_filter = ("method",)
+    list_display = ("bits", "algorithm")
+    list_filter = ("algorithm",)
     search_fields = ("bits",)
 
 
-@admin.register(Artist)
-class ArtistAdmin(admin.ModelAdmin):
-    list_display = ("names", "tags")
-    search_fields = ("names","tags")
-    horizontal_filters = ("sauces",)
+admin.site.register(Hash8Bits, HashAdmin)
+admin.site.register(Hash16Bits, HashAdmin)
+admin.site.register(Hash32Bits, HashAdmin)
+admin.site.register(Hash64Bits, HashAdmin)
