@@ -45,7 +45,7 @@ export default function Home() {
                             >
                                 <option value="1">Perceptual</option>
                                 <option value="2">Average</option>
-                                <option value="3">Diferential</option>
+                                <option value="3">Differential</option>
                             </select>
                             <ChevronDownIcon className="w-3 h-3" />
                         </div>

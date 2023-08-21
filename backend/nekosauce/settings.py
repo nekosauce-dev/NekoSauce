@@ -32,6 +32,7 @@ SECRET_KEY = os.getenv(
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", "False") == "True"
+VERSION = os.getenv("VERSION", "0.0.0")
 
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "127.0.0.1 localhost").split(" ")
 
@@ -160,4 +161,5 @@ REST_FRAMEWORK = {
     "DEFAULT_RENDERER_CLASSES": [
         "rest_framework.renderers.JSONRenderer",
     ],
+    'EXCEPTION_HANDLER': 'nekosauce.exceptions.exception_handler'
 }

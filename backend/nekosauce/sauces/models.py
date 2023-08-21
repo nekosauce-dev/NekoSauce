@@ -10,21 +10,9 @@ from PIL import Image
 import imagehash
 
 from nekosauce.sauces.utils.fields import BitField
+from nekosauce.sauces.utils.hashing import hash_to_bits
 
 # Create your models here.
-
-
-def hash_to_bits(hash):
-    bits = ""
-    for row in hash.hash:
-        bits += "".join(["1" if bit else "0" for bit in row])
-    return bits
-
-
-def bit_padding(bits: str, padding: int):
-    for i in range(padding):
-        bits += "0"
-    return bits
 
 
 class Sauce(models.Model):
@@ -108,7 +96,7 @@ class Sauce(models.Model):
             for algorithm in [
                 (Hash.Algorithm.PERCEPTUAL, imagehash.phash),
                 (Hash.Algorithm.AVERAGE, imagehash.average_hash),
-                (Hash.Algorithm.DIFERENTIAL, imagehash.dhash),
+                (Hash.Algorithm.DIFFERENTIAL, imagehash.dhash),
                 (Hash.Algorithm.WAVELET, imagehash.whash),
             ]:
                 bits = hash_to_bits(algorithm[1](img, hash_size=size))
@@ -136,7 +124,7 @@ class Hash(models.Model):
     class Algorithm(models.IntegerChoices):
         PERCEPTUAL = 0, "Perceptual"
         AVERAGE = 1, "Average"
-        DIFERENTIAL = 2, "Differential"
+        DIFFERENTIAL = 2, "Differential"
         WAVELET = 3, "Wavelet"
 
     class Meta:
