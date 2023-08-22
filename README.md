@@ -6,10 +6,7 @@ An anime art source finder.
 The project is small but uses a bunch of different tools to handle different things.
 
 **Database**: PostgreSQL
-**Backend (API)**: Django. Other important dependencies:
-  - Django Rest Framework
-  - Celery
-  - ImageHash
+**Backend (API)**: Django.
 **Frontend**: Next.js + TailwindCSS
 **Message Broker**: RabbitMQ (used together with celery to update the database with new sauces)
 **Cache**: Redis (Rate limits, general caching)
