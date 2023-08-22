@@ -17,7 +17,6 @@ class Command(BaseCommand):
         parser.add_argument("source", type=str)
         parser.add_argument("--start-from", type=str, default="last")
         parser.add_argument("--async-reqs", type=int, default=3)
-        parser.add_argument("--calc-hashes", type=bool, default=False)
 
     def handle(self, *args, **options):
         fetcher_class = get_fetcher(options["source"].lower())
@@ -34,18 +33,21 @@ class Command(BaseCommand):
 
         self.stdout.write(
             f"Fetching sauces from {source.name}"
-            + (" (and calculating hashes)" if options["calc_hashes"] else "")
             + (f", starting from page {start_from}" if start_from else "")
         )
+
+        loaded_ids = []
 
         for sauce in fetcher.get_sauces_iter(
             start_from=start_from
             if start_from and (start_from.isnumeric() or start_from[1:].isnumeric())
             else fetcher.last_sauce,
         ):
+            if sauce.source_site_id in loaded_ids:
+                break
+
+            loaded_ids.append(sauce.source_site_id)
             self.stdout.write(
                 self.style.SUCCESS(f"ADDED")
                 + f": {sauce.source_site_id} - {sauce.title}"
             )
-            if options["calc_hashes"]:
-                calc_hashes.delay(sauce.id)

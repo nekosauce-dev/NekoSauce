@@ -9,6 +9,7 @@ services:
     depends_on:
       - database
       - redis
+      - rabbitmq
     environment:
       WORKERS: 4
   frontend:
@@ -38,6 +39,19 @@ services:
       - "6379:6379"
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+  rabbitmq:
+    image: rabbitmq:alpine
+    environment:
+      RABBITMQ_DEFAULT_USER: nekosauce
+      RABBITMQ_DEFAULT_PASS: nekosauce
+    ports:
+      - "5672:5672"
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
       interval: 1m30s
       timeout: 30s
       retries: 5

@@ -13,11 +13,18 @@ from nekosauce.sauces.models import Sauce, Source
 
 
 def get_fetcher(name: str) -> "BaseFetcher":
-    match name.lower():
-        case "danbooru":
-            from nekosauce.sauces.sources.danbooru import DanbooruFetcher
+    from nekosauce.sauces.sources.danbooru import DanbooruFetcher
+    from nekosauce.sauces.sources.gelbooru import GelbooruFetcher
 
-            return DanbooruFetcher
+    fetchers = [
+        DanbooruFetcher,
+        GelbooruFetcher,
+    ]
+
+    for fetcher in fetchers:
+        if fetcher.site_name.lower() == name.lower():
+            return fetcher
+
     return None
 
 
@@ -31,9 +38,11 @@ def get_downloader(url: str) -> "BaseDownloader":
         _type_: Downloader
     """
     from nekosauce.sauces.sources.danbooru import DanbooruDownloader
+    from nekosauce.sauces.sources.gelbooru import GelbooruDownloader
 
     downloaders = [
         DanbooruDownloader,
+        GelbooruDownloader,
     ]
 
     for downloader in downloaders:
@@ -53,10 +62,12 @@ def get_tags(links: typing.List[str]) -> typing.List[str]:
         typing.List[str]: List of tags.
     """
     from nekosauce.sauces.sources.danbooru import DanbooruTagger
+    from nekosauce.sauces.sources.gelbooru import GelbooruTagger
     from nekosauce.sauces.sources.pixiv import PixivTagger
 
     taggers = [
         DanbooruTagger(),
+        GelbooruTagger(),
         PixivTagger(),
     ]
 
@@ -124,7 +135,7 @@ class BaseFetcher:
             str: The URL
         """
         if self.base_url:
-            return f"{self.base_url}{path}"
+            return f"{self.base_url}{path}&api_key={self.credentials['pass']}&user_id={self.credentials['user']}"
 
         raise NotImplementedError(
             "You need to implement either the `get_url()` algorithm or set the `base_url` attribute."

@@ -122,7 +122,7 @@ class DanbooruFetcher(sources.BaseFetcher):
         sauce = self.get_sauce(id)
         return sauce.file_urls[0]
 
-    def get_sauces_iter(self, start_from) -> typing.Iterator[Sauce]:
+    def get_sauces_iter(self, start_from = None) -> typing.Iterator[Sauce]:
         if start_from is not None and (
             isinstance(start_from, Sauce) or not start_from.isnumeric()
         ):

@@ -15,13 +15,11 @@ psycopg2-binary = "^2.9.7"
 requests = "^2.31.0"
 python-dotenv = "^1.0.0"
 validators = "^0.21.2"
-aiohttp = {extras = ["speedup"], version = "^3.8.5"}
 grequests = "^0.7.0"
-bitstring = "^4.0.2"
-django-polymorphic = "^3.1.0"
-celery = {extras = ["redis"], version = "^5.3.1"}
+celery = {extras = ["librabbitmq"], version = "^5.3.1"}
 django-celery-beat = "^2.5.0"
 imagehash = "^4.3.1"
+redis = "^5.0.0"
 
 
 [build-system]

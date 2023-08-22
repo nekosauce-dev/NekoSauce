@@ -16,7 +16,7 @@ from nekosauce.sauces.models import (
 class SauceAdmin(admin.ModelAdmin):
     list_display = ("title", "source", "downloaded", "height", "width")
     list_filter = ("downloaded", "source")
-    search_fields = ("title", "source")
+    search_fields = ("title", "source__name")
     autocomplete_fields = [
         "hashes_8bits",
         "hashes_16bits",

@@ -8,10 +8,18 @@ logging = get_task_logger("nekosauce")
 
 
 @shared_task
-def calc_hashes(sauce_id: int, replace: bool = True):
-    logging.info(f"Started calculating hashes for sauce: {sauce_id}")
+def calc_hashes(sauce_id: int, img_bytes: bytes, replace: bool = True):
     sauce = Sauce.objects.get(id=sauce_id)
-    success, error_msg = sauce.calc_hashes()
-    logging.info(
-        f"Finished calculating hashes for sauce: {sauce_id}. Success: {success}"
-    )
+    sauce.calc_hashes(img_bytes)
+
+
+@shared_task
+def update_sauces(source: str):
+    from nekosauce.sauces.management.commands.updatesauces import Command
+    Command().handle(source=source, async_reqs=3, start_from="last")
+
+
+@shared_task
+def update_hashes():
+    from nekosauce.sauces.management.commands.updatehashes import Command
+    Command().handle(limit=10000, async_reqs=3)
