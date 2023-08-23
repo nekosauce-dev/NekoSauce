@@ -17,8 +17,8 @@ def get_all_fetchers():
     from nekosauce.sauces.sources.gelbooru import GelbooruFetcher
     
     return [
-        DanbooruFetcher,
         GelbooruFetcher,
+        DanbooruFetcher,
     ]
 
 
