@@ -1,0 +1,67 @@
+version: "3.8"
+name: "nekosauce"
+services:
+  backend:
+    build: ./src/backend
+    command: "/bin/sh -c \"/app/run.sh\""
+    depends_on:
+      - database
+      - redis
+      - rabbitmq
+    environment:
+      WORKERS: 4
+    volumes:
+      - static:/static
+    restart: always
+  frontend:
+    build: ./src/frontend
+    command: "npm run start"
+  database:
+    build: ./src/database
+    environment:
+      - POSTGRES_USER=nekosauce
+      - POSTGRES_PASSWORD=nekosauce
+      - POSTGRES_DB=nekosauce
+    volumes:
+      - database:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-q", "-d", "nekosauce", "-U", "nekosauce"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+  redis:
+    image: redis:alpine
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+  rabbitmq:
+    image: rabbitmq:alpine
+    environment:
+      RABBITMQ_DEFAULT_USER: nekosauce
+      RABBITMQ_DEFAULT_PASS: nekosauce
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+  nginx:
+    image: nginx:1-alpine
+    depends_on:
+      - backend
+      - frontend
+    volumes:
+      - static:/static
+      - ./src/nginx/nekosauce-prod.conf:/etc/nginx/conf.d/default.conf
+      - ./src/nginx/certs:/etc/nginx/certs
+      - ./src/nginx/errors:/etc/nginx/errors
+    ports:
+      - "80:80"
+      - "443:443"
+volumes:
+  database:
+  static:

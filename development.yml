@@ -9,13 +9,17 @@ services:
       - redis
       - rabbitmq
     environment:
-      WORKERS: 4
+      WORKERS: 1
+    ports:
+      - "8000:8000"
     volumes:
       - static:/static
     restart: always
   frontend:
     build: ./src/frontend
     command: "npm run start"
+    ports:
+      - "3000:3000"
   database:
     build: ./src/database
     environment:
@@ -30,6 +34,8 @@ services:
       timeout: 30s
       retries: 5
       start_period: 30s
+    ports:
+      - "5432:5432"
   redis:
     image: redis:alpine
     healthcheck:
@@ -38,6 +44,8 @@ services:
       timeout: 30s
       retries: 5
       start_period: 30s
+    ports:
+      - "6379:6379"
   rabbitmq:
     image: rabbitmq:alpine
     environment:
@@ -49,6 +57,8 @@ services:
       timeout: 30s
       retries: 5
       start_period: 30s
+    ports:
+      - "5672:5672"
   nginx:
     image: nginx:1-alpine
     depends_on:
@@ -56,9 +66,7 @@ services:
       - frontend
     volumes:
       - static:/static
-      - ./src/nginx/nekosauce.conf:/etc/nginx/conf.d/default.conf
-      - ./src/nginx/certs:/etc/nginx/certs
-      - ./src/nginx/errors:/etc/nginx/errors
+      - ./src/nginx/nekosauce-dev.conf:/etc/nginx/conf.d/default.conf
     ports:
       - "80:80"
       - "443:443"
