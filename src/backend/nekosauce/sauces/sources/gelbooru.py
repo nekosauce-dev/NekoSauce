@@ -92,7 +92,7 @@ class GelbooruFetcher(sources.BaseFetcher):
     def get_sauces_iter(self, start_from=None):
         count = grequests.map(
             [self.request("GET", "/index.php?page=dapi&q=index&json=1&s=post&limit=1")]
-        )[0].json()["@attributes"]["count"]
+        )[0].json()["post"][0]["id"]
         last = 0
 
         if isinstance(start_from, Sauce):
@@ -119,6 +119,10 @@ class GelbooruFetcher(sources.BaseFetcher):
                 ignore_conflicts=True,
             )
             yield from new_sauces
+
+            for sauce in new_sauces:
+                if sauce.source_site_id == str(count):
+                    return
 
 
 class GelbooruDownloader(sources.BaseFetcher):

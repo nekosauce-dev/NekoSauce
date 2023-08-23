@@ -123,6 +123,8 @@ class DanbooruFetcher(sources.BaseFetcher):
         return sauce.file_urls[0]
 
     def get_sauces_iter(self, start_from = None) -> typing.Iterator[Sauce]:
+        greatest_id = requests.get("https://danbooru.donmai.us/posts.json").json()[0]["id"]
+
         if start_from is not None and (
             isinstance(start_from, Sauce) or not start_from.isnumeric()
         ):
@@ -171,6 +173,10 @@ class DanbooruFetcher(sources.BaseFetcher):
                 ignore_conflicts=True,
             )
             yield from new_sauces
+
+            for sauce in new_sauces:
+                if sauce.source_site_id == str(greatest_id):
+                    return
 
 
 class DanbooruDownloader(sources.BaseFetcher):

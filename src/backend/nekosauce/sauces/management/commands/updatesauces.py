@@ -27,15 +27,9 @@ class Command(BaseCommand):
                 f"\nFetching sauces from {source.name}"
             )
 
-            loaded_ids = []
-
             for sauce in fetcher.get_sauces_iter(
                 start_from=fetcher.last_sauce,
             ):
-                if sauce.source_site_id in loaded_ids:
-                    break
-
-                loaded_ids.append(sauce.source_site_id)
                 self.stdout.write(
                     self.style.SUCCESS(f"ADDED")
                     + f": ({source.name}) {sauce.source_site_id} - {sauce.title}"
