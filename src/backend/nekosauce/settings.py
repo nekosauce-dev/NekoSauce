@@ -54,8 +54,8 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    "nekosauce.middleware.DisableCSRFMiddleware",
     "django.middleware.security.SecurityMiddleware",
+    "nekosauce.middleware.DisableCSRFMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     # "django.middleware.csrf.CsrfViewMiddleware",
