@@ -16,11 +16,11 @@ cd /app
 python manage.py migrate
 
 # Start Gunicorn with specified workers and binding address
-gunicorn -w $WORKERS -b 0.0.0.0:8000 nekosauce.wsgi:application &
+gunicorn -w $GUNICORN_WORKERS -b 0.0.0.0:8000 nekosauce.wsgi:application &
 gunicorn_pid=$!
 
 # Start Celery worker with gevent pool and concurrency of 4
-celery -A nekosauce worker -l INFO -P gevent -c 4 &
+celery -A nekosauce worker -l INFO -P gevent -c $CELERY_WORKERS &
 celery_worker_pid=$!
 
 # Start Celery beat scheduler with DatabaseScheduler

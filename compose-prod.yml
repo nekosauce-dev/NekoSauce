@@ -9,7 +9,8 @@ services:
       - redis
       - rabbitmq
     environment:
-      WORKERS: 4
+      GUNICORN_WORKERS: 4
+      CELERY_WORKERS: 1
     env_file:
       - ./config/backend.env
     volumes:
