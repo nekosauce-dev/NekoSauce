@@ -64,6 +64,8 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
+CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS", "127.0.0.1 localhost").split(" ")
+
 ROOT_URLCONF = "nekosauce.urls"
 
 TEMPLATES = [
