@@ -1,6 +1,7 @@
 "use client";
 
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
+import Link from "next/link";
 import React from "react";
 
 export default function Home() {
@@ -62,7 +63,7 @@ export default function Home() {
                         drop a file!
                     </p>
                 </div> */}
-                <div className="mt-8 mb-4">
+                <div className="mt-12 mb-4">
                     <h1 className="font-bold text-center text-3xl">Frequently Asked Questions</h1>
                 </div>
                 <div className="flex flex-col gap-4">
@@ -88,6 +89,17 @@ export default function Home() {
                     <FaqItem
                         title="How frequently are sauces updated?"
                         description="Sauces are updated every 30 minutes. They're currently being updated even if the project is not released to public, so that when the release comes the database is full of sauces :)" />
+                </div>
+                <div className="mt-12 mb-4 flex flex-col items-center justify-center gap-4">
+                    <Link className="underline" href="https://ko-fi.com/nekidev">Donate now! (Objective: 25$ USD per month)</Link>
+                    <div className="flex flex-row items-center gap-2">
+                        <div className="relative w-80 h-4 rounded-full bg-neutral-200">
+                            <div className="absolute h-4 left-0 top-0 bottom-0 w-[calc(((100/25)*4)*1%)] bg-rose-500 rounded-full text-xs text-white font-bold text-center flex flex-col items-center justify-center">
+                                16%
+                            </div>
+                        </div>
+                        25$
+                    </div>
                 </div>
             </div>
         </main>
