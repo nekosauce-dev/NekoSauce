@@ -36,6 +36,10 @@ class Command(BaseCommand):
             reqs.append(downloader().download_request(url))
 
         for index, response in grequests.imap_enumerated(reqs, size=options["async_reqs"]):
+            if response is None:
+                # Failed downloading the image
+                continue
+
             sauce = sauces[index]
 
             calc_hashes.delay(sauce.id, response.content, False)
