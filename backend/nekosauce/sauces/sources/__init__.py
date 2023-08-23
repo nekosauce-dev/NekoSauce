@@ -12,14 +12,18 @@ import requests
 from nekosauce.sauces.models import Sauce, Source
 
 
-def get_fetcher(name: str) -> "BaseFetcher":
+def get_all_fetchers():
     from nekosauce.sauces.sources.danbooru import DanbooruFetcher
     from nekosauce.sauces.sources.gelbooru import GelbooruFetcher
-
-    fetchers = [
+    
+    return [
         DanbooruFetcher,
         GelbooruFetcher,
     ]
+
+
+def get_fetcher(name: str) -> "BaseFetcher":
+    fetchers = get_all_fetchers()
 
     for fetcher in fetchers:
         if fetcher.site_name.lower() == name.lower():

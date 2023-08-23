@@ -4,23 +4,20 @@ services:
   backend:
     build: ./backend
     command: "/bin/sh -c \"/app/run.sh\""
-    ports:
-      - "8080:8080"
     depends_on:
       - database
       - redis
       - rabbitmq
     environment:
       WORKERS: 4
+    volumes:
+      - static:/static
+    restart: always
   frontend:
     build: ./frontend
     command: "npm run start"
-    ports:
-      - "3000:3000"
   database:
     build: ./database
-    ports:
-      - "5432:5432"
     environment:
       - POSTGRES_USER=nekosauce
       - POSTGRES_PASSWORD=nekosauce
@@ -35,8 +32,6 @@ services:
       start_period: 30s
   redis:
     image: redis:alpine
-    ports:
-      - "6379:6379"
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 1m30s
@@ -48,13 +43,22 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER: nekosauce
       RABBITMQ_DEFAULT_PASS: nekosauce
-    ports:
-      - "5672:5672"
     healthcheck:
       test: ["CMD", "rabbitmqctl", "status"]
       interval: 1m30s
       timeout: 30s
       retries: 5
       start_period: 30s
+  nginx:
+    build: ./nginx
+    depends_on:
+      - backend
+      - frontend
+    volumes:
+      - static:/static
+    ports:
+      - "80:80"
+      - "443:443"
 volumes:
   database:
+  static:

@@ -21,9 +21,9 @@ def exception_handler(exc, context):
             {
                 "errors": [
                     {
-                        "code": exc.default_code,
+                        "status": exc.default_code,
                         "message": exc.detail,
-                        "status": exc.status_code,
+                        "code": exc.status_code,
                     }
                 ]
             },
