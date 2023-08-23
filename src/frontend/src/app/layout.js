@@ -15,7 +15,7 @@ const NunitoSans = Nunito_Sans({
 })
 
 export const metadata = {
-    title: "NekoSauce - Anime/manga art sauce finder",
+    title: "NekoSauce - Anime and Manga Sauce Finder",
     description: "Find your anime/manga art sauce!",
 };
 
