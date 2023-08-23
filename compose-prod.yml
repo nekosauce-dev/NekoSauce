@@ -20,6 +20,7 @@ services:
     command: "npm run start"
     env_file:
       - ./config/frontend.env
+    restart: always
   database:
     build: ./src/database
     environment:
@@ -34,6 +35,7 @@ services:
       timeout: 30s
       retries: 5
       start_period: 30s
+    restart: always
   redis:
     image: redis:alpine
     healthcheck:
@@ -42,6 +44,7 @@ services:
       timeout: 30s
       retries: 5
       start_period: 30s
+    restart: always
   rabbitmq:
     image: rabbitmq:alpine
     environment:
@@ -53,6 +56,7 @@ services:
       timeout: 30s
       retries: 5
       start_period: 30s
+    restart: always
   nginx:
     image: nginx:1-alpine
     depends_on:
@@ -66,6 +70,7 @@ services:
     ports:
       - "80:80"
       - "443:443"
+    restart: always
 volumes:
   database:
   static:
