@@ -156,7 +156,7 @@ class GelbooruTagger(sources.BaseTagger):
     source_domain = "gelbooru.com"
     resources = ["post", "tag"]
 
-    get_resource = lambda self, url: urllib.parse.parse_qs(url.query)["page"][0]
+    get_resource = lambda self, url: urllib.parse.parse_qs(url.query).get("page", ["unknown"])[0]
     get_property = lambda self, url: "id"
     get_value = lambda self, url: urllib.parse.parse_qs(url.query).get("id", ["unknown"])[0]
 

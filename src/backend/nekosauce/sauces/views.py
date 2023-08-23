@@ -42,6 +42,7 @@ class SearchView(APIView):
                 serializer.validated_data.get("url"),
                 headers={"User-Agent": f"NekoSauce/{settings.VERSION}"},
                 stream=True,
+                timeout=5
             )
 
             try:
