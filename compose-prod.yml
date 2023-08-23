@@ -10,12 +10,16 @@ services:
       - rabbitmq
     environment:
       WORKERS: 4
+    env_file:
+      - ./config/backend.env
     volumes:
       - static:/static
     restart: always
   frontend:
     build: ./src/frontend
     command: "npm run start"
+    env_file:
+      - ./config/frontend.env
   database:
     build: ./src/database
     environment:
