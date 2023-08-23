@@ -1,0 +1,9 @@
+{
+    "errors": [
+        {
+            "code": 500,
+            "message": "Oopsie! Seems like something went wrong. If you have some free time maybe you could contact us in our Discord server? Our neko devs will work on this soon if you do!",
+            "status": "internal_server_error"
+        }
+    ]
+}

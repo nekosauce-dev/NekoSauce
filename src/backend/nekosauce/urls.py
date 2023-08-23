@@ -20,7 +20,7 @@ from django.urls import path, include
 from nekosauce.views import IndexView
 
 urlpatterns = [
-    path("", IndexView.as_view()),
+    path("api", IndexView.as_view()),
+    path("api/", include("nekosauce.sauces.urls")),
     path("admin/", admin.site.urls),
-    path("", include("nekosauce.sauces.urls")),
 ]
