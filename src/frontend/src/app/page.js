@@ -5,7 +5,7 @@ import React from "react";
 
 export default function Home() {
     return (
-        <main className="flex flex-col items-center justify-center p-8 min-h-full selection:bg-rose-400 selection:text-white selection:rounded">
+        <main className="flex flex-col items-center justify-center py-8 px-4 min-h-full selection:bg-rose-400 selection:text-white selection:rounded">
             <div className="w-full max-w-md h-full flex flex-col gap-4">
                 <h1 className="font-caturday text-6xl leading-none text-center">
                     NekoSauce
@@ -13,28 +13,8 @@ export default function Home() {
                 <p className="text-center text-lg leading-normal text-neutral-600">
                     Find any anime/manga art's sauce!
                 </p>
-                <div className="my-12 flex flex-col gap-2 justify-self-center align-middle">
+                {/* <div className="my-12 flex flex-col gap-2 justify-self-center align-middle">
                     <div className="flex flex-row items-center gap-2 text-xs text-neutral-500 select-none">
-                        <div className="flex flex-row items-center gap-1">
-                            <input
-                                type="checkbox"
-                                className="accent-rose-500"
-                                id="crop-resistant"
-                                defaultValue={false}
-                            />
-                            <label for="crop-resistant">Crop resistant</label>
-                        </div>
-                        <span>/</span>
-                        <div className="flex flex-row items-center gap-1">
-                            <input
-                                type="checkbox"
-                                className="accent-rose-500"
-                                id="ignore-colors"
-                                defaultValue={true}
-                            />
-                            <label for="ignore-colors">Ignore colors</label>
-                        </div>
-                        <span>/</span>
                         <div div className="flex flex-row items-center gap-1">
                             <label for="hash" className="text-neutral-600">
                                 Hash:
@@ -46,6 +26,7 @@ export default function Home() {
                                 <option value="1">Perceptual</option>
                                 <option value="2">Average</option>
                                 <option value="3">Differential</option>
+                                <option value="4">Wavelet</option>
                             </select>
                             <ChevronDownIcon className="w-3 h-3" />
                         </div>
@@ -80,6 +61,9 @@ export default function Home() {
                         You can also paste a Reddit URL, a Twitter url, etc., or
                         drop a file!
                     </p>
+                </div> */}
+                <div className="mt-8 mb-4">
+                    <h1 className="font-bold text-center text-3xl">Frequently Asked Questions</h1>
                 </div>
                 <div className="flex flex-col gap-4">
                     <FaqItem
@@ -87,21 +71,23 @@ export default function Home() {
                         description="NekoSauce is an anime/manga art/screenshot sauce finder tool. It was made to help people find artists from their artworks, specifically targeting anime/manga art. It was made to help both users and developers who want to implement an API like this one in their apps."
                     />
                     <FaqItem
-                        title="Is it free?"
-                        description="All basic features are 100% free and will allow you to make up to 200 lookups per day. If you need more advanced features (transform resistance, more bits, more lookups per day, etc.) or just want to support this project, you can make a donation! You choose how much to contribute and it'll automatically enable all features for a month."
-                    />
+                        title="When will NekoSauce be released?"
+                        description="NekoSauce is ready to be launched! However, it's a project that requires a server with a lot of resources, which I'm not yet ready to pay for. If you want to, you can donate at https://ko-fi.com/nekidev to help this project be released sooner!" />
                     <FaqItem
-                        title="What are hashes, bits, and all those alien words?"
-                        description={
-                            "These are things you can adjust to make the search results better or faster. Hashing algorithms are usually don't affect normal users so the default value should work for most use cases. Bits define how detailed the match will be; the more bits the more precise the match will be. However, more bits can also make the search take longer since more details are taken into account when making the search. Lower bit counts will return not-as-precise results but they'll be faster and it usually works better if you have lower quality images."
-                        }
-                    />
+                        title="Where are the sauces taken from?"
+                        description="Currently, only Gelbooru and Danbooru are supported. I'm currently working to bring more sources in the future!" />
                     <FaqItem
-                        title="Manga pages always return incorrent results."
-                        description={
-                            "This is probably because you have used a low bit count (bits). For manga/doujinshi pages/screenshots/crops, it's better to have a higher bit count since they're almost all in black and white and therefore all images are \"similar\"."
-                        }
-                    />
+                        title="Why NekoSauce?"
+                        description="NekoSauce has a bunch of nice features that are not available in other sauce finders. Image tagging, fast queries and search customization are just a few of them!" />
+                    <FaqItem
+                        title="Is it open source?"
+                        description="Currently, it is not. However, I'm probably going to open source it in the future!" />
+                    <FaqItem
+                        title="Do I have to pay to use NekoSauce?"
+                        description="Absolutely not! This is definetly not a project intended to make money. This is just a hobby project I'm working on. However, since the project (and each query) consumes A LOT of resources, I'm not yet ready to pay for the hosting (to be specific, the project will need around 25 USD per month to be released). If you want to, you can donate at https://ko-fi.com/nekidev to help this project be released sooner!" />
+                    <FaqItem
+                        title="How frequently are sauces updated?"
+                        description="Sauces are updated every 30 minutes. They're currently being updated even if the project is not released to public, so that when the release comes the database is full of sauces :)" />
                 </div>
             </div>
         </main>
