@@ -8,4 +8,5 @@ RUN pip install poetry && \
     rm pyproject.toml && \
     pip install -r requirements.txt && \
     python manage.py collectstatic --noinput && \
-    mv /app/static /static
+    mv /app/static /static && \
+    chmod 755 /app/run.sh
