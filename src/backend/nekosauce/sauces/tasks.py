@@ -16,10 +16,10 @@ def calc_hashes(sauce_id: int, img_bytes: bytes, replace: bool = True):
 @shared_task
 def update_sauces():
     from nekosauce.sauces.management.commands.updatesauces import Command
-    Command().handle(async_reqs=3)
+    Command().handle(async_reqs=3, chunk_size=1024)
 
 
 @shared_task
 def update_hashes():
     from nekosauce.sauces.management.commands.updatehashes import Command
-    Command().handle(limit=10000, async_reqs=3)
+    Command().handle(limit=10000, async_reqs=3, chunk_size=128)
