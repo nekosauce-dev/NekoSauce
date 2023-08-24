@@ -171,6 +171,6 @@ class GelbooruTagger(sources.BaseTagger):
         parsed_url = urllib.parse.urlparse(url)
         return (
             url.startswith("https://gelbooru.com")
-            and self.get_resource(parsed_url) in resources
+            and self.get_resource(parsed_url) in self.resources
             and self.get_value(parsed_url) != "unknown"
         )
