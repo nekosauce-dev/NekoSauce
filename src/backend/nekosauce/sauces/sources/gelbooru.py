@@ -56,10 +56,13 @@ class GelbooruFetcher(sources.BaseFetcher):
                     f"/index.php?page=dapi&q=index&json=1&s=post&id={post['id']}"
                 )
             ],
-            file_urls=[post.get("file_url")] if post.get("file_url") else post["source"].split(" "),
+            file_urls=[post.get("file_url")]
+            if post.get("file_url")
+            else post["source"].split(" "),
             source=self.source,
             source_site_id=post["id"],
-            tags=sources.get_tags(site_urls) + [f"gelbooru:tag:name:{tag}" for tag in post["tags"].split(" ")],
+            tags=sources.get_tags(site_urls)
+            + [f"gelbooru:tag:name:{tag}" for tag in post["tags"].split(" ")],
             is_nsfw=post["rating"] in ["questionable", "explicit"],
             height=post["height"],
             width=post["width"],
@@ -156,9 +159,17 @@ class GelbooruTagger(sources.BaseTagger):
     source_domain = "gelbooru.com"
     resources = ["post", "tag"]
 
-    get_resource = lambda self, url: urllib.parse.parse_qs(url.query).get("page", ["unknown"])[0]
+    get_resource = lambda self, url: urllib.parse.parse_qs(url.query).get(
+        "page", ["unknown"]
+    )[0]
     get_property = lambda self, url: "id"
-    get_value = lambda self, url: urllib.parse.parse_qs(url.query).get("id", ["unknown"])[0]
+    get_value = lambda self, url: urllib.parse.parse_qs(url.query).get(
+        "id", ["unknown"]
+    )[0]
 
     def check_url(self, url: str) -> bool:
-        return url.startswith("https://gelbooru.com")
+        return (
+            url.startswith("https://gelbooru.com")
+            and self.get_resource(url) in resources
+            and self.get_value(url) != "unknown"
+        )
