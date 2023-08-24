@@ -13,8 +13,9 @@ class Command(BaseCommand):
     help = "Updates all hashes for the specified fetcher/source"
 
     def add_arguments(self, parser):
-        parser.add_argument("--limit", type=int, default=10000)
-        parser.add_argument("--async-reqs", type=int, default=3)
+        parser.add_argument("--limit", "-l", type=int, default=10000)
+        parser.add_argument("--async-reqs", "-a", type=int, default=3)
+        parser.add_argument("--chunk-size", "-c", type=int, default=128)
 
     def handle(self, *args, **options):
         self.stdout.write(f"Hashing sauces...")
@@ -35,16 +36,26 @@ class Command(BaseCommand):
 
             reqs.append(downloader().download_request(url))
 
-        for index, response in grequests.imap_enumerated(reqs, size=options["async_reqs"]):
-            if response is None:
-                # Failed downloading the image
-                continue
+        req_chunks = paginate(reqs, options["chunk_size"])
 
-            sauce = sauces[index]
+        while True:
+            for index, response in grequests.imap_enumerated(req_chunks[0], size=options["async_reqs"]):
+                if response is None:
+                    # Failed downloading the image
+                    continue
 
-            calc_hashes.delay(sauce.id, response.content, False)
+                sauce = sauces[index]
 
-            self.stdout.write(
-                self.style.SUCCESS(f"ADDING")
-                + f": {sauce.source_site_id} - {sauce.title}"
-            )
+                calc_hashes.delay(sauce.id, response.content, False)
+
+                self.stdout.write(
+                    self.style.SUCCESS(f"ADDING")
+                    + f": {sauce.source_site_id} - {sauce.title}"
+                )
+            
+            del req_chunks[0]
+
+            if len(req_chunks) == 0:
+                break
+
+        self.stdout.write(self.style.SUCCESS("Done!"))

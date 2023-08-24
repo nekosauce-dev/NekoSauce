@@ -10,6 +10,7 @@ import requests
 import validators
 
 from nekosauce.sauces import sources
+from nekosauce.sauces.utils import paginate
 from nekosauce.sauces.models import Sauce, Source
 
 
@@ -122,7 +123,7 @@ class DanbooruFetcher(sources.BaseFetcher):
         sauce = self.get_sauce(id)
         return sauce.file_urls[0]
 
-    def get_sauces_iter(self, start_from = None) -> typing.Iterator[Sauce]:
+    def get_sauces_iter(self, chunk_size: int = 1024, start_from = None) -> typing.Iterator[Sauce]:
         greatest_id = requests.get("https://danbooru.donmai.us/posts.json").json()[0]["id"]
 
         if start_from is not None and (
@@ -152,34 +153,42 @@ class DanbooruFetcher(sources.BaseFetcher):
                 for i in range(page, 100000)
             ]
 
-        for index, response in grequests.imap_enumerated(
-            reqs,
-            size=self.async_reqs,
-        ):
-            if response is None:
-                return
+        req_chunks = paginate(reqs, chunk_size)
 
-            new_sauces = [
-                self._get_new_sauce_from_response(
-                    post,
-                )
-                for post in response.json()
-                if (
-                    "file_url" in post
-                    and post["file_url"]
-                    and not post["is_pending"]
-                    and not post["is_deleted"]
-                )
-            ]
-            Sauce.objects.bulk_create(
-                new_sauces,
-                ignore_conflicts=True,
-            )
-            yield from new_sauces
-
-            for sauce in new_sauces:
-                if sauce.source_site_id == str(greatest_id):
+        while True:
+            for index, response in grequests.imap_enumerated(
+                req_chunks[0],
+                size=self.async_reqs,
+            ):
+                if response is None:
                     return
+
+                new_sauces = [
+                    self._get_new_sauce_from_response(
+                        post,
+                    )
+                    for post in response.json()
+                    if (
+                        "file_url" in post
+                        and post["file_url"]
+                        and not post["is_pending"]
+                        and not post["is_deleted"]
+                    )
+                ]
+                Sauce.objects.bulk_create(
+                    new_sauces,
+                    ignore_conflicts=True,
+                )
+                yield from new_sauces
+
+                for sauce in new_sauces:
+                    if sauce.source_site_id == str(greatest_id):
+                        return
+            
+            del req_chunks[0]
+
+            if len(req_chunks) == 0:
+                break
 
 
 class DanbooruDownloader(sources.BaseFetcher):

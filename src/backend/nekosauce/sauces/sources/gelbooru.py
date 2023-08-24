@@ -9,11 +9,8 @@ import requests
 import validators
 
 from nekosauce.sauces import sources
+from nekosauce.sauces.utils import paginate
 from nekosauce.sauces.models import Sauce, Source
-
-
-def paginate(iterable, limit: int) -> list:
-    return [(iterable[i : i + limit], i) for i in range(0, len(iterable), limit)]
 
 
 class GelbooruFetcher(sources.BaseFetcher):
@@ -92,7 +89,7 @@ class GelbooruFetcher(sources.BaseFetcher):
         sauce = self.get_sauce(id)
         return sauce.file_urls[0]
 
-    def get_sauces_iter(self, start_from=None):
+    def get_sauces_iter(self, chunk_size: int = 1024, start_from=None):
         count = grequests.map(
             [self.request("GET", "/index.php?page=dapi&q=index&json=1&s=post&limit=1")]
         )[0].json()["post"][0]["id"]
@@ -103,32 +100,41 @@ class GelbooruFetcher(sources.BaseFetcher):
         elif isinstance(start_from, int):
             last = start_from
 
-        for index, response in grequests.imap_enumerated(
-            [
+        reqs = [
                 self.request(
                     "GET",
                     f"/index.php?page=dapi&q=index&json=1&s=post&limit=100&tags=id:<{page + 100}",
                 )
                 for page in range(last, count, 100)
-            ],
-            size=self.async_reqs,
-        ):
-            if response is None:
-                return
+            ]
+        req_chunks = paginate(reqs, chunk_size)
 
-            new_sauces = []
-            for post in response.json()["post"]:
-                new_sauces.append(self.get_new_sauce_from_response(post))
-
-            Sauce.objects.bulk_create(
-                new_sauces,
-                ignore_conflicts=True,
-            )
-            yield from new_sauces
-
-            for sauce in new_sauces:
-                if sauce.source_site_id == str(count):
+        while True:
+            for index, response in grequests.imap_enumerated(
+                req_chunks[0],
+                size=self.async_reqs,
+            ):
+                if response is None:
                     return
+
+                new_sauces = []
+                for post in response.json()["post"]:
+                    new_sauces.append(self.get_new_sauce_from_response(post))
+
+                Sauce.objects.bulk_create(
+                    new_sauces,
+                    ignore_conflicts=True,
+                )
+                yield from new_sauces
+
+                for sauce in new_sauces:
+                    if sauce.source_site_id == str(count):
+                        return
+
+            del req_chunks[0]
+
+            if len(req_chunks) == 0:
+                break
 
 
 class GelbooruDownloader(sources.BaseFetcher):
