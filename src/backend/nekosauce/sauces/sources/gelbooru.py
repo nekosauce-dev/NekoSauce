@@ -113,6 +113,9 @@ class GelbooruFetcher(sources.BaseFetcher):
             ],
             size=self.async_reqs,
         ):
+            if response is None:
+                return
+
             new_sauces = []
             for post in response.json()["post"]:
                 new_sauces.append(self.get_new_sauce_from_response(post))

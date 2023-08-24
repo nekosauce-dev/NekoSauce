@@ -156,6 +156,9 @@ class DanbooruFetcher(sources.BaseFetcher):
             reqs,
             size=self.async_reqs,
         ):
+            if response is None:
+                return
+
             new_sauces = [
                 self._get_new_sauce_from_response(
                     post,
