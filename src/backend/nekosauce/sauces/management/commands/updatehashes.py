@@ -13,7 +13,7 @@ class Command(BaseCommand):
     help = "Updates all hashes for the specified fetcher/source"
 
     def add_arguments(self, parser):
-        parser.add_argument("--limit", "-l", type=int, default=10000)
+        parser.add_argument("--limit", "-l", type=int, default=1000)
         parser.add_argument("--async-reqs", "-a", type=int, default=3)
         parser.add_argument("--chunk-size", "-c", type=int, default=128)
 
@@ -38,11 +38,16 @@ class Command(BaseCommand):
 
         req_chunks = paginate(reqs, options["chunk_size"])
 
+        current_index = 0
+
         while True:
             for index, response in grequests.imap_enumerated(req_chunks[0], size=options["async_reqs"]):
                 if response is None:
                     # Failed downloading the image
                     continue
+
+                if current_index > options["limit"]:
+                    return
 
                 sauce = sauces[index]
 
