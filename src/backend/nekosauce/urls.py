@@ -19,6 +19,8 @@ from django.urls import path, include
 
 from nekosauce.views import IndexView
 
+admin.site.site_header = "NekoSauce"
+
 urlpatterns = [
     path("api", IndexView.as_view()),
     path("api/", include("nekosauce.sauces.urls")),
