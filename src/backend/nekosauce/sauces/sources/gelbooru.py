@@ -49,9 +49,7 @@ class GelbooruFetcher(sources.BaseFetcher):
             title=f"Artwork from Gelbooru #{post['id']} - {post['image']}",
             site_urls=site_urls,
             api_urls=[
-                self.get_url(
-                    f"/index.php?page=dapi&q=index&json=1&s=post&id={post['id']}"
-                )
+                f"https://gelbooru.com/index.php?page=dapi&q=index&json=1&s=post&id={post['id']}"
             ],
             file_urls=[post.get("file_url")]
             if post.get("file_url")
@@ -101,12 +99,12 @@ class GelbooruFetcher(sources.BaseFetcher):
             last = start_from
 
         reqs = [
-                self.request(
-                    "GET",
-                    f"/index.php?page=dapi&q=index&json=1&s=post&limit=100&tags=id:<{page + 100}",
-                )
-                for page in range(last, count, 100)
-            ]
+            self.request(
+                "GET",
+                f"/index.php?page=dapi&q=index&json=1&s=post&limit=100&tags=id:<{page + 100}",
+            )
+            for page in range(last, count, 100)
+        ]
         req_chunks = paginate(reqs, chunk_size)
 
         while True:

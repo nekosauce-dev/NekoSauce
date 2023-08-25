@@ -12,17 +12,25 @@ from nekosauce.sauces.models import (
 # Register your models here.
 
 
+def hash_inline(m):
+    class HashInline(admin.StackedInline):
+        model = m
+
+    return HashInline
+
+
 @admin.register(Sauce)
 class SauceAdmin(admin.ModelAdmin):
     list_display = ("title", "source", "downloaded", "height", "width")
     list_select_related = ("source",)
     list_filter = ("downloaded", "source")
     search_fields = ("title", "source__name")
-    autocomplete_fields = [
-        "hashes_8bits",
-        "hashes_16bits",
-        "hashes_32bits",
-        "hashes_64bits",
+    date_hierarchy = "created_at"
+    inlines = [
+        hash_inline(Hash8Bits.sauces.through),
+        hash_inline(Hash16Bits.sauces.through),
+        hash_inline(Hash32Bits.sauces.through),
+        hash_inline(Hash64Bits.sauces.through),
     ]
 
     def __init__(self, *args, **kwargs):
