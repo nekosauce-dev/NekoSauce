@@ -25,4 +25,5 @@ urlpatterns = [
     path("api", IndexView.as_view()),
     path("api/", include("nekosauce.sauces.urls")),
     path("admin/", admin.site.urls),
+    path("__debug__/", include("debug_toolbar.urls")),
 ]

@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     "nekosauce.users.apps.UsersConfig",
     "django_celery_beat",
     "rest_framework",
+    "debug_toolbar",
 ]
 
 MIDDLEWARE = [
@@ -62,6 +63,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
 CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS", "http://127.0.0.1 http://localhost").split(" ")
@@ -166,3 +168,5 @@ REST_FRAMEWORK = {
     ],
     'EXCEPTION_HANDLER': 'nekosauce.exceptions.exception_handler'
 }
+
+SHOW_TOOLBAR_CALLBACK = lambda request: request.user.is_authenticated && request.user.is_superuser

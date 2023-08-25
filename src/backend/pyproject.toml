@@ -20,6 +20,7 @@ celery = {extras = ["librabbitmq"], version = "^5.3.1"}
 django-celery-beat = "^2.5.0"
 imagehash = "^4.3.1"
 redis = "^5.0.0"
+django-debug-toolbar = "^4.2.0"
 
 
 [build-system]
