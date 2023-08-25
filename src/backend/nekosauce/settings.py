@@ -153,9 +153,6 @@ CELERY_BROKER_URL = "amqp://nekosauce:nekosauce@" + ("rabbitmq" if not DEBUG els
 CELERY_TIMEZONE = "America/Argentina/Buenos_Aires"
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
-CELERY_TASK_ROUTES = {
-    "sauces.tasks.calc_hashes": {"queue": "default"},
-}
 CELERY_TASK_ACKS_LATE = True
 
 

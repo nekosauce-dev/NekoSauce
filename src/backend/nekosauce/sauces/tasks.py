@@ -7,19 +7,19 @@ from nekosauce.sauces.models import Sauce
 logging = get_task_logger("nekosauce")
 
 
-@shared_task
-def calc_hashes(sauce_id: int, img_bytes: bytes, replace: bool = True):
+@shared_task(name="Calculate Hashes")
+def calc_hashes(sauce_id: int, img_bytes: bytes, replace: bool = False):
     sauce = Sauce.objects.get(id=sauce_id)
     sauce.calc_hashes(img_bytes)
 
 
-@shared_task
+@shared_task(name="(Beat) Update Sauces")
 def update_sauces(async_reqs=3, chunk_size=1024):
     from nekosauce.sauces.management.commands.updatesauces import Command
     Command().handle(async_reqs=async_reqs, chunk_size=chunk_size)
 
 
-@shared_task
+@shared_task(name="(Beat) Update Hashes")
 def update_hashes(limit=10000, async_reqs=3, chunk_size=128):
     from nekosauce.sauces.management.commands.updatehashes import Command
     Command().handle(limit=limit, async_reqs=async_reqs, chunk_size=chunk_size)
