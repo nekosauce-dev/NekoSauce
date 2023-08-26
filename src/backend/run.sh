@@ -22,7 +22,7 @@ gunicorn_pid=$!
 # Start multiple Celery workers with gevent pool and concurrency of 1
 celery_worker_pids=()
 for ((i=1; i<=$CELERY_WORKERS; i++)); do
-    celery -A nekosauce worker -l INFO -P gevent -c 1 -n worker$i@nekosauce.org &
+    celery -A nekosauce worker -l INFO -P gevent -c 1 -O fair -n worker$i@nekosauce.org &
     celery_worker_pids+=($!)
 done
 
