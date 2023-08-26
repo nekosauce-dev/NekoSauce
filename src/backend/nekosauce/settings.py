@@ -169,4 +169,6 @@ REST_FRAMEWORK = {
     'EXCEPTION_HANDLER': 'nekosauce.exceptions.exception_handler'
 }
 
-SHOW_TOOLBAR_CALLBACK = lambda request: request.user.is_authenticated & request.user.is_superuser
+DEBUG_TOOLBAR_CONFIG = {
+    "SHOW_TOOLBAR_CALLBACK" : lambda request: request.user.is_authenticated & request.user.is_superuser,
+}
