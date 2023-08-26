@@ -55,6 +55,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "nekosauce.middleware.DisableCSRFMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -63,7 +64,6 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
 CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS", "http://127.0.0.1 http://localhost").split(" ")
@@ -151,7 +151,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Celery Configuration Options
 CELERY_BROKER_URL = "amqp://nekosauce:nekosauce@" + ("rabbitmq" if not DEBUG else "localhost") + ":5672/"
-# CELERY_RESULT_BACKEND = "rpc://nekosauce:nekosauce@" + ("rabbitmq" if not DEBUG else "localhost") + ":5672/"
+CELERY_RESULT_BACKEND = "rpc://nekosauce:nekosauce@" + ("rabbitmq" if not DEBUG else "localhost") + ":5672/"
 CELERY_TIMEZONE = "America/Argentina/Buenos_Aires"
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
