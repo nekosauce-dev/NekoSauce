@@ -16,6 +16,7 @@ import imagehash
 from nekosauce.exceptions import ValidationError, DownloadError
 from nekosauce.sauces.models import (
     Sauce,
+    Source,
     Hash,
     Hash8Bits,
     Hash16Bits,
@@ -42,7 +43,7 @@ class SearchView(APIView):
                 serializer.validated_data.get("url"),
                 headers={"User-Agent": f"NekoSauce/{settings.VERSION}"},
                 stream=True,
-                timeout=5
+                timeout=5,
             )
 
             try:
@@ -89,7 +90,11 @@ class SearchView(APIView):
         results = (
             hashes[int(serializer.validated_data["bits"])]
             .objects.prefetch_related("sauces__source")
-            .annotate(similarity=Func(F("bits"), RawSQL("B'%s'" % image_hash_bits, ()), function="HAMMING"))
+            .annotate(
+                similarity=Func(
+                    F("bits"), RawSQL("B'%s'" % image_hash_bits, ()), function="HAMMING"
+                )
+            )
             .filter(
                 algorithm=int(serializer.validated_data["algorithm"]),
             )
@@ -139,6 +144,26 @@ class SearchView(APIView):
                         int(serializer.validated_data["algorithm"])
                     ).name,
                     "upload": serializer.validated_data.get("url"),
+                },
+            }
+        )
+
+
+class SourceView(APIView):
+    def get(self, request):
+        return Response(
+            {
+                "data": [
+                    {
+                        "id": s.id,
+                        "name": s.name,
+                        "website": s.website,
+                        "api_docs": s.api_docs,
+                    }
+                    for s in Source.objects.all()
+                ],
+                "meta": {
+                    "count": Source.objects.count(),
                 },
             }
         )
