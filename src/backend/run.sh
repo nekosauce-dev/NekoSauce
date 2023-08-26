@@ -19,6 +19,8 @@ python manage.py migrate
 gunicorn -w $GUNICORN_WORKERS -b 0.0.0.0:8000 nekosauce.wsgi:application &
 gunicorn_pid=$!
 
+celery -A nekosauce purge -f
+
 # Get the desired Celery concurrency from the environment variable
 if [ -n "$CELERY_CONCURRENCY" ]; then
     celery_concurrency_option="-c $CELERY_CONCURRENCY"
@@ -29,7 +31,7 @@ fi
 # Start multiple Celery workers with gevent pool and specified concurrency
 celery_worker_pids=()
 for ((i=1; i<=$CELERY_WORKERS; i++)); do
-    celery -A nekosauce worker -l INFO $celery_concurrency_option -n worker$i@nekosauce.org -P gevent &
+    celery -A nekosauce worker -l INFO $celery_concurrency_option -n worker$i@nekosauce.org -P gevent -Q celery &
     celery_worker_pids+=($!)
 
     if [ $i -lt $CELERY_WORKERS ]; then
