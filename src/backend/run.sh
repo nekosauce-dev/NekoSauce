@@ -29,7 +29,7 @@ fi
 # Start multiple Celery workers with gevent pool and specified concurrency
 celery_worker_pids=()
 for ((i=1; i<=$CELERY_WORKERS; i++)); do
-    celery -A nekosauce worker -l INFO $celery_concurrency_option -n worker$i@nekosauce.org &
+    celery -A nekosauce worker -l INFO $celery_concurrency_option -n worker$i@nekosauce.org -P gevent &
     celery_worker_pids+=($!)
 
     if [ $i -lt $CELERY_WORKERS ]; then
