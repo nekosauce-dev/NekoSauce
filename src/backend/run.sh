@@ -34,9 +34,7 @@ for ((i=1; i<=$CELERY_WORKERS; i++)); do
     celery -A nekosauce worker -l INFO $celery_concurrency_option -n worker$i@nekosauce.org -P gevent -Q celery &
     celery_worker_pids+=($!)
 
-    if [ $i -lt $CELERY_WORKERS ]; then
-        sleep 5
-    fi
+    sleep 10
 done
 
 # Start Celery beat scheduler with DatabaseScheduler
