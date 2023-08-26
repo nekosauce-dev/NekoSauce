@@ -19,10 +19,17 @@ python manage.py migrate
 gunicorn -w $GUNICORN_WORKERS -b 0.0.0.0:8000 nekosauce.wsgi:application &
 gunicorn_pid=$!
 
-# Start multiple Celery workers with gevent pool and concurrency of 1
+# Get the desired Celery concurrency from the environment variable
+if [ -n "$CELERY_CONCURRENCY" ]; then
+    celery_concurrency_option="-c $CELERY_CONCURRENCY"
+else
+    celery_concurrency_option=""
+fi
+
+# Start multiple Celery workers with gevent pool and specified concurrency
 celery_worker_pids=()
 for ((i=1; i<=$CELERY_WORKERS; i++)); do
-    celery -A nekosauce worker -l INFO -O fair -n worker$i@nekosauce.org &
+    celery -A nekosauce worker -l INFO $celery_concurrency_option -n worker$i@nekosauce.org &
     celery_worker_pids+=($!)
 done
 
