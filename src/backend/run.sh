@@ -21,7 +21,7 @@ gunicorn_pid=$!
 
 
 # Start Dramatiq worker
-python manage.py rundramatiq --processes $DRAMATIQ_WORKERS --threads $DRAMATIQ_THREADS --use-gevent &
+python manage.py rundramatiq --processes $DRAMATIQ_WORKERS --threads $DRAMATIQ_THREADS --use-gevent --skip-logging &
 dramatiq_worker_pid=$!
 
 # Wait for any of the processes to finish
