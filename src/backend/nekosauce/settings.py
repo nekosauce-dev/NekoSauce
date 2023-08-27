@@ -47,11 +47,11 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.postgres",
-    "nekosauce.sauces.apps.SaucesConfig",
-    "nekosauce.users.apps.UsersConfig",
-    "django_celery_beat",
     "rest_framework",
     "debug_toolbar",
+    "django_dramatiq",
+    "nekosauce.sauces.apps.SaucesConfig",
+    "nekosauce.users.apps.UsersConfig",
 ]
 
 MIDDLEWARE = [
@@ -66,7 +66,9 @@ MIDDLEWARE = [
     "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
-CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS", "http://127.0.0.1 http://localhost").split(" ")
+CSRF_TRUSTED_ORIGINS = os.getenv(
+    "CSRF_TRUSTED_ORIGINS", "http://127.0.0.1 http://localhost"
+).split(" ")
 CSRF_COOKIE_SECURE = True
 
 ROOT_URLCONF = "nekosauce.urls"
@@ -149,15 +151,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# Celery Configuration Options
-CELERY_BROKER_URL = "amqp://nekosauce:nekosauce@" + ("rabbitmq" if not DEBUG else "localhost") + ":5672/"
-CELERY_RESULT_BACKEND = "rpc://nekosauce:nekosauce@" + ("rabbitmq" if not DEBUG else "localhost") + ":5672/"
-CELERY_TIMEZONE = "America/Argentina/Buenos_Aires"
-CELERY_TASK_TRACK_STARTED = True
-CELERY_TASK_TIME_LIMIT = 30 * 60
-CELERY_TASK_ACKS_LATE = True
-CELERY_DEFAULT_QUEUE = 'nekosauce-default'
-
 
 REST_FRAMEWORK = {
     "DEFAULT_PARSER_CLASSES": [
@@ -167,9 +160,29 @@ REST_FRAMEWORK = {
     "DEFAULT_RENDERER_CLASSES": [
         "rest_framework.renderers.JSONRenderer",
     ],
-    'EXCEPTION_HANDLER': 'nekosauce.exceptions.exception_handler'
+    "EXCEPTION_HANDLER": "nekosauce.exceptions.exception_handler",
 }
 
+
 DEBUG_TOOLBAR_CONFIG = {
-    "SHOW_TOOLBAR_CALLBACK" : lambda request: request.user.is_authenticated & request.user.is_superuser,
+    "SHOW_TOOLBAR_CALLBACK": lambda request: request.user.is_authenticated
+    & request.user.is_superuser,
 }
+
+
+DRAMATIQ_BROKER = {
+    "BROKER": "dramatiq.brokers.rabbitmq.RabbitmqBroker",
+    "OPTIONS": {
+        "url": f"amqp://nekosauce:nekosauce@{'localhost' if DEBUG else 'rabbitmq'}:5672",
+    },
+    "MIDDLEWARE": [
+        "dramatiq.middleware.Prometheus",
+        "dramatiq.middleware.AgeLimit",
+        "dramatiq.middleware.TimeLimit",
+        "dramatiq.middleware.Callbacks",
+        "dramatiq.middleware.Retries",
+        "django_dramatiq.middleware.DbConnectionsMiddleware",
+        "django_dramatiq.middleware.AdminMiddleware",
+    ],
+}
+DRAMATIQ_AUTODISCOVER_MODULES = ["tasks"]

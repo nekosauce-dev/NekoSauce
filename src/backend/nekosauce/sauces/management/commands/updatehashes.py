@@ -1,4 +1,5 @@
 import time
+import base64
 
 from django.core.management.base import BaseCommand, CommandError
 
@@ -52,7 +53,7 @@ class Command(BaseCommand):
 
                 sauce = sauces[index]
 
-                calc_hashes.delay(sauce.id, response.content, False)
+                calc_hashes.send(sauce.id, base64.b64encode(response.content).decode(), False)
 
                 self.stdout.write(
                     self.style.SUCCESS(f"ADDING")
