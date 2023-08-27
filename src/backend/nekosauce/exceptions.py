@@ -15,6 +15,12 @@ class DownloadError(APIException):
     status_code = 400
 
 
+class NotFound(APIException):
+    default_code = "not_found"
+    default_detail = "Not found"
+    status_code = 404
+
+
 def exception_handler(exc, context):
     if isinstance(exc, APIException):
         return Response(
