@@ -31,7 +31,7 @@ fi
 # Start multiple Celery workers with gevent pool and specified concurrency
 celery_worker_pids=()
 for ((i=1; i<=$CELERY_WORKERS; i++)); do
-    celery -A nekosauce worker -l INFO $celery_concurrency_option -n worker$i@nekosauce.org -P gevent -Q celery &
+    celery -A nekosauce worker -l INFO $celery_concurrency_option -n worker$i@nekosauce.org -P gevent -Q nekosauce-default &
     celery_worker_pids+=($!)
 
     sleep 10
