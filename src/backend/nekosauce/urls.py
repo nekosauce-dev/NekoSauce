@@ -17,13 +17,17 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-from nekosauce.views import IndexView
+from nekosauce import views
 
 admin.site.site_header = "NekoSauce"
 
 urlpatterns = [
-    path("api", IndexView.as_view()),
     path("api/", include("nekosauce.sauces.urls")),
     path("admin/", admin.site.urls),
     path("__debug__/", include("debug_toolbar.urls")),
 ]
+
+handler400 = views.error_400
+handler403 = views.error_403
+handler404 = views.error_404
+handler500 = views.error_500

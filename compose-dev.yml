@@ -9,7 +9,9 @@ services:
       - redis
       - rabbitmq
     environment:
-      WORKERS: 1
+      GUNICORN_WORKERS: 1
+      DRAMATIQ_WORKERS: 1
+      DRAMATIQ_THREADS: 1
     ports:
       - "8000:8000"
     volumes:

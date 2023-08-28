@@ -15,10 +15,22 @@ class DownloadError(APIException):
     status_code = 400
 
 
+class Forbidden(APIException):
+    default_code = "forbidden"
+    default_detail = "Forbidden"
+    status_code = 403
+
+
 class NotFound(APIException):
     default_code = "not_found"
     default_detail = "Not found"
     status_code = 404
+
+
+class ServerInternalError(APIException):
+    default_code = "server_error"
+    default_detail = "Internal server error"
+    status_code = 500
 
 
 def exception_handler(exc, context):

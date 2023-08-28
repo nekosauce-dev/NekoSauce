@@ -10,7 +10,8 @@ services:
       - rabbitmq
     environment:
       GUNICORN_WORKERS: 4
-      CELERY_WORKERS: 1
+      DRAMATIQ_WORKERS: 4
+      DRAMATIQ_THREADS: 1
     env_file:
       - ./config/backend.env
     volumes:
