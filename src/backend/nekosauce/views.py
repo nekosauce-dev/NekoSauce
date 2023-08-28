@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from nekosauce.exceptions import NotFound, Forbidden, ServerInternalError
 
 
-def error_400(request):
+def error_400(request, exception):
     return Response(
         {
             "errors": [
@@ -19,7 +19,7 @@ def error_400(request):
     )
 
 
-def error_403(request):
+def error_403(request, exception):
     return Response(
         {
             "errors": [
@@ -34,7 +34,7 @@ def error_403(request):
     )
 
 
-def error_404(request):
+def error_404(request, exception):
     return Response(
         {
             "errors": [
