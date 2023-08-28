@@ -1,4 +1,4 @@
 cert.pem
 key.pem
 docker-compose.yml
-config/
+config
