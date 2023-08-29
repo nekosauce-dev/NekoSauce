@@ -80,8 +80,11 @@ def get_tags(links: typing.List[str]) -> typing.List[str]:
     for link in links:
         for tagger in taggers:
             if tagger.check_url(link):
-                result.append(tagger.to_tag(link))
-                break
+                try:
+                    result.append(tagger.to_tag(link))
+                    break
+                except ValueError:
+                    pass
 
     return result
 
