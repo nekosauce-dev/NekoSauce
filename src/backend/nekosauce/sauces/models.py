@@ -71,14 +71,14 @@ class Sauce(models.Model):
 
         from nekosauce.sauces.sources import get_downloader
 
-        downloaders = [(get_downloader(url), url) for url in sauce.file_urls]
+        downloaders = [(get_downloader(url), url) for url in self.file_urls]
         downloaders = [d for d in downloaders if d[0] is not None]
 
         downloader, url = downloaders[0] if downloaders else (None, None)
 
         if downloader is None:
             return False, "No downloader found for URLs {}".format(
-                ", ".join(sauce.file_urls)
+                ", ".join(self.file_urls)
             )
 
         img = Image.open(io.BytesIO(downloader.download(url)))
