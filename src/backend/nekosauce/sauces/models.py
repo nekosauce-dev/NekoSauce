@@ -60,7 +60,7 @@ class Sauce(models.Model):
     def __str__(self):
         return self.title
 
-    def calc_hashes(self, bytes: bytes, save: bool = True, replace: bool = True) -> bool:
+    def calc_hashes(self, save: bool = True, replace: bool = True) -> bool:
         if [0 for i in range(4)] != [
             self.hashes_8bits.count(),
             self.hashes_16bits.count(),
