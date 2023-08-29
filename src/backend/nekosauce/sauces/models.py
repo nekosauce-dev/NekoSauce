@@ -81,7 +81,7 @@ class Sauce(models.Model):
                 ", ".join(self.file_urls)
             )
 
-        img = Image.open(io.BytesIO(downloader.download(url)))
+        img = Image.open(io.BytesIO(downloader().download(url)))
 
         hash_model_from_bits = {
             8: Hash8Bits,
