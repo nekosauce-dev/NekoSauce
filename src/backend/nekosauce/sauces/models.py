@@ -61,8 +61,6 @@ class Sauce(models.Model):
         return self.title
 
     def calc_hashes(self, bytes: bytes, save: bool = True, replace: bool = True) -> bool:
-        from nekosauce.sauces.sources import get_downloader
-
         if [0 for i in range(4)] != [
             self.hashes_8bits.count(),
             self.hashes_16bits.count(),
@@ -71,7 +69,19 @@ class Sauce(models.Model):
         ] and not replace:
             return False, "Hashes already exist"
 
-        img = Image.open(io.BytesIO(bytes))
+        from nekosauce.sauces.sources import get_downloader
+
+        downloaders = [(get_downloader(url), url) for url in sauce.file_urls]
+        downloaders = [d for d in downloaders if d[0] is not None]
+
+        downloader, url = downloaders[0] if downloaders else (None, None)
+
+        if downloader is None:
+            return False, "No downloader found for URLs {}".format(
+                ", ".join(sauce.file_urls)
+            )
+
+        img = Image.open(io.BytesIO(downloader.download(url)))
 
         hash_model_from_bits = {
             8: Hash8Bits,

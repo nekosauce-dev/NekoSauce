@@ -26,43 +26,6 @@ class Command(BaseCommand):
         reqs = []
 
         for sauce in sauces:
-            downloaders = [(get_downloader(url), url) for url in sauce.file_urls]
-            downloaders = [d for d in downloaders if d[0] is not None]
-
-            downloader, url = downloaders[0] if downloaders else (None, None)
-
-            if downloader is None:
-                return False, "No downloader found for URLs {}".format(
-                    ", ".join(sauce.file_urls)
-                )
-
-            reqs.append(downloader().download_request(url))
-
-        req_chunks = paginate(reqs, options["chunk_size"])
-
-        current_index = 0
-
-        while True:
-            for index, response in grequests.imap_enumerated(req_chunks[0], size=options["async_reqs"]):
-                if response is None:
-                    # Failed downloading the image
-                    continue
-
-                if current_index > options["limit"]:
-                    return
-
-                sauce = sauces[index]
-
-                calc_hashes.send(sauce.id, base64.b64encode(response.content).decode(), False)
-
-                self.stdout.write(
-                    self.style.SUCCESS(f"ADDING")
-                    + f": {sauce.source_site_id} - {sauce.title}"
-                )
-            
-            del req_chunks[0]
-
-            if len(req_chunks) == 0:
-                break
+            calc_hashes.send(sauce.id)
 
         self.stdout.write(self.style.SUCCESS("Done!"))
