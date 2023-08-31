@@ -10,6 +10,7 @@ class StatisticAdmin(admin.ModelAdmin):
     search_fields = ("resource", "attribute")
     list_filter = ("created_at",)
     date_hierarchy = "created_at"
+    ordering = ("-created_at",)
 
 
 admin.site.register(Statistic, StatisticAdmin)
