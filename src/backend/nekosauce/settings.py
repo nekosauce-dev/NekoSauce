@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     "django_dramatiq",
     "nekosauce.sauces.apps.SaucesConfig",
     "nekosauce.users.apps.UsersConfig",
+    "nekosauce.stats.apps.StatsConfig",
 ]
 
 MIDDLEWARE = [
