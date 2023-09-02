@@ -5,14 +5,15 @@ from django.db.models import Func
 from django.contrib.postgres.fields import ArrayField
 from django.contrib.postgres.indexes import BTreeIndex
 
-from PIL import Image
+from PIL import Image, ImageFile
 
 import imagehash
 
 from nekosauce.sauces.utils.fields import BitField
 from nekosauce.sauces.utils.hashing import hash_to_bits
 
-# Create your models here.
+
+ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 
 class Sauce(models.Model):
