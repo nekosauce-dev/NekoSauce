@@ -131,6 +131,7 @@ class Hash(models.Model):
     class Meta:
         verbose_name = "Hash"
         verbose_name_plural = "Hashes"
+        unique_together = ["bits", "algorithm"]
         abstract = True
 
     algorithm = models.IntegerField(
@@ -142,7 +143,8 @@ class Hash(models.Model):
 
 
 class Hash8Bits(Hash):
-    class Meta:
+    class Meta(Hash.Meta):
+        abstract = False
         verbose_name = "Hash (8^2 Bits)"
         verbose_name_plural = "Hashes (8^2 Bits)"
         indexes = [
@@ -158,7 +160,8 @@ class Hash8Bits(Hash):
 
 
 class Hash16Bits(Hash):
-    class Meta:
+    class Meta(Hash.Meta):
+        abstract = False
         verbose_name = "Hash (16^2 Bits)"
         verbose_name_plural = "Hashes (16^2 Bits)"
         indexes = [
@@ -174,7 +177,8 @@ class Hash16Bits(Hash):
 
 
 class Hash32Bits(Hash):
-    class Meta:
+    class Meta(Hash.Meta):
+        abstract = False
         verbose_name = "Hash (32^2 Bits)"
         verbose_name_plural = "Hashes (32^2 Bits)"
         indexes = [
@@ -190,7 +194,8 @@ class Hash32Bits(Hash):
 
 
 class Hash64Bits(Hash):
-    class Meta:
+    class Meta(Hash.Meta):
+        abstract = False
         verbose_name = "Hash (64^2 Bits)"
         verbose_name_plural = "Hashes (64^2 Bits)"
         indexes = [
