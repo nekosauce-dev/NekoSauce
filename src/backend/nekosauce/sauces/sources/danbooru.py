@@ -163,6 +163,8 @@ class DanbooruFetcher(sources.BaseFetcher):
                 if response is None:
                     return
 
+                print(response.url, response.status_code)
+
                 new_sauces = [
                     self._get_new_sauce_from_response(
                         post,
