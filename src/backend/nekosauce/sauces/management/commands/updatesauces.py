@@ -15,7 +15,7 @@ class Command(BaseCommand):
     help = "Fetches new sauces for the specified fetcher/source"
 
     def add_arguments(self, parser):
-        parser.add_argument("source", type=str, default="all")
+        parser.add_argument("--source", type=str, default="all")
         parser.add_argument("--async-reqs", "-a", type=int, default=3)
         parser.add_argument("--chunk-size", "-c", type=int, default=1024)
         parser.add_argument("--limit", "-l", type=int, default=100000)

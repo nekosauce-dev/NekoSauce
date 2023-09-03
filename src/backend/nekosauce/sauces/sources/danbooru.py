@@ -16,7 +16,6 @@ from nekosauce.sauces.models import Sauce, Source
 
 class DanbooruFetcher(sources.BaseFetcher):
     site_name = "Danbooru"
-    base_url = "https://danbooru.donmai.us"
     source = Source.objects.get(name="Danbooru")
 
     @property
