@@ -8,19 +8,22 @@ from django.core.management.base import BaseCommand, CommandError
 from nekosauce.sauces.utils import paginate
 from nekosauce.sauces.tasks import calc_hashes
 from nekosauce.sauces.models import Sauce, Source
-from nekosauce.sauces.sources import get_all_fetchers
+from nekosauce.sauces.sources import get_fetcher, get_all_fetchers
 
 
 class Command(BaseCommand):
     help = "Fetches new sauces for the specified fetcher/source"
 
     def add_arguments(self, parser):
+        parser.add_argument("source", type=str, default="all")
         parser.add_argument("--async-reqs", "-a", type=int, default=3)
         parser.add_argument("--chunk-size", "-c", type=int, default=1024)
         parser.add_argument("--limit", "-l", type=int, default=100000)
 
-    def handle(self, async_reqs=3, chunk_size=1024, limit=100000, *args, **options):
-        for fetcher_class in get_all_fetchers():
+    def handle(self, source, async_reqs=3, chunk_size=1024, limit=100000, *args, **options):
+        fetchers = get_all_fetchers() if source == "all" else [get_fetcher(source.lower())]
+
+        for fetcher_class in fetchers:
             fetcher = fetcher_class(
                 async_reqs=async_reqs,
             )
