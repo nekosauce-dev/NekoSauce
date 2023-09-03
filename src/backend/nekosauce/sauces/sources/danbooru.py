@@ -23,6 +23,12 @@ class DanbooruFetcher(sources.BaseFetcher):
     def last_page(self) -> str:
         return f"a{self.last_sauce.source_site_id}"
 
+    def get_url(self, path: str) -> str:
+        user = self.credentials["user"]
+        pwd = self.credentials["pass"]
+
+        return f"https://{user}:{pwd}@danbooru.donmai.us{path}"
+
     def get_sauce_request(self, id: str) -> grequests.AsyncRequest:
         return self.request("GET", f"/posts/{id}.json")
 
