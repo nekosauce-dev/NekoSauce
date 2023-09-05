@@ -55,21 +55,13 @@ class Sauce(models.Model):
     height = models.PositiveIntegerField()
     width = models.PositiveIntegerField()
 
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.title
 
-    def calc_hashes(self, save: bool = True, replace: bool = True) -> bool:
-        if [0 for i in range(4)] != [
-            self.hashes_8bits.count(),
-            self.hashes_16bits.count(),
-            self.hashes_32bits.count(),
-            self.hashes_64bits.count(),
-        ] and not replace:
-            return False, "Hashes already exist"
-
+    def calc_hashes(self, save: bool = True) -> bool:
         from nekosauce.sauces.sources import get_downloader
 
         downloaders = [(get_downloader(url), url) for url in self.file_urls]
@@ -101,7 +93,6 @@ class Sauce(models.Model):
                 (Hash.Algorithm.WAVELET, imagehash.whash),
             ]:
                 bits = hash_to_bits(algorithm[1](img, hash_size=size))
-                print(bits) if not isinstance(bits, str) else None
                 new_hash, _ = hash_model_from_bits[size].objects.update_or_create(
                     bits=bits,
                     algorithm=algorithm[0],
