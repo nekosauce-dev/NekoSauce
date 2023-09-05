@@ -51,7 +51,7 @@ class Sauce(models.Model):
     )
     is_nsfw = models.BooleanField(default=False)
 
-    downloaded = models.BooleanField(default=False, db_index=True)
+    downloaded = models.BooleanField(default=False, null=True, db_index=True)
     height = models.PositiveIntegerField()
     width = models.PositiveIntegerField()
 

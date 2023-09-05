@@ -5,4 +5,5 @@ from django.contrib.auth.models import AbstractUser
 
 
 class User(AbstractUser):
-    pass
+    donation = models.FloatField(default=0.0)
+    donation_date = models.DateTimeField(null=True)
