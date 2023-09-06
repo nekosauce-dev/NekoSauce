@@ -204,7 +204,7 @@ STORAGES = {
     },
 }
 
-BUNNY_USERNAME = os.getenv("BUNNY_USER", "")
-BUNNY_PASSWORD = os.getenv("BUNNY_PASS", "")
+BUNNY_USERNAME = os.getenv("BUNNY_USERNAME", "")
+BUNNY_PASSWORD = os.getenv("BUNNY_PASSWORD", "")
 BUNNY_REGION = os.getenv("BUNNY_REGION", "ny")
 BUNNY_HOSTNAME = os.getenv("BUNNY_HOSTNAME", "")
