@@ -2,7 +2,13 @@ version: "3.8"
 name: "nekosauce"
 services:
   backend:
-    build: ./src/backend
+    build:
+      context: ./src/backend
+      args:
+        BUNNY_USERNAME: ${BUNNY_USERNAME}
+        BUNNY_PASSWORD: ${BUNNY_PASSWORD}
+        BUNNY_REGION: ${BUNNY_REGION}
+        BUNNY_HOSTNAME: ${BUNNY_HOSTNAME}
     command: "/bin/sh -c \"/app/run.sh\""
     depends_on:
       - database
@@ -14,11 +20,6 @@ services:
       DRAMATIQ_THREADS: 1
     env_file:
       - ./config/backend.env
-    args:
-      - BUNNY_USERNAME=${BUNNY_USERNAME}
-      - BUNNY_PASSWORD=${BUNNY_PASSWORD}
-      - BUNNY_REGION=${BUNNY_REGION}
-      - BUNNY_HOSTNAME=${BUNNY_HOSTNAME}
     volumes:
       - static:/static
     restart: always
