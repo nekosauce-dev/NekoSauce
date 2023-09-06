@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 
-from nekosauce.sauces.tasks import calc_hash
+from nekosauce.sauces.tasks import download_thumbnail
 from nekosauce.sauces.models import Sauce
 
 
@@ -15,10 +15,10 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         self.stdout.write(f"Hashing sauces...")
 
-        sauces = Sauce.objects.filter(hash__isnull=True)[: options["limit"]]
+        sauces = Sauce.objects.filter(sha512_hash__isnull=True)[: options["limit"]]
         reqs = []
 
         for sauce in sauces:
-            calc_hash.send(sauce.id)
+            download_thumbnail.send(sauce.id)
 
         self.stdout.write(self.style.SUCCESS("Done!"))

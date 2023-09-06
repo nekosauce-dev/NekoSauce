@@ -3,19 +3,15 @@ from django.contrib import admin
 from nekosauce.sauces.models import (
     Sauce,
     Source,
-    Hash8Bits,
-    Hash16Bits,
-    Hash32Bits,
-    Hash64Bits,
+    Hash
 )
 
 
 @admin.register(Sauce)
 class SauceAdmin(admin.ModelAdmin):
-    list_display = ("title", "downloaded", "height", "width")
-    list_filter = ("downloaded",)
+    list_display = ("title", "height", "width")
     search_fields = ("title", "source__name", "tags")
-    autocomplete_fields = ("hashes_8bits", "hashes_16bits", "hashes_32bits", "hashes_64bits",)
+    raw_id_fields = ("source", "hash",)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -27,13 +23,7 @@ class SourceAdmin(admin.ModelAdmin):
     list_display = ("name", "website", "api_docs")
 
 
+@admin.register(Hash)
 class HashAdmin(admin.ModelAdmin):
-    list_display = ("bits", "algorithm")
-    list_filter = ("algorithm",)
+    list_display = ("bits",)
     search_fields = ("bits",)
-
-
-admin.site.register(Hash8Bits, HashAdmin)
-admin.site.register(Hash16Bits, HashAdmin)
-admin.site.register(Hash32Bits, HashAdmin)
-admin.site.register(Hash64Bits, HashAdmin)

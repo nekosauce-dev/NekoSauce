@@ -18,10 +18,6 @@ from nekosauce.sauces.models import (
     Sauce,
     Source,
     Hash,
-    Hash8Bits,
-    Hash16Bits,
-    Hash32Bits,
-    Hash64Bits,
 )
 from nekosauce.sauces.serializers import SearchQuerySerializer
 from nekosauce.sauces.utils.hashing import hash_to_bits
@@ -37,6 +33,9 @@ class SearchView(APIView):
             )
 
         file_obj = request.data.get("file")
+
+        if not file_obj and not serializer.validated_data.get("url"):
+            raise ValidationError(detail="Either a file or a URL is required.")
 
         if not file_obj:
             r = requests.get(
@@ -62,41 +61,20 @@ class SearchView(APIView):
 
         img = Image.open(file_obj)
 
-        hashes = {
-            8: Hash8Bits,
-            16: Hash16Bits,
-            32: Hash32Bits,
-            64: Hash64Bits,
-        }
-
-        functions = {
-            0: imagehash.phash,
-            1: imagehash.average_hash,
-            3: imagehash.dhash,
-            4: imagehash.whash,
-        }
-
-        image_hash = functions[serializer.validated_data["algorithm"]](
-            img, hash_size=int(serializer.validated_data["bits"])
+        image_hash = imagehash.whash(
+            img, hash_size=16
         )
         image_hash_bits = hash_to_bits(image_hash)
 
-        limit = (
-            serializer.validated_data["limit"]
-            if serializer.validated_data["limit"] < 20
-            else 10
-        )
+        limit = serializer.validated_data["limit"]
 
         results = (
-            hashes[int(serializer.validated_data["bits"])]
+            Hash
             .objects.prefetch_related("sauces__source")
             .annotate(
                 similarity=Func(
                     F("bits"), RawSQL("B'%s'" % image_hash_bits, ()), function="HAMMING"
                 )
-            )
-            .filter(
-                algorithm=int(serializer.validated_data["algorithm"]),
             )
             .order_by("-similarity")[:limit]
         )
@@ -139,10 +117,8 @@ class SearchView(APIView):
                     for s, h in sauces
                 ][:limit],
                 "meta": {
+                    "total": len(results),
                     "hash": image_hash_bits,
-                    "algorithm": Hash.Algorithm(
-                        int(serializer.validated_data["algorithm"])
-                    ).name,
                     "upload": serializer.validated_data.get("url"),
                 },
             }

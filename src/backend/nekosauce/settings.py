@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "debug_toolbar",
     "django_dramatiq",
+    "django_bunny",
     "nekosauce.sauces.apps.SaucesConfig",
     "nekosauce.users.apps.UsersConfig",
     "nekosauce.stats.apps.StatsConfig",
@@ -187,3 +188,23 @@ DRAMATIQ_BROKER = {
     ],
 }
 DRAMATIQ_AUTODISCOVER_MODULES = ["tasks"]
+
+STORAGES = {
+    "default": {
+        "BACKEND": "django_bunny.storage.BunnyStorage",
+        "OPTIONS": {
+            "base_dir": ""
+        }
+    },
+    "staticfiles": {
+        "BACKEND": "django_bunny.storage.BunnyStorage",
+        "OPTIONS": {
+            "base_dir": "static/"
+        }
+    },
+}
+
+BUNNY_USERNAME = os.getenv("BUNNY_USER", "")
+BUNNY_PASSWORD = os.getenv("BUNNY_PASS", "")
+BUNNY_REGION = os.getenv("BUNNY_REGION", "ny")
+BUNNY_HOSTNAME = os.getenv("BUNNY_HOSTNAME", "")

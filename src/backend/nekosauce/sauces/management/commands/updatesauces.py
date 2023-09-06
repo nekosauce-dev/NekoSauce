@@ -1,13 +1,9 @@
 import grequests
 
-from django.db import transaction
-from django.db.models import Q, F, IntegerField
-from django.db.models.functions import Cast
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 
-from nekosauce.sauces.utils import paginate
-from nekosauce.sauces.tasks import calc_hashes
-from nekosauce.sauces.models import Sauce, Source
+from nekosauce.sauces.tasks import download_thumbnail
+from nekosauce.sauces.models import Sauce
 from nekosauce.sauces.sources import get_fetcher, get_all_fetchers
 
 
