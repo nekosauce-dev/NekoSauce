@@ -16,12 +16,12 @@ cd /app
 python manage.py migrate
 
 # Start Gunicorn with multiple workers and binding address
-gunicorn -w $GUNICORN_WORKERS -b 0.0.0.0:8000 nekosauce.wsgi:application &
+gunicorn -w $BACKEND_GUNICORN_WORKERS -b 0.0.0.0:8000 nekosauce.wsgi:application &
 gunicorn_pid=$!
 
 
 # Start Dramatiq worker
-python manage.py rundramatiq --processes $DRAMATIQ_WORKERS --threads $DRAMATIQ_THREADS --use-gevent --skip-logging &
+python manage.py rundramatiq --processes $BACKEND_DRAMATIQ_WORKERS --threads $BACKEND_DRAMATIQ_THREADS --use-gevent --skip-logging &
 dramatiq_worker_pid=$!
 
 # Wait for any of the processes to finish

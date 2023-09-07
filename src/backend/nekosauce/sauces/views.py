@@ -91,7 +91,8 @@ class SearchView(APIView):
                         "id": s.id,
                         "similarity": h.similarity,
                         "title": s.title,
-                        "preview": None,
+                        "hash": h.bits,
+                        "sha512_hash": s.sha512_hash,
                         "urls": {
                             "site": s.site_urls,
                             "api": s.api_urls,
@@ -117,7 +118,7 @@ class SearchView(APIView):
                     for s, h in sauces
                 ][:limit],
                 "meta": {
-                    "total": len(results),
+                    "count": len(sauces),
                     "hash": image_hash_bits,
                     "upload": serializer.validated_data.get("url"),
                 },

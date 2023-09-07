@@ -9,9 +9,9 @@ services:
       - redis
       - rabbitmq
     environment:
-      GUNICORN_WORKERS: 1
-      DRAMATIQ_WORKERS: 1
-      DRAMATIQ_THREADS: 1
+      BACKEND_GUNICORN_WORKERS: 1
+      BACKEND_DRAMATIQ_WORKERS: 1
+      BACKEND_DRAMATIQ_THREADS: 1
     ports:
       - "8000:8000"
     volumes:
@@ -68,7 +68,7 @@ services:
       - frontend
     volumes:
       - static:/static
-      - ./src/nginx/nekosauce-dev.conf:/etc/nginx/conf.d/default.conf
+      - ./src/nginx/nekosauce.dev.conf:/etc/nginx/conf.d/default.conf
     ports:
       - "80:80"
       - "443:443"

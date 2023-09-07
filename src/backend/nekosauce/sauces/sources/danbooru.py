@@ -18,9 +18,7 @@ class DanbooruFetcher(sources.BaseFetcher):
     site_name = "Danbooru"
     source = Source.objects.get(name="Danbooru")
 
-    @property
-    def last_page(self) -> str:
-        return f"a{self.last_sauce.source_site_id}"
+    last_page = property(lambda self: f"a{self.last_sauce.source_site_id}")
 
     def get_url(self, path: str) -> str:
         user = self.credentials["user"]

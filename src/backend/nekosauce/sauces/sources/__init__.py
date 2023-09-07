@@ -117,8 +117,8 @@ class BaseFetcher:
 
     def __init__(self, async_reqs: int = 10):
         self.credentials = {
-            "user": os.getenv(f"SAUCE_{self.site_name.upper()}_USER"),
-            "pass": os.getenv(f"SAUCE_{self.site_name.upper()}_PASS"),
+            "user": os.getenv(f"BACKEND_SOURCE_{self.site_name.upper()}_USERNAME"),
+            "pass": os.getenv(f"BACKEND_SOURCE_{self.site_name.upper()}_PASSWORD"),
         }
         self.async_reqs = async_reqs
 
@@ -142,7 +142,7 @@ class BaseFetcher:
             str: The URL
         """
         if self.base_url:
-            return f"{self.base_url}{path}&api_key={self.credentials['pass']}&user_id={self.credentials['user']}"
+            return f"{self.base_url}{path}"
 
         raise NotImplementedError(
             "You need to implement either the `get_url()` algorithm or set the `base_url` attribute."

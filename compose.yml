@@ -5,40 +5,34 @@ services:
     build:
       context: ./src/backend
       args:
-        BUNNY_USERNAME: ${BUNNY_USERNAME}
-        BUNNY_PASSWORD: ${BUNNY_PASSWORD}
-        BUNNY_REGION: ${BUNNY_REGION}
-        BUNNY_HOSTNAME: ${BUNNY_HOSTNAME}
+        BUNNY_USERNAME: ${BACKEND_BUNNY_USERNAME}
+        BUNNY_PASSWORD: ${BACKEND_BUNNY_PASSWORD}
+        BUNNY_REGION: ${BACKEND_BUNNY_REGION}
+        BUNNY_HOSTNAME: ${BACKEND_BUNNY_HOSTNAME}
     command: "/bin/sh -c \"/app/run.sh\""
     depends_on:
       - database
       - redis
       - rabbitmq
-    environment:
-      GUNICORN_WORKERS: 4
-      DRAMATIQ_WORKERS: 4
-      DRAMATIQ_THREADS: 1
-    env_file:
-      - ./config/backend.env
     volumes:
       - static:/static
+    secrets:
+      - BACKEND_SECRET_KEY
     restart: always
   frontend:
     build: ./src/frontend
     command: "npm run start"
-    env_file:
-      - ./config/frontend.env
     restart: always
   database:
     build: ./src/database
     environment:
-      - POSTGRES_USER=nekosauce
-      - POSTGRES_PASSWORD=nekosauce
-      - POSTGRES_DB=nekosauce
+      POSTGRES_PASSWORD_FILE: /run/secrets/DATABASE_PASSWORD
+      POSTGRES_USER: ${DATABASE_USERNAME}
+      POSTGRES_DB: ${DATABASE_NAME}
     volumes:
       - database:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD", "pg_isready", "-q", "-d", "nekosauce", "-U", "nekosauce"]
+      test: ["CMD", "pg_isready", "-q", "-d", "${DATABASE_POSTGRES_DB}", "-U", "${DATABASE_POSTGRES_USER}"]
       interval: 1m30s
       timeout: 30s
       retries: 5
@@ -56,8 +50,8 @@ services:
   rabbitmq:
     image: rabbitmq:alpine
     environment:
-      RABBITMQ_DEFAULT_USER: nekosauce
-      RABBITMQ_DEFAULT_PASS: nekosauce
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USERNAME}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
     healthcheck:
       test: ["CMD", "rabbitmqctl", "status"]
       interval: 1m30s
@@ -72,13 +66,23 @@ services:
       - frontend
     volumes:
       - static:/static
-      - ./src/nginx/nekosauce-prod.conf:/etc/nginx/conf.d/default.conf
-      - ./src/nginx/certs:/etc/nginx/certs
+      - ./src/nginx/nekosauce.conf:/etc/nginx/conf.d/default.conf
       - ./src/nginx/errors:/etc/nginx/errors
+    secrets:
+      - NGINX_CERT_CERTIFICATE
+      - NGINX_CERT_PRIVATE_KEY
     ports:
-      - "80:80"
       - "443:443"
     restart: always
+secrets:
+  BACKEND_SECRET_KEY:
+    file: ./secrets/BACKEND_SECRET_KEY.txt
+  DATABASE_PASSWORD:
+    file: ./secrets/DATABASE_PASSWORD.txt
+  NGINX_CERT_CERTIFICATE:
+    file: ./secrets/NGINX_CERT_CERTIFICATE.pem
+  NGINX_CERT_PRIVATE_KEY:
+    file: ./secrets/NGINX_CERT_PRIVATE_KEY.pem
 volumes:
   database:
   static:

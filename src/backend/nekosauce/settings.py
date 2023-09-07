@@ -27,14 +27,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv(
-    "SECRET_KEY", "django-insecure-a61@7(+227wg_4kh36e@t6bkaext*0l0#3kkxo_(85zrftx9%p"
+    "BACKEND_SECRET_KEY", "django-insecure-a61@7(+227wg_4kh36e@t6bkaext*0l0#3kkxo_(85zrftx9%p"
 )
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("DEBUG", "False") == "True"
-VERSION = os.getenv("VERSION", "0.0.0")
+DEBUG = os.getenv("BACKEND_DEBUG", "False") == "True"
+VERSION = "0.2"
 
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "127.0.0.1 localhost").split(" ")
+ALLOWED_HOSTS = os.getenv("BACKEND_ALLOWED_HOSTS", "127.0.0.1 localhost").split(" ")
 
 
 # Application definition
@@ -69,7 +69,7 @@ MIDDLEWARE = [
 ]
 
 CSRF_TRUSTED_ORIGINS = os.getenv(
-    "CSRF_TRUSTED_ORIGINS", "http://127.0.0.1 http://localhost"
+    "BACKEND_CSRF_TRUSTED_ORIGINS", "http://127.0.0.1 http://localhost"
 ).split(" ")
 CSRF_COOKIE_SECURE = True
 
@@ -100,11 +100,11 @@ WSGI_APPLICATION = "nekosauce.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.getenv("POSTGRES_NAME", "nekosauce"),
-        "USER": os.getenv("POSTGRES_USER", "nekosauce"),
-        "PASSWORD": os.getenv("POSTGRES_PASS", "nekosauce"),
-        "HOST": os.getenv("POSTGRES_HOST", "database"),
-        "PORT": os.getenv("POSTGRES_PORT", "5432"),
+        "NAME": os.getenv("DATABASE_NAME", "nekosauce"),
+        "USER": os.getenv("DATABASE_USERNAME", "nekosauce"),
+        "PASSWORD": os.getenv("DATABASE_PASSWORD", "nekosauce"),
+        "HOST": os.getenv("DATABASE_HOSTNAME", "database"),
+        "PORT": os.getenv("DATABASE_PORT", "5432"),
     }
 }
 
@@ -175,7 +175,7 @@ DEBUG_TOOLBAR_CONFIG = {
 DRAMATIQ_BROKER = {
     "BROKER": "dramatiq.brokers.rabbitmq.RabbitmqBroker",
     "OPTIONS": {
-        "url": f"amqp://nekosauce:nekosauce@{'localhost' if DEBUG else 'rabbitmq'}:5672",
+        "url": f"amqp://{os.getenv('RABBITMQ_USERNAME', 'guest')}:{os.getenv('RABBITMQ_PASSWORD', 'guest')}@{os.getenv('RABBITMQ_HOSTNAME', 'localhost')}:{os.getenv('RABBITMQ_PORT', '5672')}",
     },
     "MIDDLEWARE": [
         "dramatiq.middleware.Prometheus",
@@ -192,19 +192,15 @@ DRAMATIQ_AUTODISCOVER_MODULES = ["tasks"]
 STORAGES = {
     "default": {
         "BACKEND": "django_bunny.storage.BunnyStorage",
-        "OPTIONS": {
-            "base_dir": ""
-        }
+        "OPTIONS": {"base_dir": ""},
     },
     "staticfiles": {
         "BACKEND": "django_bunny.storage.BunnyStorage",
-        "OPTIONS": {
-            "base_dir": "static/"
-        }
+        "OPTIONS": {"base_dir": "static/"},
     },
 }
 
-BUNNY_USERNAME = os.getenv("BUNNY_USERNAME", "")
-BUNNY_PASSWORD = os.getenv("BUNNY_PASSWORD", "")
-BUNNY_REGION = os.getenv("BUNNY_REGION", "ny")
-BUNNY_HOSTNAME = os.getenv("BUNNY_HOSTNAME", "")
+BUNNY_USERNAME = os.getenv("BACKEND_BUNNY_USERNAME", "")
+BUNNY_PASSWORD = os.getenv("BACKEND_BUNNY_PASSWORD", "")
+BUNNY_HOSTNAME = os.getenv("BACKEND_BUNNY_HOSTNAME", "")
+BUNNY_REGION = os.getenv("BACKEND_BUNNY_REGION", "de")
