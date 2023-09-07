@@ -191,6 +191,11 @@ DRAMATIQ_BROKER = {
 }
 DRAMATIQ_AUTODISCOVER_MODULES = ["tasks"]
 
+BUNNY_USERNAME = os.getenv("BACKEND_BUNNY_USERNAME", "")
+BUNNY_PASSWORD = os.getenv("BACKEND_BUNNY_PASSWORD", "")
+BUNNY_HOSTNAME = os.getenv("BACKEND_BUNNY_HOSTNAME", "")
+BUNNY_REGION = os.getenv("BACKEND_BUNNY_REGION", "de")
+
 STORAGES = {
     "default": {
         "BACKEND": "django_bunny.storage.BunnyStorage",
@@ -198,11 +203,6 @@ STORAGES = {
     },
     "staticfiles": {
         "BACKEND": "django_bunny.storage.BunnyStorage",
-        "OPTIONS": {"base_dir": "static/"},
+        "OPTIONS": {"base_dir": "static/", "hostname": BUNNY_HOSTNAME + "static/"},
     },
 }
-
-BUNNY_USERNAME = os.getenv("BACKEND_BUNNY_USERNAME", "")
-BUNNY_PASSWORD = os.getenv("BACKEND_BUNNY_PASSWORD", "")
-BUNNY_HOSTNAME = os.getenv("BACKEND_BUNNY_HOSTNAME", "")
-BUNNY_REGION = os.getenv("BACKEND_BUNNY_REGION", "de")
