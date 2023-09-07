@@ -19,6 +19,12 @@ services:
     secrets:
       - BACKEND_SECRET_KEY
     restart: always
+    deploy:
+      resources:
+        limits:
+          memory: ${BACKEND_MEMORY_LIMIT}
+        reservations:
+          memory: ${BACKEND_MEMORY_RESERVATION}
   frontend:
     build: ./src/frontend
     command: "npm run start"
