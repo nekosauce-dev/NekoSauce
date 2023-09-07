@@ -5,7 +5,7 @@ import dramatiq
 from nekosauce.sauces.models import Sauce
 
 
-@dramatiq.actor
+@dramatiq.actor(max_retries=0)
 def calc_hash(sauce_id: int):
     try:
         sauce = Sauce.objects.get(id=sauce_id)
@@ -15,7 +15,7 @@ def calc_hash(sauce_id: int):
         print(e)
 
 
-@dramatiq.actor
+@dramatiq.actor(max_retries=0)
 def download_thumbnail(sauce_id: int):
     try:
         sauce = Sauce.objects.get(id=sauce_id)
