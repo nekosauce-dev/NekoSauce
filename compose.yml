@@ -18,6 +18,7 @@ services:
       - static:/static
     secrets:
       - BACKEND_SECRET_KEY
+      - DATABASE_PASSWORD
     restart: always
     deploy:
       resources:
