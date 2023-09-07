@@ -348,8 +348,11 @@ class BaseTagger:
         Returns:
             bool: Wether this tagger can handle this URL or not.
         """
-        parsed_url = urllib.parse.urlparse(url)
-        return parsed_url.netloc == self.source_domain
+        try:
+            parsed_url = urllib.parse.urlparse(url)
+            return parsed_url.netloc == self.source_domain
+        except ValueError:
+            return False
 
     def to_tag(self, url) -> str:
         """Converts a URL into a tag.

@@ -234,4 +234,4 @@ class DanbooruTagger(sources.BaseTagger):
     get_value = lambda self, url: url.path.split("/")[2].split(".")[0]
 
     def check_url(self, url: str) -> bool:
-        return url.startswith("https://danbooru.donmai.us")
+        return url.startswith("https://danbooru.donmai.us/")

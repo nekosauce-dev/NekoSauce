@@ -174,10 +174,13 @@ class GelbooruTagger(sources.BaseTagger):
     )[0]
 
     def check_url(self, url: str) -> bool:
-        parsed_url = urllib.parse.urlparse(url)
-        return (
-            url.startswith("https://gelbooru.com")
-            and self.get_resource(parsed_url) in self.resources
-            and self.get_value(parsed_url) != "unknown"
-            and self.check_resources(self.get_resource(parsed_url), False)
-        )
+        try:
+            parsed_url = urllib.parse.urlparse(url)
+            return (
+                url.startswith("https://gelbooru.com")
+                and self.get_resource(parsed_url) in self.resources
+                and self.get_value(parsed_url) != "unknown"
+                and self.check_resources(self.get_resource(parsed_url), False)
+            )
+        except Exception as e:
+            return False
