@@ -38,6 +38,8 @@ services:
       POSTGRES_DB: ${DATABASE_NAME}
     volumes:
       - database:/var/lib/postgresql/data
+    secrets:
+      - DATABASE_PASSWORD
     healthcheck:
       test: ["CMD", "pg_isready", "-q", "-d", "${DATABASE_NAME}", "-U", "${DATABASE_USERNAME}"]
       interval: 1m30s
