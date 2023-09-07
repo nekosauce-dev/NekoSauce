@@ -243,13 +243,13 @@ bcrypt = ["bcrypt"]
 
 [[package]]
 name = "django-bunny"
-version = "1.1.4"
+version = "1.1.5"
 description = "A django storage for bunny.net"
 optional = false
 python-versions = ">=3.7,<4.0"
 files = [
-    {file = "django_bunny-1.1.4-py3-none-any.whl", hash = "sha256:eb36e97802d09e70ec6b5a506d7837a3ab7220525a303fbfbf65a2ff3d77b9fb"},
-    {file = "django_bunny-1.1.4.tar.gz", hash = "sha256:e6d45ae3a437433910ec37fb8690c891823b92fa9197de83cc8f2f81d6894fab"},
+    {file = "django_bunny-1.1.5-py3-none-any.whl", hash = "sha256:0d1f48e4b200844355e66a64f4f68d121a754e44f153e3d2864092bae6904553"},
+    {file = "django_bunny-1.1.5.tar.gz", hash = "sha256:adb429ced08f9a931381da659147fa79db24509843c2f5bd8b02508df0e64816"},
 ]
 
 [package.dependencies]

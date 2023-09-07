@@ -203,6 +203,6 @@ STORAGES = {
     },
     "staticfiles": {
         "BACKEND": "django_bunny.storage.BunnyStorage",
-        "OPTIONS": {"base_dir": "static/", "hostname": BUNNY_HOSTNAME + "static/"},
+        "OPTIONS": {"base_dir": "static/", "hostname": BUNNY_HOSTNAME},
     },
 }
