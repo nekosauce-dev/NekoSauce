@@ -18,5 +18,4 @@ RUN poetry export --without-hashes --format=requirements.txt --output=requiremen
 RUN rm pyproject.toml
 RUN pip install -r requirements.txt
 RUN python manage.py collectstatic --noinput
-RUN mv /app/static /static
 RUN chmod 755 /app/run.sh
