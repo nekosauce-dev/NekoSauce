@@ -19,6 +19,8 @@ services:
     secrets:
       - BACKEND_SECRET_KEY
       - DATABASE_PASSWORD
+    env_file:
+      - .env
     restart: always
     deploy:
       resources:
