@@ -16,6 +16,8 @@ import os
 
 import dotenv
 
+from nekosauce import utils
+
 dotenv.load_dotenv(".env.dev")
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -26,7 +28,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv(
+SECRET_KEY = utils.getsecret(
     "BACKEND_SECRET_KEY", "django-insecure-a61@7(+227wg_4kh36e@t6bkaext*0l0#3kkxo_(85zrftx9%p"
 )
 
@@ -102,7 +104,7 @@ DATABASES = {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": os.getenv("DATABASE_NAME", "nekosauce"),
         "USER": os.getenv("DATABASE_USERNAME", "nekosauce"),
-        "PASSWORD": os.getenv("DATABASE_PASSWORD", "nekosauce"),
+        "PASSWORD": utils.getsecret("DATABASE_PASSWORD", "nekosauce"),
         "HOST": os.getenv("DATABASE_HOSTNAME", "database"),
         "PORT": os.getenv("DATABASE_PORT", "5432"),
     }
