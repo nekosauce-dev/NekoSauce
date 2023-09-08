@@ -6,6 +6,7 @@ from django.db.models.expressions import RawSQL
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 
 from PIL import Image
 
@@ -24,6 +25,8 @@ from nekosauce.sauces.utils.hashing import hash_to_bits
 
 
 class SearchView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request):
         serializer = SearchQuerySerializer(data=request.GET)
 
