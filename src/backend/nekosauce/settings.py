@@ -166,6 +166,7 @@ REST_FRAMEWORK = {
         "rest_framework.renderers.JSONRenderer",
     ],
     "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.SessionAuthentication",
         "nekosauce.authentication.ApiKeyAuthentication",
     ],
     "EXCEPTION_HANDLER": "nekosauce.exceptions.exception_handler",
