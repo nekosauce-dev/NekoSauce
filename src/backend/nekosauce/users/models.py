@@ -14,4 +14,4 @@ class User(AbstractUser):
     donation = models.FloatField(default=0.0)
     donation_date = models.DateTimeField(null=True)
 
-    api_key = models.CharField(default=generate_api_key, max_length=86)
+    api_key = models.CharField(default=generate_api_key, max_length=86, db_index=True)
