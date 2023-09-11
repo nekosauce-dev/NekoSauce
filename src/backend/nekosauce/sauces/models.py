@@ -106,7 +106,7 @@ class Sauce(models.Model):
 
         self.hash, created = Hash.objects.get_or_create(
             bits=hash_to_bits(
-                imagehash.whash(img, hash_size=16),
+                imagehash.whash(img, hash_size=32),
             )
         )
 
@@ -154,7 +154,7 @@ class Hash(models.Model):
         verbose_name = "Hash"
         verbose_name_plural = "Hashes"
 
-    bits = BitField(max_length=16 ** 2, null=False, blank=False, unique=True, primary_key=True, editable=False)
+    bits = BitField(max_length=32 ** 2, null=False, blank=False, unique=True, primary_key=True, editable=False)
 
 
 class Source(models.Model):
