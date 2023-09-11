@@ -38,6 +38,9 @@ def get_thumbnail_size(width: int, height: int, min_size: int = 256) -> tuple[in
 class Sauce(models.Model):
     class Meta:
         unique_together = ["source", "source_site_id"]
+        indexes = [
+            BTreeIndex("hash", "source", name="sauces__hash_source__idx")
+        ]
 
     class SauceType(models.IntegerChoices):
         ART_STATIC = 0, "Art"
