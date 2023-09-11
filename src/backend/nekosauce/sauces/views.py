@@ -65,7 +65,7 @@ class SearchView(APIView):
         img = Image.open(file_obj)
 
         image_hash = imagehash.whash(
-            img, hash_size=16
+            img, hash_size=32
         )
         image_hash_bits = hash_to_bits(image_hash)
 
@@ -94,7 +94,7 @@ class SearchView(APIView):
                         "id": s.id,
                         "similarity": h.similarity,
                         "title": s.title,
-                        "hash": h.bits,
+                        "hash": hex(int(h.bits, 2))[2:],
                         "sha512_hash": s.sha512_hash,
                         "urls": {
                             "site": s.site_urls,
@@ -122,7 +122,7 @@ class SearchView(APIView):
                 ][:limit],
                 "meta": {
                     "count": len(sauces),
-                    "hash": image_hash_bits,
+                    "hash": hex(int(image_hash_bits, 2))[2:],
                     "upload": serializer.validated_data.get("url"),
                 },
             }
