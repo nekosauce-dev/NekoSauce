@@ -89,8 +89,11 @@ class Sauce(models.Model):
     def __str__(self):
         return self.title
 
-    def calc_hash(self, save: bool = True) -> bool:
+    def process(self, save: bool = True) -> bool:
         from nekosauce.sauces.sources import get_downloader
+
+        if self.hash_id is not None and self.sha512_hash is not None:
+            return False, None
 
         downloaders = [(get_downloader(url), url) for url in self.file_urls]
         downloaders = [d for d in downloaders if d[0] is not None]
@@ -102,54 +105,35 @@ class Sauce(models.Model):
                 ", ".join(self.file_urls)
             )
 
-        img = Image.open(io.BytesIO(downloader().download(url)))
+        img_bytes = downloader().download(url)
+        img = Image.open(io.BytesIO(img_bytes))
+
+        self.sha512_hash = hashlib.sha512(img_bytes).hexdigest()
 
         self.height = img.height
         self.width = img.width
 
-        self.hash, created = Hash.objects.get_or_create(
-            bits=hash_to_bits(
-                imagehash.whash(img, hash_size=32),
+        if self.hash_id is None:
+            self.hash, created = Hash.objects.get_or_create(
+                bits=hash_to_bits(
+                    imagehash.whash(img, hash_size=32),
+                )
             )
-        )
+
+        if self.sha512_hash is None:
+            img.thumbnail(get_thumbnail_size(img.width, img.height))
+            with io.BytesIO() as output:
+                img.save(output, format="WEBP")
+                output.seek(0)
+                default_storage.save(
+                    f"images/thumbnails/{self.source.name.lower().replace(' ', '-')}/{self.sha512_hash}.webp",
+                    output,
+                )
 
         if save:
             self.save()
 
         return True, None
-
-    def download_thumbnail(self) -> None:
-        from nekosauce.sauces.sources import get_downloader
-
-        downloaders = [(get_downloader(url), url) for url in self.file_urls]
-        downloaders = [d for d in downloaders if d[0] is not None]
-
-        downloader, url = downloaders[0] if downloaders else (None, None)
-
-        if downloader is None:
-            return False, "No downloader found for URLs {}".format(
-                ", ".join(self.file_urls)
-            )
-
-        response = downloader().download(url)
-
-        sha512_hash = hashlib.sha512(response).hexdigest()
-
-        img = Image.open(io.BytesIO(response))
-        img.thumbnail(get_thumbnail_size(img.width, img.height))
-
-        with io.BytesIO() as output:
-            img.save(output, format="WEBP")
-            output.seek(0)
-            default_storage.save(
-                f"images/thumbnails/{self.source.name.lower().replace(' ', '-')}/{sha512_hash}.webp",
-                output,
-            )
-
-        self.sha512_hash = sha512_hash
-        self.save()
-
-        return None
 
 
 class Hash(models.Model):
