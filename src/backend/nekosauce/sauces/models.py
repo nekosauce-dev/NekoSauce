@@ -108,7 +108,7 @@ class Sauce(models.Model):
         img_bytes = downloader().download(url)
         img = Image.open(io.BytesIO(img_bytes))
 
-        self.sha512_hash = hashlib.sha512(img_bytes).hexdigest()
+        self.sha512_hash = hashlib.sha512(img_bytes).hexdigest() if self.sha512_hash is None else self.sha512_hash
 
         self.height = img.height
         self.width = img.width
@@ -120,13 +120,17 @@ class Sauce(models.Model):
                 )
             )
 
-        if self.sha512_hash is None:
+        thumbnail_path = f"images/thumbnails/{self.source.name.lower().replace(' ', '-')}/{self.sha512_hash}.webp"
+
+        if not default_storage.exists(
+            thumbnail_path
+        ):
             img.thumbnail(get_thumbnail_size(img.width, img.height))
             with io.BytesIO() as output:
                 img.save(output, format="WEBP")
                 output.seek(0)
                 default_storage.save(
-                    f"images/thumbnails/{self.source.name.lower().replace(' ', '-')}/{self.sha512_hash}.webp",
+                    thumbnail_path,
                     output,
                 )
 
