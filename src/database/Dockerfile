@@ -9,8 +9,8 @@ RUN git clone https://github.com/eulerto/pg_similarity.git /usr/src/pg_similarit
 
 # Build and install pg_similarity extension
 RUN cd /usr/src/pg_similarity \
-    && make \
-    && make install
+    && USE_PGXS=1 make \
+    && USE_PGXS=1 make install
 
 # Clean up build dependencies
 RUN apk del build-base git clang15 llvm15 \
