@@ -2,7 +2,6 @@ import grequests
 
 from django.core.management.base import BaseCommand
 
-from nekosauce.sauces.tasks import download_thumbnail
 from nekosauce.sauces.models import Sauce
 from nekosauce.sauces.sources import get_fetcher, get_all_fetchers
 
