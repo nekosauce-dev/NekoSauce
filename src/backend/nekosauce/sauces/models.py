@@ -144,6 +144,9 @@ class Hash(models.Model):
     class Meta:
         verbose_name = "Hash"
         verbose_name_plural = "Hashes"
+        indexes = [
+            models.Index(fields=["-bits"], name="hash_bits_idx"),
+        ]
 
     bits = BitField(max_length=32 ** 2, null=False, blank=False, unique=True, primary_key=True, editable=False)
 
