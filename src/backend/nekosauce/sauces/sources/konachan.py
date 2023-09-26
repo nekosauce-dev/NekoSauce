@@ -83,12 +83,14 @@ class KonachanFetcher(sources.BaseFetcher):
         else:
             start_from = 0
 
+        page_range = 100
+
         reqs = [
             self.request(
                 "GET",
-                f"/post.json?limit=1000&tags=id:{','.join([str(n) for n in range(i, i + 1000)])}",
+                f"/post.json?limit={page_range}&tags=id:{','.join([str(n) for n in range(i, i + page_range)])}",
             )
-            for i in range(start_from, last_konachan_sauce_id + 1, 1000)
+            for i in range(start_from, last_konachan_sauce_id + 1, page_range)
         ]
 
         req_chunks = paginate(reqs, chunk_size)
@@ -103,7 +105,7 @@ class KonachanFetcher(sources.BaseFetcher):
 
                 if response.status_code == 520:
                     print(
-                        f"({range(start_from, last_konachan_sauce_id + 1, 1000)[index]}-{range(start_from, last_konachan_sauce_id + 1, 1000)[index + 1]}) ERROR 520! Skipping..."
+                        f"({range(start_from, last_konachan_sauce_id + 1, page_range)[index]}-{range(start_from, last_konachan_sauce_id + 1, page_range)[index + 1]}) ERROR 520! Skipping..."
                     )
                     continue
 
