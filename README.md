@@ -1,6 +1,6 @@
 # NekoSauce
 
-An anime art source finder.
+An anime & manga source finder. Written in Django (Python 3) (Backend) and Next.js (Node.js) (Frontend).
 
 [Documentation](https://docs.nekosauce.org/) • [Donate](https://ko-fi.com/Nekidev)
 
