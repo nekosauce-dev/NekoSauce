@@ -2,6 +2,8 @@
 
 An anime art source finder.
 
+[Documentation](https://docs.nekosauce.org/) • [Donate](https://ko-fi.com/Nekidev)
+
 ## Stack
 
 The project is small but uses a bunch of different tools to handle different things.
