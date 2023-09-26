@@ -43,7 +43,8 @@ class Command(BaseCommand):
                     i += 1
                     if i >= limit:
                         break
-            except:
+            except Exception as e:
                 self.stdout.write(
                     self.style.ERROR(f"ERROR! Something went wrong fetching sauces from {source.name}.")
                 )
+                self.stdout.write(str(e))
