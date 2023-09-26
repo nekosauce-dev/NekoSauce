@@ -125,7 +125,7 @@ class KonachanFetcher(sources.BaseFetcher):
                 break
 
 
-class KonachanFetcher(sources.BaseFetcher):
+class KonachanDownloader(sources.BaseDownloader):
     fetcher = KonachanFetcher
     site_name = "Konachan"
 
