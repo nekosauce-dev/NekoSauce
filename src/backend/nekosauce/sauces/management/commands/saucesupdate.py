@@ -1,3 +1,5 @@
+import traceback
+
 import grequests
 
 from django.core.management.base import BaseCommand
@@ -43,8 +45,8 @@ class Command(BaseCommand):
                     i += 1
                     if i >= limit:
                         break
-            except Exception as e:
+            except:
                 self.stdout.write(
                     self.style.ERROR(f"ERROR! Something went wrong fetching sauces from {source.name}.")
                 )
-                self.stdout.write(str(e))
+                traceback.print_exc()
