@@ -82,7 +82,7 @@ class KonachanFetcher(sources.BaseFetcher):
         reqs = [
             self.request(
                 "GET",
-                self.get_url(f"/post.json?limit=1000&tags=id:{','.join([str(n) for n in range(i, i + 1000)])}")
+                f"/post.json?limit=1000&tags=id:{','.join([str(n) for n in range(i, i + 1000)])}"
             ) for i in range(start_from, last_konachan_sauce_id + 1, 1000)
         ]
 
