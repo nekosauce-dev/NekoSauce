@@ -1,6 +1,6 @@
 # NekoSauce
 
-An anime & manga source finder. Made with in Django and Next.js.
+An anime & manga source finder. Made with Django and Next.js.
 
 [Documentation](https://docs.nekosauce.org/) • [Donate](https://ko-fi.com/Nekidev)
 
