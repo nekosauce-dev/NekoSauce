@@ -54,8 +54,8 @@ class YandereFetcher(sources.BaseFetcher):
                 else []
             ),
             is_nsfw=post["rating"] in ["q", "e"],
-            width=post["jpeg_width"],
-            height=post["jpeg_height"],
+            width=post["jpeg_width"] if post["jpeg_width"] else post["width"],
+            height=post["jpeg_height"] if post["jpeg_height"] else post["height"],
         )
 
         return sauce
