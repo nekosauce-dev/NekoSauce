@@ -30,15 +30,20 @@ class Command(BaseCommand):
 
             i = 0
 
-            for sauce in fetcher.get_sauces_iter(
-                chunk_size=chunk_size,
-                start_from=fetcher.last_sauce,
-            ):
-                self.stdout.write(
-                    self.style.SUCCESS(f"ADDED")
-                    + f": ({source.name}) {sauce.source_site_id} - {sauce.title}"
-                )
+            try:
+                for sauce in fetcher.get_sauces_iter(
+                    chunk_size=chunk_size,
+                    start_from=fetcher.last_sauce,
+                ):
+                    self.stdout.write(
+                        self.style.SUCCESS(f"ADDED")
+                        + f": ({source.name}) {sauce.source_site_id} - {sauce.title}"
+                    )
 
-                i += 1
-                if i >= limit:
-                    break
+                    i += 1
+                    if i >= limit:
+                        break
+            except:
+                self.stdout.write(
+                    self.style.ERROR(f"ERROR! Something went wrong fetching sauces from {source.name}.")
+                )
