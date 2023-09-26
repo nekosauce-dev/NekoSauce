@@ -15,10 +15,12 @@ from nekosauce.sauces.models import Sauce, Source
 def get_all_fetchers():
     from nekosauce.sauces.sources.danbooru import DanbooruFetcher
     from nekosauce.sauces.sources.gelbooru import GelbooruFetcher
+    from nekosauce.sauces.sources.konachan import KonachanFetcher
     
     return [
         GelbooruFetcher,
         DanbooruFetcher,
+        KonachanFetcher
     ]
 
 
@@ -43,10 +45,12 @@ def get_downloader(url: str) -> "BaseDownloader":
     """
     from nekosauce.sauces.sources.danbooru import DanbooruDownloader
     from nekosauce.sauces.sources.gelbooru import GelbooruDownloader
+    from nekosauce.sauces.sources.konachan import KonachanDownloader
 
     downloaders = [
         DanbooruDownloader,
         GelbooruDownloader,
+        KonachanDownloader
     ]
 
     for downloader in downloaders:
@@ -67,11 +71,13 @@ def get_tags(links: typing.List[str]) -> typing.List[str]:
     """
     from nekosauce.sauces.sources.danbooru import DanbooruTagger
     from nekosauce.sauces.sources.gelbooru import GelbooruTagger
+    from nekosauce.sauces.sources.konachan import KonachanTagger
     from nekosauce.sauces.sources.pixiv import PixivTagger
 
     taggers = [
         DanbooruTagger(),
         GelbooruTagger(),
+        KonachanTagger(),
         PixivTagger(),
     ]
 
