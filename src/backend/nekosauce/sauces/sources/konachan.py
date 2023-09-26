@@ -1,3 +1,4 @@
+import typing
 import urllib.parse
 
 import grequests
