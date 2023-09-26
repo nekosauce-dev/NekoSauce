@@ -71,9 +71,13 @@ class KonachanFetcher(sources.BaseFetcher):
 
         return self._get_sauce_from_response(post)
 
-    def get_sauces_iter(self, chunk_size: int = 1024, start_from = None) -> typing.Iterator[Sauce]:
-        last_konachan_sauce_id = int(requests.get(self.get_url("/post.json?limit=1")).json()[0]["id"])
-        
+    def get_sauces_iter(
+        self, chunk_size: int = 1024, start_from=None
+    ) -> typing.Iterator[Sauce]:
+        last_konachan_sauce_id = int(
+            requests.get(self.get_url("/post.json?limit=1")).json()[0]["id"]
+        )
+
         if isinstance(start_from, Sauce):
             start_from = int(start_from.source_site_id)
         else:
@@ -82,8 +86,9 @@ class KonachanFetcher(sources.BaseFetcher):
         reqs = [
             self.request(
                 "GET",
-                f"/post.json?limit=1000&tags=id:{','.join([str(n) for n in range(i, i + 1000)])}"
-            ) for i in range(start_from, last_konachan_sauce_id + 1, 1000)
+                f"/post.json?limit=1000&tags=id:{','.join([str(n) for n in range(i, i + 1000)])}",
+            )
+            for i in range(start_from, last_konachan_sauce_id + 1, 1000)
         ]
 
         req_chunks = paginate(reqs, chunk_size)
@@ -97,7 +102,9 @@ class KonachanFetcher(sources.BaseFetcher):
                     return
 
                 if response.status_code == 520:
-                    print("ERROR 520! Skipping...")
+                    print(
+                        f"({range(start_from, last_konachan_sauce_id + 1, 1000)[index]}-{range(start_from, last_konachan_sauce_id + 1, 1000)[index + 1]}) ERROR 520! Skipping..."
+                    )
                     continue
 
                 new_sauces = [
@@ -120,7 +127,7 @@ class KonachanFetcher(sources.BaseFetcher):
                 for sauce in new_sauces:
                     if sauce.source_site_id == str(last_konachan_sauce_id):
                         return
-            
+
             del req_chunks[0]
 
             if len(req_chunks) == 0:
