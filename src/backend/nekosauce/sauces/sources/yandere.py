@@ -118,6 +118,13 @@ class YandereFetcher(sources.BaseFetcher):
                         "file_url" in post
                         and post["file_url"]
                         and post["status"] == "active"
+                        and None
+                        not in [
+                            post["jpeg_height"],
+                            post["jpeg_width"],
+                            post["height"],
+                            post["width"],
+                        ]
                     )
                 ]
                 Sauce.objects.bulk_create(
