@@ -97,6 +97,7 @@ class KonachanFetcher(sources.BaseFetcher):
                     return
 
                 if response.status_code == 520:
+                    print("ERROR 520! Skipping...")
                     continue
 
                 new_sauces = [
