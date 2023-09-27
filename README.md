@@ -80,9 +80,8 @@ The currently available sources are:
 
 Now that you have the server correctly set up, you just need to set up cron jobs to update the database with new sauces/hashes/thumbnails/etc. There are 3 commands you need to set up:
 
-- `docker exec nekosauce-backend-1 python manage.py updatesauces`: Will fetch new sauces from all sources, or from one source if passed as an argument.
-- `docker exec nekosauce-backend-1 python manage.py updatehashes`: Will download the fetched sauces (the file) from their source's CDN or however they serve their images and calculate their hash.
-- `docker exec nekosauce-backend-1 python manage.py updatethumbs`: Will download the fetched images from their source's CDN or however they serve their images and update the thumbnails and their sha512 hash.
+- `docker exec nekosauce-backend-1 python manage.py saucesupdate`: Will fetch new sauces from all sources, or from one source if passed as an argument.
+- `docker exec nekosauce-backend-1 python manage.py saucesprocess`: Will download the fetched sauces (the file) from their source's CDN or however they serve their images, calculate their hash, and update the thumbnails and their sha512 hash.
 
 You can get more info about them adding `--help` at the end of each command. It's up to you to decide how frequently each of them will run, but you should do some benchmarking to see what works best for you.
 
