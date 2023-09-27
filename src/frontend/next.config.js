@@ -1,9 +1,15 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    eslint: {
-        // Warning: This allows production builds to successfully complete even if
-        // your project has ESLint errors.
-        ignoreDuringBuilds: true,
+    reactStrictMode: true,
+    env: {
+        FOOTER_DISCORD_LINK: process.env.FRONTEND_FOOTER_DISCORD_LINK,
+        FOOTER_TWITTER_LINK: process.env.FRONTEND_FOOTER_TWITTER_LINK,
+        FOOTER_REDDIT_LINK: process.env.FRONTEND_FOOTER_REDDIT_LINK,
+        FOOTER_DONATE_LINK: process.env.FRONTEND_FOOTER_DONATE_LINK,
+        FUNDING_PROGRESS: process.env.FRONTEND_FUNDING_PROGRESS,
+        FUNDING_PROGRESS_FORMAT: process.env.FRONTEND_FUNDING_PROGRESS_FORMAT
+            ? process.env.FRONTEND_FUNDING_PROGRESS_FORMAT
+            : "{value}%",
     },
 };
 

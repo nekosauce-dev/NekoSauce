@@ -1,134 +1,235 @@
 "use client";
 
-import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
-import React from "react";
+
+import {
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
+} from "@/components/ui/accordion";
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardFooter,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { Progress } from "@/components/ui/progress";
+import { Button } from "@/components/ui/button";
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export default function Home() {
     return (
         <main className="flex flex-col items-center justify-center py-8 px-4 min-h-full selection:bg-rose-400 selection:text-white selection:rounded">
-            <div className="w-full max-w-md h-full flex flex-col gap-4">
+            <div className="w-full max-w-md h-full flex flex-col gap-4 relative">
                 <h1 className="font-caturday text-6xl leading-none text-center">
                     NekoSauce
                 </h1>
-                <p className="text-center text-lg leading-normal text-neutral-600">
+                <p className="text-center text-lg leading-normal text-muted-foreground">
                     Find any anime/manga art's sauce!
                 </p>
-                {/* <div className="my-12 flex flex-col gap-2 justify-self-center align-middle">
-                    <div className="flex flex-row items-center gap-2 text-xs text-neutral-500 select-none">
-                        <div div className="flex flex-row items-center gap-1">
-                            <label for="hash" className="text-neutral-600">
-                                Hash:
-                            </label>
-                            <select
-                                className="border-none appearance-none p-1 -m-1 outline-none bg-transparent"
-                                id="hash"
-                            >
-                                <option value="1">Perceptual</option>
-                                <option value="2">Average</option>
-                                <option value="3">Differential</option>
-                                <option value="4">Wavelet</option>
-                            </select>
-                            <ChevronDownIcon className="w-3 h-3" />
-                        </div>
-                        <span>/</span>
-                        <div div className="flex flex-row items-center gap-1">
-                            <label for="bits" className="text-neutral-600">
-                                Bits:
-                            </label>
-                            <select
-                                className="border-none appearance-none p-1 -m-1 outline-none bg-transparent w-fit"
-                                id="bits"
-                            >
-                                <option value="8">8</option>
-                                <option value="16">16</option>
-                                <option value="32">32</option>
-                                <option value="64">64</option>
-                            </select>
-                            <ChevronDownIcon className="w-3 h-3" />
-                        </div>
-                    </div>
-                    <div className="flex flex-row items-center gap-2">
-                        <input
-                            className="flex-1 p-2 leading-none bg-white border border-neutral-200 rounded-lg outline-none placeholder:text-neutral-400 transition focus:border-neutral-400"
-                            type="url"
-                            placeholder="Paste your image's URL"
-                        />
-                        <button className="py-2 px-4 font-bold bg-rose-500 hover:bg-rose-600 text-white rounded-lg outline-none transition">
-                            Upload
-                        </button>
-                    </div>
-                    <p className="text-sm text-neutral-500 leading-none">
-                        You can also paste a Reddit URL, a Twitter url, etc., or
-                        drop a file!
-                    </p>
-                </div> */}
-                <div className="mt-12 mb-4">
-                    <h1 className="font-bold text-center text-3xl">Frequently Asked Questions</h1>
-                </div>
-                <div className="flex flex-col gap-4">
-                    <FaqItem
-                        title="What's NekoSauce?"
-                        description="NekoSauce is an anime/manga art/screenshot sauce finder tool. It was made to help people find artists from their artworks, specifically targeting anime/manga art. It was made to help both users and developers who want to implement an API like this one in their apps."
-                    />
-                    <FaqItem
-                        title="When will NekoSauce be released?"
-                        description="NekoSauce is ready to be launched! However, it's a project that requires a server with a lot of resources, which I'm not yet ready to pay for. If you want to, you can donate at https://ko-fi.com/nekidev to help this project be released sooner!" />
-                    <FaqItem
-                        title="Where are the sauces taken from?"
-                        description="Currently, only Gelbooru and Danbooru are supported. I'm currently working to bring more sources in the future!" />
-                    <FaqItem
-                        title="Why NekoSauce?"
-                        description="NekoSauce has a bunch of nice features that are not available in other sauce finders. Image tagging, fast queries and search customization are just a few of them!" />
-                    <FaqItem
-                        title="Is it open source?"
-                        description="Currently, it is not. However, I'm probably going to open source it in the future!" />
-                    <FaqItem
-                        title="Do I have to pay to use NekoSauce?"
-                        description="Absolutely not! This is definetly not a project intended to make money. This is just a hobby project I'm working on. However, since the project (and each query) consumes A LOT of resources, I'm not yet ready to pay for the hosting (to be specific, the project will need around 25 USD per month to be released). If you want to, you can donate at https://ko-fi.com/nekidev to help this project be released sooner!" />
-                    <FaqItem
-                        title="How frequently are sauces updated?"
-                        description="Sauces are updated every 30 minutes. They're currently being updated even if the project is not released to public, so that when the release comes the database is full of sauces :)" />
-                </div>
-                <div className="mt-12 mb-4 flex flex-col items-center justify-center gap-4">
-                    <Link className="underline" href="https://ko-fi.com/nekidev">Donate now! (Objective: 25$ USD per month)</Link>
-                    <div className="flex flex-row items-center gap-2">
-                        <div className="relative w-80 h-4 rounded-full bg-neutral-200">
-                            <div className="absolute h-4 left-0 top-0 bottom-0 w-[calc(((100/25)*4)*1%)] bg-rose-500 rounded-full text-xs text-white font-bold text-center flex flex-col items-center justify-center">
-                                16%
+                <Card className="my-4">
+                    <CardHeader>
+                        <CardTitle>FAQ</CardTitle>
+                        <CardDescription>
+                            Frequently Asked Questions
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <Separator />
+                        <Accordion type="single" collapsible className="w-full">
+                            <AccordionItem value="whats-nekosauce">
+                                <AccordionTrigger>
+                                    What's NekoSauce?
+                                </AccordionTrigger>
+                                <AccordionContent>
+                                    NekoSauce is an anime/manga art/screenshot
+                                    sauce finder tool. It was made to help
+                                    people find artists from their artworks,
+                                    specifically targeting anime/manga art. It
+                                    was made to help both users and developers
+                                    who want to implement an API like this one
+                                    in their apps.
+                                </AccordionContent>
+                            </AccordionItem>
+                            <AccordionItem value="when-will-nekosauce-be-released">
+                                <AccordionTrigger>
+                                    When will NekoSauce be released?
+                                </AccordionTrigger>
+                                <AccordionContent>
+                                    NekoSauce is currently fetching sauces
+                                    (again) and hashing them. Ideally a beta
+                                    will be released once it reaches around
+                                    8,000,000 hashed sauces, but it's not
+                                    confirmed.
+                                </AccordionContent>
+                            </AccordionItem>
+                            <AccordionItem value="where-are-the-sauces-taken-from">
+                                <AccordionTrigger>
+                                    Where are the sauces taken from?
+                                </AccordionTrigger>
+                                <AccordionContent>
+                                    At the time of writing, the supported
+                                    sources are: Danbooru, Gelbooru, Konachan,
+                                    and Yande.re. I'm constantly adding new
+                                    sources, so stay tuned!
+                                </AccordionContent>
+                            </AccordionItem>
+                            <AccordionItem value="why-nekosauce">
+                                <AccordionTrigger>
+                                    Why NekoSauce?
+                                </AccordionTrigger>
+                                <AccordionContent>
+                                    NekoSauce has a bunch of nice features that
+                                    are not available in other sauce finders.
+                                    Image tagging, fast queries and search
+                                    customization are just a few of them!
+                                </AccordionContent>
+                            </AccordionItem>
+                            <AccordionItem value="is-it-open-source">
+                                <AccordionTrigger>
+                                    Is it open source?
+                                </AccordionTrigger>
+                                <AccordionContent>
+                                    Currently, the source code is only open to
+                                    donators. This could change in the future,
+                                    but I need to confirm a few things before
+                                    completely open-sourcing it.
+                                </AccordionContent>
+                            </AccordionItem>
+                            <AccordionItem value="will-i-need-to-pay">
+                                <AccordionTrigger>
+                                    Will I need to pay?
+                                </AccordionTrigger>
+                                <AccordionContent>
+                                    NekoSauce is 100% free to use for regular
+                                    users! The API is a bit more limited since
+                                    the servers are not yet prepared to receive
+                                    big amounts of requests. Donators have an{" "}
+                                    <b>increased limit</b>.
+                                </AccordionContent>
+                            </AccordionItem>
+                        </Accordion>
+                    </CardContent>
+                    {process.env.FUNDING_PROGRESS && (
+                        <CardFooter className="flex items-center gap-2">
+                            <Progress
+                                value={process.env.FUNDING_PROGRESS}
+                                className="flex-1"
+                            />
+                            <div className="text-muted-foreground">
+                                {process.env.FUNDING_PROGRESS_FORMAT.replace(
+                                    "{value}",
+                                    process.env.FUNDING_PROGRESS
+                                )}{" "}
+                                funded
                             </div>
-                        </div>
-                        25$
-                    </div>
+                        </CardFooter>
+                    )}
+                </Card>
+                <div className="flex flex-row items-center justify-center">
+                    {process.env.FOOTER_DISCORD_LINK && (
+                        <>
+                            <Link
+                                href={process.env.FOOTER_DISCORD_LINK}
+                                target="_blank"
+                                key="discord-btn"
+                            >
+                                <Button variant="link">Discord</Button>
+                            </Link>
+                            <Separator
+                                key="discord-separator"
+                                orientation="vertical"
+                                className="h-6"
+                            />
+                        </>
+                    )}
+                    {process.env.FOOTER_TWITTER_LINK && (
+                        <>
+                            <Link
+                                href={process.env.FOOTER_TWITTER_LINK}
+                                target="_blank"
+                                key="twitter-btn"
+                            >
+                                <Button variant="link">Twitter</Button>
+                            </Link>
+                            <Separator
+                                key="twitter-separator"
+                                orientation="vertical"
+                                className="h-6"
+                            />
+                        </>
+                    )}
+                    {process.env.FOOTER_REDDIT_LINK && (
+                        <>
+                            <Link
+                                href={process.env.FOOTER_REDDIT_LINK}
+                                target="_blank"
+                                key="reddit-btn"
+                            >
+                                <Button variant="link">Reddit</Button>
+                            </Link>
+                            <Separator
+                                key="reddit-separator"
+                                orientation="vertical"
+                                className="h-6"
+                            />
+                        </>
+                    )}
+                    {process.env.FOOTER_DONATE_LINK && (
+                        <>
+                            <TooltipProvider>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <Link
+                                            href={
+                                                process.env.FOOTER_DONATE_LINK
+                                            }
+                                            target="_blank"
+                                            key="donate-btn"
+                                        >
+                                            <Button variant="link">
+                                                Donate
+                                            </Button>
+                                        </Link>
+                                    </TooltipTrigger>
+                                    {process.env.FUNDING_PROGRESS && (
+                                        <TooltipContent>
+                                            <p>
+                                                {process.env.FUNDING_PROGRESS_FORMAT.replace(
+                                                    "{value}",
+                                                    process.env.FUNDING_PROGRESS
+                                                )}{" "}
+                                                funded
+                                            </p>
+                                        </TooltipContent>
+                                    )}
+                                </Tooltip>
+                            </TooltipProvider>
+                            <Separator
+                                key="donate-separator"
+                                orientation="vertical"
+                                className="h-6"
+                            />
+                        </>
+                    )}
+                    <Link
+                        href="https://nyeki.dev"
+                        target="_blank"
+                        key="nyeki-btn"
+                    >
+                        <Button variant="link">Nyeki.py</Button>
+                    </Link>
                 </div>
             </div>
         </main>
-    );
-}
-
-function FaqItem({ title, description }) {
-    const [isOpen, setIsOpen] = React.useState(false);
-
-    return (
-        <button
-            className="bg-neutral-100 py-2 px-2.5 rounded-lg flex flex-col gap-2 relative text-neutral-900 group"
-            onClick={() => setIsOpen(!isOpen)}
-        >
-            <div className="flex flex-row items-center justify-between w-full">
-                <span className="font-bold">{title}</span>
-                <button className="rounded-md bg-purple-500 group-hover:bg-purple-600 transition text-white p-1 aspect-square -m-1">
-                    <ChevronDownIcon
-                        className={`h-5 w-5 stroke-2 ${
-                            isOpen ? "rotate-180" : ""
-                        }`}
-                    />
-                </button>
-            </div>
-            {isOpen && (
-                <p className="text-start text-sm text-neutral-600">
-                    {description}
-                </p>
-            )}
-        </button>
     );
 }
