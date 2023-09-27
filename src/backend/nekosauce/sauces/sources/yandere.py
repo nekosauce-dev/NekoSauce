@@ -39,7 +39,7 @@ class YandereFetcher(sources.BaseFetcher):
             api_urls=[
                 f"https://yande.re/post.json?tags=id:{post['id']}",
             ],
-            file_urls=[post["jpeg_url"], post["file_url"]],
+            file_urls=[post["file_url"]],
             source=self.source,
             source_site_id=str(post["id"]),
             tags=sources.get_tags(site_urls)
@@ -54,8 +54,8 @@ class YandereFetcher(sources.BaseFetcher):
                 else []
             ),
             is_nsfw=post["rating"] in ["q", "e"],
-            width=post["jpeg_width"] if post["jpeg_width"] else post.get("width", 0),
-            height=post["jpeg_height"] if post["jpeg_height"] else post.get("height", 0),
+            width=post.get("width", 0),
+            height=post.get("height", 0),
         )
 
         return sauce
