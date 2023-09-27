@@ -147,13 +147,13 @@ class KonachanDownloader(sources.BaseDownloader):
         return urllib.parse.urlparse(url).path.split("/")[-1].split(".")[0]
 
     def download_request(self, url: str):
-        if urllib.parse.urlparse(url).path.startswith("/image/"):
+        if urllib.parse.urlparse(url).path.startswith("/post/"):
             url = self.fetcher.get_file_url(KonachanDownloader.get_sauce_id(url))
 
         return grequests.get(url)
 
     def download(self, url: str) -> bytes:
-        if urllib.parse.urlparse(url).path.startswith("/image/"):
+        if urllib.parse.urlparse(url).path.startswith("/post/"):
             url = self.fetcher.get_file_url(KonachanDownloader.get_sauce_id(url))
 
         r = requests.get(url)
