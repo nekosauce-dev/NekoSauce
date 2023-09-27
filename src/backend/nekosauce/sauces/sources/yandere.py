@@ -141,7 +141,7 @@ class YandereDownloader(sources.BaseDownloader):
     site_name = "Yande.re"
 
     def check_url(self, url: str) -> bool:
-        return url.startswith("https://yande.re")
+        return url.startswith("https://files.yande.re")
 
     def get_sauce_id(url: str) -> str:
         return urllib.parse.urlparse(url).path.split("/")[-1].split(".")[0]
