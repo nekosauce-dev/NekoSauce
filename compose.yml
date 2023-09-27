@@ -32,6 +32,8 @@ services:
     build: ./src/frontend
     command: "npm run start"
     restart: always
+    env_file:
+      - .env
   database:
     build: ./src/database
     environment:
