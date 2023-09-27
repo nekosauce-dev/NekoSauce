@@ -72,7 +72,6 @@ module.exports = {
             fontFamily: {
                 caturday: [
                     "var(--font-caturday)",
-                    "var(--font-nunito-sans)",
                     "sans-serif",
                 ],
             },
