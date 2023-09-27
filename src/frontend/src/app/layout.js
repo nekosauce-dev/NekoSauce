@@ -1,6 +1,5 @@
 import "./globals.css";
 import localFont from "next/font/local";
-import { Nunito_Sans, Inter } from "next/font/google";
 
 const Caturday = localFont({
     src: "Caturday.ttf",
