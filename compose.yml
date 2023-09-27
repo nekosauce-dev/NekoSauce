@@ -29,7 +29,15 @@ services:
         reservations:
           memory: ${BACKEND_MEMORY_RESERVATION}
   frontend:
-    build: ./src/frontend
+    build:
+      context: ./src/frontend
+      args:
+        FRONTEND_FOOTER_DISCORD_LINK: ${FRONTEND_FOOTER_DISCORD_LINK}
+        FRONTEND_FOOTER_DONATE_LINK: ${FRONTEND_FOOTER_DONATE_LINK}
+        FRONTEND_FOOTER_TWITTER_LINK: ${FRONTEND_FOOTER_TWITTER_LINK}
+        FRONTEND_FOOTER_REDDIT_LINK: ${FRONTEND_FOOTER_REDDIT_LINK}
+        FRONTEND_FUNDING_PROGRESS: ${FRONTEND_FUNDING_PROGRESS}
+        FRONTEND_FUNDING_PROGRESS_FORMAT: ${FRONTEND_FUNDING_PROGRESS_FORMAT}
     command: "npm run start"
     restart: always
     env_file:
