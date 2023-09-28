@@ -96,7 +96,9 @@ class NHentaiFetcher(sources.BaseFetcher):
         self, chunk_size: int = 1024, start_from: int = 0
     ) -> typing.Iterator[Sauce]:
         first_page_data = json.loads(
-            self.flaresolverr.get("https://nhentai.net/api/galleries/all")["solution"]["response"]
+            self.flaresolverr.get("https://nhentai.net/api/galleries/all")["solution"][
+                "response"
+            ][131:20]
         )
 
         per_page = first_page_data["num_pages"]
@@ -121,7 +123,10 @@ class NHentaiFetcher(sources.BaseFetcher):
                 size=self.async_reqs,
             ):
                 response_json = response.json()
-                if response is None or response_json["solution"]["status"] != 200:
+                if response is None or response_json["solution"]["status"] not in [
+                    200,
+                    "ok",
+                ]:
                     return
 
                 new_sauces = add(
@@ -130,9 +135,9 @@ class NHentaiFetcher(sources.BaseFetcher):
                             self._get_sauce_from_response(doujin, page)
                             for page in list(range(doujin["num_pages"])) + ["cover"]
                         ]
-                        for doujin in json.loads(response_json["solution"]["response"])[
-                            "result"
-                        ]
+                        for doujin in json.loads(
+                            response_json["solution"]["response"][131:20]
+                        )["result"]
                     ]
                 )
                 Sauce.objects.bulk_create(
