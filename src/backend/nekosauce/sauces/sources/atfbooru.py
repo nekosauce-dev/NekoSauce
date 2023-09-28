@@ -21,10 +21,7 @@ class ATFBooruFetcher(sources.BaseFetcher):
     last_page = property(lambda self: f"a{self.last_sauce.source_site_id}")
 
     def get_url(self, path: str) -> str:
-        user = self.credentials["user"]
-        pwd = self.credentials["pass"]
-
-        return f"https://{user}:{pwd}@booru.allthefallen.moe{path}"
+        return f"https://booru.allthefallen.moe{path}"
 
     def get_sauce_request(self, id: str) -> grequests.AsyncRequest:
         return self.request("GET", f"/posts/{id}.json")
