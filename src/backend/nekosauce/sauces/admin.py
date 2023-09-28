@@ -20,7 +20,9 @@ class SauceAdmin(admin.ModelAdmin):
 
 @admin.register(Source)
 class SourceAdmin(admin.ModelAdmin):
-    list_display = ("name", "website", "api_docs")
+    list_display = ("name", "website", "api_docs", "enabled")
+    list_filter = ("enabled",)
+    search_fields = ("name", "website", "api_docs")
 
 
 @admin.register(Hash)
