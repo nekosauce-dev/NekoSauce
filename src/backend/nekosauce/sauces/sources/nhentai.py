@@ -101,8 +101,8 @@ class NHentaiFetcher(sources.BaseFetcher):
             ][131:-20]
         )
 
-        per_page = first_page_data["num_pages"]
-        last_page = first_page_data["num_data"]
+        per_page = first_page_data["per_page"]
+        last_page = first_page_data["num_pages"]
 
         if isinstance(start_from, Sauce):
             last_page = int(start_from.source_site_id.split(":")[0]) / per_page
