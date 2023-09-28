@@ -199,7 +199,9 @@ class AIBooruDownloader(sources.BaseFetcher):
     site_name = "AIBooru"
 
     def check_url(self, url: str) -> bool:
-        return url.startswith("https://aibooru.online") or url.startswith(
+        return url.startswith(
+            "https://cdn.aibooru.online"
+        ) or url.startswith(
             "https://cdn.aibooru.space"
         )
 
@@ -207,15 +209,9 @@ class AIBooruDownloader(sources.BaseFetcher):
         return urllib.parse.urlparse(url).path.split("/")[-1].split(".")[0]
 
     def download_request(self, url: str):
-        if urllib.parse.urlparse(url).netloc == "aibooru.online":
-            url = self.fetcher.get_file_url(AIBooruDownloader.get_sauce_id(url))
-
         return grequests.get(url)
 
     def download(self, url: str) -> bytes:
-        if urllib.parse.urlparse(url).netloc == "aibooru.online":
-            url = self.fetcher.get_file_url(AIBooruDownloader.get_sauce_id(url))
-
         r = requests.get(url)
         r.raise_for_status()
 
@@ -229,7 +225,7 @@ class AIBooruTagger(sources.BaseTagger):
 
     get_resource = lambda self, url: url.path.split("/")[1][:-1]
     get_property = lambda self, url: "id"
-    get_value = lambda self, url: url.path.split("/")[2].split(".")[0]
+    get_value = lambda self, url: url.path.split("/")[-1].split(".")[0]
 
     def check_url(self, url: str) -> bool:
-        return url.startswith("https://aibooru.online/")
+        return url.startswith("https://aibooru.online/") or url.startswith("https://aibooru.space/")
