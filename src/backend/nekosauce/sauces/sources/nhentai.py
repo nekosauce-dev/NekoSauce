@@ -146,7 +146,7 @@ class NHentaiFetcher(sources.BaseFetcher):
             if len(req_chunks) == 0:
                 break
         
-    self.flaresolverr.__exit__()
+        self.flaresolverr.__exit__()
 
 
 class NHentaiDownloader(sources.BaseFetcher):
