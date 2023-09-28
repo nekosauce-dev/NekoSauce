@@ -83,14 +83,14 @@ class LolibooruFetcher(sources.BaseFetcher):
         else:
             start_from = 0
 
-        page_range = 100
+        page_range = 1000
 
         reqs = [
             self.request(
                 "GET",
-                f"/post.json?limit={page_range}&tags=id:{','.join([str(n) for n in range(i, i + page_range)])}",
+                f"/post.json?limit={page_range}&page={page}",
             )
-            for i in range(start_from, last_lolibooru_sauce_id + 1, page_range)
+            for page in reversed(range(start_from // page_range, last_lolibooru_sauce_id // page_range))
         ]
 
         req_chunks = paginate(reqs, chunk_size)
