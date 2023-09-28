@@ -134,12 +134,11 @@ class AIBooruFetcher(sources.BaseFetcher):
                 if isinstance(start_from, Sauce)
                 else start_from
             )
-            ids = list(range(int(page[1:]) % 200, int(page[1:]), 200))
-            ids.reverse()
+            ids = list(range(int(page[1:]) - 200, greatest_id, 200))
             reqs = [
                 self.request(
                     "GET",
-                    "/posts.json?page=b{page}&limit=200".format(page=i),
+                    "/posts.json?page=a{page}&limit=200".format(page=i),
                 )
                 for i in ids
             ]
