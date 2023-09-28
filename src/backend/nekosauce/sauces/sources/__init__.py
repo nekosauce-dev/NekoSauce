@@ -17,6 +17,7 @@ def get_all_fetchers():
     from nekosauce.sauces.sources.danbooru import DanbooruFetcher
     from nekosauce.sauces.sources.gelbooru import GelbooruFetcher
     from nekosauce.sauces.sources.konachan import KonachanFetcher
+    from nekosauce.sauces.sources.atfbooru import ATFbooruFetcher
     from nekosauce.sauces.sources.yandere import YandereFetcher
     from nekosauce.sauces.sources.aibooru import AIBooruFetcher
 
@@ -25,6 +26,7 @@ def get_all_fetchers():
         GelbooruFetcher,
         DanbooruFetcher,
         KonachanFetcher,
+        ATFbooruFetcher,
         YandereFetcher,
         AIBooruFetcher,
     ]
@@ -53,6 +55,7 @@ def get_downloader(url: str) -> "BaseDownloader":
     from nekosauce.sauces.sources.danbooru import DanbooruDownloader
     from nekosauce.sauces.sources.gelbooru import GelbooruDownloader
     from nekosauce.sauces.sources.konachan import KonachanDownloader
+    from nekosauce.sauces.sources.atfbooru import ATFbooruDownloader
     from nekosauce.sauces.sources.yandere import YandereDownloader
     from nekosauce.sauces.sources.aibooru import AIBooruDownloader
 
@@ -61,6 +64,7 @@ def get_downloader(url: str) -> "BaseDownloader":
         DanbooruDownloader,
         GelbooruDownloader,
         KonachanDownloader,
+        ATFbooruDownloader,
         YandereDownloader,
         AIBooruDownloader,
     ]
@@ -85,6 +89,7 @@ def get_tags(links: typing.List[str]) -> typing.List[str]:
     from nekosauce.sauces.sources.danbooru import DanbooruTagger
     from nekosauce.sauces.sources.gelbooru import GelbooruTagger
     from nekosauce.sauces.sources.konachan import KonachanTagger
+    from nekosauce.sauces.sources.atfbooru import ATFbooruTagger
     from nekosauce.sauces.sources.yandere import YandereTagger
     from nekosauce.sauces.sources.aibooru import AIBooruTagger
     from nekosauce.sauces.sources.pixiv import PixivTagger
@@ -94,6 +99,7 @@ def get_tags(links: typing.List[str]) -> typing.List[str]:
         DanbooruTagger(),
         GelbooruTagger(),
         KonachanTagger(),
+        ATFbooruTagger(),
         YandereTagger(),
         AIBooruTagger(),
         PixivTagger(),
