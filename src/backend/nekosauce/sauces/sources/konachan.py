@@ -54,8 +54,8 @@ class KonachanFetcher(sources.BaseFetcher):
                 else []
             ),
             is_nsfw=post["rating"] in ["q", "e"],
-            width=post.get("width", 0),
-            height=post.get("height", 0),
+            width=post["width"] if post["width"] is not None else 0,
+            height=post["height"] if post["height"] is not None else 0,
         )
 
         return sauce
