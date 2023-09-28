@@ -98,7 +98,7 @@ class NHentaiFetcher(sources.BaseFetcher):
         first_page_data = json.loads(
             self.flaresolverr.get("https://nhentai.net/api/galleries/all")["solution"][
                 "response"
-            ][131:20]
+            ][131:-20]
         )
 
         per_page = first_page_data["num_pages"]
@@ -136,7 +136,7 @@ class NHentaiFetcher(sources.BaseFetcher):
                             for page in list(range(doujin["num_pages"])) + ["cover"]
                         ]
                         for doujin in json.loads(
-                            response_json["solution"]["response"][131:20]
+                            response_json["solution"]["response"][131:-20]
                         )["result"]
                     ]
                 )
