@@ -6,7 +6,7 @@ import grequests
 import requests
 
 
-from nekosauce.utils import FlareSolver
+from nekosauce.utils import FlareSolverr
 from nekosauce.sauces import sources
 from nekosauce.sauces.utils import paginate
 from nekosauce.sauces.models import Sauce, Source
@@ -26,7 +26,7 @@ class NHentaiFetcher(sources.BaseFetcher):
     source = Source.objects.get(name="NHentai")
 
     def __init__(self, *args, **kwargs):
-        self.flaresolverr = FlareSolver().__enter__()
+        self.flaresolverr = FlareSolverr().__enter__()
         return super().__init__(*args, **kwargs)
 
     def get_url(self, path):
@@ -96,7 +96,7 @@ class NHentaiFetcher(sources.BaseFetcher):
         self, chunk_size: int = 1024, start_from: int = 0
     ) -> typing.Iterator[Sauce]:
         first_page_data = json.loads(
-            self.flaresolverr.get("/api/galleries/all")["solution"]["response"]
+            self.flaresolverr.get("https://nhentai.net/api/galleries/all")["solution"]["response"]
         )
 
         per_page = first_page_data["num_pages"]
@@ -145,7 +145,7 @@ class NHentaiFetcher(sources.BaseFetcher):
 
             if len(req_chunks) == 0:
                 break
-        
+
         self.flaresolverr.__exit__()
 
 

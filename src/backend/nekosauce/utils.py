@@ -21,15 +21,15 @@ def getsecret(name: str, default=None, env_fallback: bool = True):
         return os.getenv(name, default) if env_fallback else default
 
 
-class FlareSolver:
+class FlareSolverr:
     session_id: str = "nekosauce"
 
     def __init__(
         self,
-        flaresolver_url: str = "http://flaresolver:8191/v1",
+        flaresolverr_url: str = "http://flaresolverr:8191/v1",
         session_id: str = None,
     ):
-        self.flaresolver_url = flaresolver_url
+        self.flaresolverr_url = flaresolverr_url
 
     def __enter__(self):
         if self.session_id is None:
@@ -41,12 +41,12 @@ class FlareSolver:
             self.session_id = "nekosauce"
         return self
 
-    def __exit__(self, exc_type = None, exc_val = None, exc_tb = None):
+    def __exit__(self, exc_type=None, exc_val=None, exc_tb=None):
         self.destroy_session("nekosauce")
 
     def create_session(self, id: str):
         r = requests.post(
-            self.flaresolver_url, json={"cmd": "session.create", "session": id}
+            self.flaresolverr_url, json={"cmd": "sessions.create", "session": id}
         )
         r.raise_for_status()
 
@@ -56,24 +56,22 @@ class FlareSolver:
 
     def destroy_session(self, session_id: str = None):
         r = requests.post(
-            self.flaresolver_url,
-            json={"cmd": "session.destroy", "session": session_id if session_id else self.session_id},
+            self.flaresolverr_url,
+            json={
+                "cmd": "sessions.destroy",
+                "session": session_id if session_id else self.session_id,
+            },
         )
         r.raise_for_status()
 
     def list_sessions(self):
-        r = requests.post(
-            self.flaresolver_url, json={"cmd": "session.list"}
-        )
+        r = requests.post(self.flaresolverr_url, json={"cmd": "sessions.list"})
         r.raise_for_status()
 
         return r.json()["sessions"]
 
     def use_random_active_session(self) -> str:
-        r = requests.post(self.flaresolver_url, json={"cmd": "session.list"})
-        r.raise_for_status()
-
-        sessions = r.json()["sessions"]
+        sessions = self.list_sessions()
 
         if len(sessions) == 0:
             return None
@@ -84,7 +82,7 @@ class FlareSolver:
 
     def get(self, url: str):
         r = requests.post(
-            self.flaresolver_url,
+            self.flaresolverr_url,
             json={"cmd": "request.get", "session": self.session_id, "url": url},
         )
         r.raise_for_status()
@@ -93,7 +91,7 @@ class FlareSolver:
 
     def aget(self, url: str) -> grequests.AsyncRequest:
         r = grequests.get(
-            self.flaresolver_url,
+            self.flaresolverr_url,
             json={"cmd": "request.get", "session": self.session_id, "url": url},
         )
         return r
