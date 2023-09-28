@@ -62,6 +62,7 @@ def get_downloader(url: str) -> "BaseDownloader":
         GelbooruDownloader,
         KonachanDownloader,
         YandereDownloader,
+        AIBooruDownloader,
     ]
 
     for downloader in downloaders:
