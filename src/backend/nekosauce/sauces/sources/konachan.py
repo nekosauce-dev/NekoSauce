@@ -169,7 +169,7 @@ class KonachanTagger(sources.BaseTagger):
 
     get_resource = lambda self, url: url.path.split("/")[1]
     get_property = lambda self, url: "id"
-    get_value = lambda self, url: url.path.split("/")[3].split(".")[0]
+    get_value = lambda self, url: url.path.split("/")[-1].split(".")[0]
 
     def check_url(self, url: str) -> bool:
         return url.startswith("https://konachan.com")
