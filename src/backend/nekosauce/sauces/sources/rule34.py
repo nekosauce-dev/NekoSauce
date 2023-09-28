@@ -15,7 +15,7 @@ from nekosauce.sauces.models import Sauce, Source
 
 class Rule34Fetcher(sources.BaseFetcher):
     site_name: str = "Rule 34"
-    base_url: str = "https://rule34.xxx"
+    base_url: str = "https://api.rule34.xxx"
     source: Source = Source.objects.get(name="Rule 34")
 
     get_url = lambda self, path: f"{self.base_url}{path}"
@@ -58,8 +58,8 @@ class Rule34Fetcher(sources.BaseFetcher):
             tags=sources.get_tags(site_urls)
             + [f"rule34:tag:name:{tag}" for tag in post["tags"].split(" ")],
             is_nsfw=post["rating"] in ["questionable", "explicit"],
-            height=post["height"],
-            width=post["width"],
+            height=post.get("height", 0),
+            width=post("width", 0),
         )
 
         return sauce
@@ -89,7 +89,7 @@ class Rule34Fetcher(sources.BaseFetcher):
     def get_sauces_iter(self, chunk_size: int = 1024, start_from=None):
         count = grequests.map(
             [self.request("GET", "/index.php?page=dapi&q=index&json=1&s=post&limit=1")]
-        )[0].json()["post"][0]["id"]
+        )[0].json()[0]["id"]
         last = 0
 
         if isinstance(start_from, Sauce):
@@ -115,7 +115,7 @@ class Rule34Fetcher(sources.BaseFetcher):
                     return
 
                 new_sauces = []
-                for post in response.json()["post"]:
+                for post in response.json():
                     new_sauces.append(self.get_new_sauce_from_response(post))
 
                 Sauce.objects.bulk_create(
