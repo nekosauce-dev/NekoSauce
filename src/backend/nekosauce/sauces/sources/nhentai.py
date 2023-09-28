@@ -95,8 +95,10 @@ class NHentaiFetcher(sources.BaseFetcher):
     def get_sauces_iter(
         self, chunk_size: int = 1024, start_from: int = 0
     ) -> typing.Iterator[Sauce]:
+        first_page_request = self.flaresolverr.get("https://nhentai.net/api/galleries/all")
+        print(first_page_request)
         first_page_data = json.loads(
-            self.flaresolverr.get("https://nhentai.net/api/galleries/all")["solution"][
+            first_page_request["solution"][
                 "response"
             ][131:-20]
         )
