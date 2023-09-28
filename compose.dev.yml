@@ -72,6 +72,11 @@ services:
     ports:
       - "80:80"
       - "443:443"
+  flaresolverr:
+    image: flaresolverr/flaresolverr:latest
+    restart: always
+    ports:
+      - "8191:8191"
 volumes:
   database:
   static:

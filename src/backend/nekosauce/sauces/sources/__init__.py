@@ -16,13 +16,15 @@ def get_all_fetchers():
     from nekosauce.sauces.sources.danbooru import DanbooruFetcher
     from nekosauce.sauces.sources.gelbooru import GelbooruFetcher
     from nekosauce.sauces.sources.konachan import KonachanFetcher
+    from nekosauce.sauces.sources.nhentai import NHentaiFetcher
     from nekosauce.sauces.sources.yandere import YandereFetcher
-    
+
     return [
         GelbooruFetcher,
         DanbooruFetcher,
         KonachanFetcher,
-        YandereFetcher
+        NHentaiFetcher,
+        YandereFetcher,
     ]
 
 
@@ -48,13 +50,15 @@ def get_downloader(url: str) -> "BaseDownloader":
     from nekosauce.sauces.sources.danbooru import DanbooruDownloader
     from nekosauce.sauces.sources.gelbooru import GelbooruDownloader
     from nekosauce.sauces.sources.konachan import KonachanDownloader
+    from nekosauce.sauces.sources.nhentai import NHentaiDownloader
     from nekosauce.sauces.sources.yandere import YandereDownloader
 
     downloaders = [
         DanbooruDownloader,
         GelbooruDownloader,
         KonachanDownloader,
-        YandereDownloader
+        NHentaiDownloader,
+        YandereDownloader,
     ]
 
     for downloader in downloaders:
@@ -76,6 +80,7 @@ def get_tags(links: typing.List[str]) -> typing.List[str]:
     from nekosauce.sauces.sources.danbooru import DanbooruTagger
     from nekosauce.sauces.sources.gelbooru import GelbooruTagger
     from nekosauce.sauces.sources.konachan import KonachanTagger
+    from nekosauce.sauces.sources.nhentai import NHentaiTagger
     from nekosauce.sauces.sources.yandere import YandereTagger
     from nekosauce.sauces.sources.pixiv import PixivTagger
 
@@ -83,6 +88,7 @@ def get_tags(links: typing.List[str]) -> typing.List[str]:
         DanbooruTagger(),
         GelbooruTagger(),
         KonachanTagger(),
+        NHentaiTagger(),
         YandereTagger(),
         PixivTagger(),
     ]
@@ -157,20 +163,20 @@ class BaseFetcher:
             return f"{self.base_url}{path}"
 
         raise NotImplementedError(
-            "You need to implement either the `get_url()` algorithm or set the `base_url` attribute."
+            "You need to implement either the `get_url()` method or set the `base_url` attribute."
         )
 
-    def request(self, algorithm, url, **kwargs) -> grequests.AsyncRequest:
+    def request(self, method, url, **kwargs) -> grequests.AsyncRequest:
         """Makes a request to the Sauce API.
 
         Args:
-            algorithm (str): HTTP algorithm.
+            method (str): HTTP method.
             url (str): URL of the post/file to download.
 
         Returns:
             grequests.AsyncRequest: The request's response.
         """
-        return grequests.request(algorithm, self.get_url(url), **kwargs)
+        return grequests.request(method, self.get_url(url), **kwargs)
 
     def get_file_url(self, id: str) -> str:
         """Fetches the file URL from the given URL.
@@ -179,14 +185,12 @@ class BaseFetcher:
             id (str): ID of the original post's file.
 
         Raises:
-            NotImplementedError: The requested algorithm needs to be implemented.
+            NotImplementedError: The requested method needs to be implemented.
 
         Returns:
             str: The file URL.
         """
-        raise NotImplementedError(
-            "You need to implement the `.get_file_url()` algorithm."
-        )
+        raise NotImplementedError("You need to implement the `.get_file_url()` method.")
 
     def get_sauce_request(self, id: str) -> grequests.AsyncRequest:
         """Gets the request for the sauce with the given id.
@@ -195,13 +199,13 @@ class BaseFetcher:
             id (str): ID of the sauce.
 
         Raises:
-            NotImplementedError: The requested algorithm needs to be implemented.
+            NotImplementedError: The requested method needs to be implemented.
 
         Returns:
             grequests.AsyncRequest: The request (not yet executed).
         """
         raise NotImplementedError(
-            "You need to implement the `.get_sauce_request()` algorithm."
+            "You need to implement the `.get_sauce_request()` method."
         )
 
     def get_sauces_iter(self, start_from: int = 0) -> typing.Iterator[Sauce]:
@@ -211,19 +215,19 @@ class BaseFetcher:
             start_from (int, optional): The page to start from. Defaults to 0.
 
         Raises:
-            NotImplementedError: The requested algorithm needs to be implemented.
+            NotImplementedError: The requested method needs to be implemented.
 
         Returns:
             typing.Iterator[Sauce]: The iterator.
         """
-        raise NotImplementedError("You need to implement the `.get_iter()` algorithm.")
+        raise NotImplementedError("You need to implement the `.get_iter()` method.")
 
 
 class BaseDownloader:
     """Handles the downloading of sauce files.
 
     Raises:
-        NotImplementedError: The requested algorithm needs to be implemented.
+        NotImplementedError: The requested method needs to be implemented.
 
     Methods:
         download(self, url: str) -> io.BytesIO
@@ -241,7 +245,7 @@ class BaseDownloader:
             url (str): The URL where the file is located.
 
         Raises:
-            NotImplementedError: The requested algorithm needs to be implemented.
+            NotImplementedError: The requested method needs to be implemented.
 
         Returns:
             io.BytesIO: The downloaded file.
@@ -259,7 +263,7 @@ class BaseDownloader:
             url (str): The URL where the file is located.
 
         Raises:
-            NotImplementedError: The requested algorithm needs to be implemented.
+            NotImplementedError: The requested method needs to be implemented.
 
         Returns:
             grequests.AsyncRequest: The request.
@@ -277,12 +281,12 @@ class BaseDownloader:
             url (str): The URL to be checked.
 
         Raises:
-            NotImplementedError: The requested algorithm needs to be implemented.
+            NotImplementedError: The requested method needs to be implemented.
 
         Returns:
             bool: Wether this downloader can handle this URL download or not.
         """
-        raise NotImplementedError("You need to implement the `.check_url()` algorithm.")
+        raise NotImplementedError("You need to implement the `.check_url()` method.")
 
     def get_sauce_id(self, url) -> str:
         """Returns the post ID from a Danbooru post URL.
@@ -291,14 +295,12 @@ class BaseDownloader:
             url (str): The URL of the post.
 
         Raises:
-            NotImplementedError: The requested algorithm needs to be implemented.
+            NotImplementedError: The requested method needs to be implemented.
 
         Returns:
             str: The post ID.
         """
-        raise NotImplementedError(
-            "You need to implement the `.get_sauce_id()` algorithm."
-        )
+        raise NotImplementedError("You need to implement the `.get_sauce_id()` method.")
 
 
 class BaseTagger:
@@ -318,13 +320,13 @@ class BaseTagger:
 
     get_source: typing.Callable = lambda self, parsed_url: self.source
     get_resource: typing.Callable = lambda self, parsed_url: _not_implemented_error(
-        "The `get_resource()` algorithm is not implemented."
+        "The `get_resource()` method is not implemented."
     )
     get_property: typing.Callable = lambda self, parsed_url: _not_implemented_error(
-        "The `get_property()` algorithm is not implemented."
+        "The `get_property()` method is not implemented."
     )
     get_value: typing.Callable = lambda self, parsed_url: _not_implemented_error(
-        "The `get_value()` algorithm is not implemented."
+        "The `get_value()` method is not implemented."
     )
 
     def check_resources(self, resource, raise_error: bool = True):
@@ -334,7 +336,7 @@ class BaseTagger:
             resource (str): The resource to be checked.
 
         Raises:
-            NotImplementedError: The requested algorithm needs to be implemented.
+            NotImplementedError: The requested method needs to be implemented.
 
         Returns:
             bool: Wether this tagger can handle this resource or not.
@@ -355,7 +357,7 @@ class BaseTagger:
             url (str): The URL to be checked.
 
         Raises:
-            NotImplementedError: The requested algorithm needs to be implemented.
+            NotImplementedError: The requested method needs to be implemented.
 
         Returns:
             bool: Wether this tagger can handle this URL or not.
@@ -373,7 +375,7 @@ class BaseTagger:
             url (str): The URL to be converted.
 
         Raises:
-            NotImplementedError: The requested algorithm needs to be implemented.
+            NotImplementedError: The requested method needs to be implemented.
             ValueError: The URL is invalid.
 
         Returns:
@@ -397,7 +399,7 @@ class BaseTagger:
             tag (str): The tag to be converted.
 
         Raises:
-            NotImplementedError: The requested algorithm needs to be implemented.
+            NotImplementedError: The requested method needs to be implemented.
             ValueError: The tag is invalid.
 
         Returns:

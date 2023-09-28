@@ -95,6 +95,11 @@ services:
     ports:
       - "443:443"
     restart: always
+  flaresolverr:
+    image: flaresolverr/flaresolverr:latest
+    restart: always
+    ports:
+      - "8191:8191"
 secrets:
   BACKEND_SECRET_KEY:
     file: ./secrets/BACKEND_SECRET_KEY.txt
