@@ -151,9 +151,9 @@ class ATFBooruFetcher(sources.BaseFetcher):
             reqs = [
                 self.request(
                     "GET",
-                    "/posts.json?page={page}&limit=200".format(page=i),
+                    "/posts.json?page=a{page}&limit=200".format(page=i),
                 )
-                for i in range(page, 100000)
+                for i in range(page, page + 1000000, 200)
             ]
 
         req_chunks = paginate(reqs, chunk_size)

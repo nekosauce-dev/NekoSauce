@@ -83,7 +83,7 @@ class LolibooruFetcher(sources.BaseFetcher):
         else:
             start_from = 0
 
-        page_range = 1000
+        page_range = 500
 
         reqs = [
             self.request(

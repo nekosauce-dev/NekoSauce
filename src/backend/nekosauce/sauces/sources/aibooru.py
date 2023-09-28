@@ -21,10 +21,7 @@ class AIBooruFetcher(sources.BaseFetcher):
     last_page = property(lambda self: f"a{self.last_sauce.source_site_id}")
 
     def get_url(self, path: str) -> str:
-        user = self.credentials["user"]
-        pwd = self.credentials["pass"]
-
-        return f"https://{user}:{pwd}@aibooru.online{path}"
+        return f"https://aibooru.online{path}"
 
     def get_sauce_request(self, id: str) -> grequests.AsyncRequest:
         return self.request("GET", f"/posts/{id}.json")
@@ -151,9 +148,9 @@ class AIBooruFetcher(sources.BaseFetcher):
             reqs = [
                 self.request(
                     "GET",
-                    "/posts.json?page={page}&limit=200".format(page=i),
+                    "/posts.json?page=a{page}&limit=200".format(page=i),
                 )
-                for i in range(page, 100000)
+                for i in range(page, page + 1000000, 200)
             ]
 
         req_chunks = paginate(reqs, chunk_size)
