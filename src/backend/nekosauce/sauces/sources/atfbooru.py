@@ -132,21 +132,19 @@ class ATFBooruFetcher(sources.BaseFetcher):
         if start_from is not None and (
             isinstance(start_from, Sauce) or not start_from.isnumeric()
         ):
-            page = (
-                f"a{start_from.source_site_id}"
-                if isinstance(start_from, Sauce)
-                else start_from
-            )
-            ids = list(range(int(page[1:]) % 200, int(page[1:]), 200))
-            ids.reverse()
-            reqs = [
-                self.request(
-                    "GET",
-                    "/posts.json?page=b{page}&limit=200".format(page=i),
-                )
-                for i in ids
-            ]
-        else:
+            page = ( 
+                 f"a{start_from.source_site_id}" 
+                 if isinstance(start_from, Sauce) 
+                 else start_from 
+             ) 
+             ids = list(range(int(page[1:]) - 200, (greatest_id // 200) + 1, 200)) 
+             reqs = [ 
+                 self.request( 
+                     "GET", 
+                     "/posts.json?page=a{page}&limit=200".format(page=i), 
+                 ) 
+                 for i in ids 
+             ]        else:
             page = int(start_from) if start_from is not None else 1
             reqs = [
                 self.request(
