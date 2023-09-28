@@ -123,7 +123,9 @@ class AIBooruFetcher(sources.BaseFetcher):
         sauce = self.get_sauce(id)
         return sauce.file_urls[0]
 
-    def get_sauces_iter(self, chunk_size: int = 1024, start_from = None) -> typing.Iterator[Sauce]:
+    def get_sauces_iter(
+        self, chunk_size: int = 1024, start_from=None
+    ) -> typing.Iterator[Sauce]:
         greatest_id = requests.get("https://aibooru.online/posts.json").json()[0]["id"]
 
         if start_from is not None and (
@@ -134,7 +136,7 @@ class AIBooruFetcher(sources.BaseFetcher):
                 if isinstance(start_from, Sauce)
                 else start_from
             )
-            ids = list(range(int(page[1:]) - 200, (greatest_id // 200) + 1, 200))
+            ids = list(range(int(page[1:]) - 200, greatest_id + 200, 200))
             reqs = [
                 self.request(
                     "GET",
@@ -183,7 +185,7 @@ class AIBooruFetcher(sources.BaseFetcher):
                 for sauce in new_sauces:
                     if sauce.source_site_id == str(greatest_id):
                         return
-            
+
             del req_chunks[0]
 
             if len(req_chunks) == 0:
@@ -195,9 +197,7 @@ class AIBooruDownloader(sources.BaseFetcher):
     site_name = "AIBooru"
 
     def check_url(self, url: str) -> bool:
-        return url.startswith(
-            "https://cdn.aibooru.online"
-        ) or url.startswith(
+        return url.startswith("https://cdn.aibooru.online") or url.startswith(
             "https://cdn.aibooru.space"
         )
 
@@ -224,4 +224,6 @@ class AIBooruTagger(sources.BaseTagger):
     get_value = lambda self, url: url.path.split("/")[-1].split(".")[0]
 
     def check_url(self, url: str) -> bool:
-        return url.startswith("https://aibooru.online/") or url.startswith("https://aibooru.space/")
+        return url.startswith("https://aibooru.online/") or url.startswith(
+            "https://aibooru.space/"
+        )

@@ -134,7 +134,7 @@ class ATFBooruFetcher(sources.BaseFetcher):
                  if isinstance(start_from, Sauce) 
                  else start_from 
              ) 
-             ids = list(range(int(page[1:]) - 200, (greatest_id // 200) + 1, 200)) 
+             ids = list(range(int(page[1:]) - 200, greatest_id + 200, 200)) 
              reqs = [ 
                  self.request( 
                      "GET", 

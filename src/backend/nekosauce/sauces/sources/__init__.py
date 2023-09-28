@@ -134,11 +134,11 @@ class BaseFetcher:
     their sources.
 
     Raises:
-        NotImplementedError: The requested algorithm needs to be implemented.
+        NotImplementedError: The requested method needs to be implemented.
 
     Methods:
         get_url(path): Returns the URL for the given path.
-        request(algorithm, url, **kwargs): Makes a request to the Sauce API.
+        request(method, url, **kwargs): Makes a request to the Sauce API.
         get_artist_request(id): Gets the request for the artist with the given id.
         get_artist(id): Gets the artist with the given id.
         get_uploader_request(id): Gets the request for the uploader with the given id.
