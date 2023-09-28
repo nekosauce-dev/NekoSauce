@@ -13,12 +13,12 @@ from nekosauce.sauces.utils import paginate
 from nekosauce.sauces.models import Sauce, Source
 
 
-class GelbooruFetcher(sources.BaseFetcher):
-    site_name: str = "Gelbooru"
-    base_url: str = "https://gelbooru.com"
-    source: Source = Source.objects.get(name="Gelbooru")
+class Rule34Fetcher(sources.BaseFetcher):
+    site_name: str = "Rule 34"
+    base_url: str = "https://rule34.xxx"
+    source: Source = Source.objects.get(name="Rule 34")
 
-    get_url = lambda self, path: f"{self.base_url}{path}&api_key={self.credentials['pass']}&user_id={self.credentials['user']}"
+    get_url = lambda self, path: f"{self.base_url}{path}"
     last_page = property(lambda self: int(self.last_sauce.source_site_id))
 
     def get_sauce_request(self, id: str) -> grequests.AsyncRequest:
@@ -27,7 +27,7 @@ class GelbooruFetcher(sources.BaseFetcher):
         )
 
     def get_sauce(self, id: str) -> Sauce:
-        qs = Sauce.objects.filter(tags__overlap=[f"gelbooru:post:id:{id}"])
+        qs = Sauce.objects.filter(tags__overlap=[f"rule34:post:id:{id}"])
 
         if qs.exists():
             return qs[0]
@@ -39,16 +39,16 @@ class GelbooruFetcher(sources.BaseFetcher):
 
     def get_new_sauce_from_response(self, post: dict) -> Sauce:
         site_urls = [
-            f"https://gelbooru.com/index.php?page=post&s=view&id={post['id']}"
+            f"https://rule34.xxx/index.php?page=post&s=view&id={post['id']}"
         ] + (
             post.get("source").split(" ") if validators.url(post.get("source")) else []
         )
 
         sauce = Sauce(
-            title=f"Artwork from Gelbooru #{post['id']} - {post['image']}",
+            title=f"Artwork from Rule 34 #{post['id']} - {post['image']}",
             site_urls=site_urls,
             api_urls=[
-                f"https://gelbooru.com/index.php?page=dapi&q=index&json=1&s=post&id={post['id']}"
+                f"https://rule34.xxx/index.php?page=dapi&q=index&json=1&s=post&id={post['id']}"
             ],
             file_urls=[post.get("file_url")]
             if post.get("file_url")
@@ -56,7 +56,7 @@ class GelbooruFetcher(sources.BaseFetcher):
             source=self.source,
             source_site_id=post["id"],
             tags=sources.get_tags(site_urls)
-            + [f"gelbooru:tag:name:{tag}" for tag in post["tags"].split(" ")],
+            + [f"rule34:tag:name:{tag}" for tag in post["tags"].split(" ")],
             is_nsfw=post["rating"] in ["questionable", "explicit"],
             height=post["height"],
             width=post["width"],
@@ -66,7 +66,7 @@ class GelbooruFetcher(sources.BaseFetcher):
 
     def get_sauce_from_response(self, post: dict) -> Sauce:
         sauce = Sauce.objects.filter(
-            tags__overlap=[f"gelbooru:post:id:{post['id']}"]
+            tags__overlap=[f"rule34:post:id:{post['id']}"]
         ).first()
 
         if sauce:
@@ -78,7 +78,7 @@ class GelbooruFetcher(sources.BaseFetcher):
         return sauce
 
     def get_file_url(self, id: str) -> str:
-        qs = Source.objects.filter(tags__overlap=[f"gelbooru:post:id:{id}"])
+        qs = Source.objects.filter(tags__overlap=[f"rule34:post:id:{id}"])
 
         if qs.exists():
             return qs[0].file_urls[0]
@@ -134,24 +134,24 @@ class GelbooruFetcher(sources.BaseFetcher):
                 break
 
 
-class GelbooruDownloader(sources.BaseDownloader):
-    fetcher = GelbooruFetcher
-    site_name = "Gelbooru"
+class Rule34Downloader(sources.BaseDownloader):
+    fetcher = Rule34Fetcher
+    site_name = "Rule 34"
 
     def check_url(self, url: str) -> bool:
-        return re.match(r"^https://[a-zA-Z0-9-]+\.gelbooru\.com/", url) is not None
+        return re.match(r"^https://[a-zA-Z0-9-]+\.rule34\.xxx/", url) is not None
 
     def get_sauce_id(url: str) -> str:
         return urllib.parse.parse_qs(urllib.parse.urlparse(url).query)["id"][0]
 
     def download_request(self, url: str):
-        if urllib.parse.urlparse(url).netloc == "gelbooru.com":
+        if urllib.parse.urlparse(url).netloc == "rule34.xxx":
             url = self.fetcher.get_file_url(DanbooruDownloader.get_sauce_id(url))
 
         return grequests.get(url)
 
     def download(self, url: str) -> bytes:
-        if urllib.parse.urlparse(url).netloc == "gelbooru.com":
+        if urllib.parse.urlparse(url).netloc == "rule34.xxx":
             url = self.fetcher.get_file_url(DanbooruDownloader.get_sauce_id(url))
 
         r = requests.get(url)
@@ -160,9 +160,9 @@ class GelbooruDownloader(sources.BaseDownloader):
         return r.content
 
 
-class GelbooruTagger(sources.BaseTagger):
-    source = "gelbooru"
-    source_domain = "gelbooru.com"
+class Rule34Tagger(sources.BaseTagger):
+    source = "rule34"
+    source_domain = "rule34.xxx"
     resources = ["post", "tag"]
 
     get_resource = lambda self, url: urllib.parse.parse_qs(url.query).get(
@@ -177,7 +177,7 @@ class GelbooruTagger(sources.BaseTagger):
         try:
             parsed_url = urllib.parse.urlparse(url)
             return (
-                url.startswith("https://gelbooru.com")
+                url.startswith("https://rule34.xxx")
                 and self.get_resource(parsed_url) in self.resources
                 and self.get_value(parsed_url) != "unknown"
                 and self.check_resources(self.get_resource(parsed_url), False)

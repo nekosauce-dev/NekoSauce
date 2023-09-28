@@ -20,6 +20,7 @@ def get_all_fetchers():
     from nekosauce.sauces.sources.atfbooru import ATFBooruFetcher
     from nekosauce.sauces.sources.yandere import YandereFetcher
     from nekosauce.sauces.sources.aibooru import AIBooruFetcher
+    from nekosauce.sauces.sources.rule34 import Rule34Fetcher
 
     return [
         LolibooruFetcher,
@@ -29,6 +30,7 @@ def get_all_fetchers():
         ATFBooruFetcher,
         YandereFetcher,
         AIBooruFetcher,
+        Rule34Fetcher,
     ]
 
 
@@ -58,6 +60,7 @@ def get_downloader(url: str) -> "BaseDownloader":
     from nekosauce.sauces.sources.atfbooru import ATFBooruDownloader
     from nekosauce.sauces.sources.yandere import YandereDownloader
     from nekosauce.sauces.sources.aibooru import AIBooruDownloader
+    from nekosauce.sauces.sources.rule34 import Rule34Downloader
 
     downloaders = [
         LolibooruDownloader,
@@ -67,6 +70,7 @@ def get_downloader(url: str) -> "BaseDownloader":
         ATFBooruDownloader,
         YandereDownloader,
         AIBooruDownloader,
+        Rule34Downloader,
     ]
 
     for downloader in downloaders:
@@ -92,6 +96,7 @@ def get_tags(links: typing.List[str]) -> typing.List[str]:
     from nekosauce.sauces.sources.atfbooru import ATFBooruTagger
     from nekosauce.sauces.sources.yandere import YandereTagger
     from nekosauce.sauces.sources.aibooru import AIBooruTagger
+    from nekosauce.sauces.sources.rule34 import Rule34Tagger
     from nekosauce.sauces.sources.pixiv import PixivTagger
 
     taggers = [
@@ -102,6 +107,7 @@ def get_tags(links: typing.List[str]) -> typing.List[str]:
         ATFBooruTagger(),
         YandereTagger(),
         AIBooruTagger(),
+        Rule34Tagger(),
         PixivTagger(),
     ]
 
