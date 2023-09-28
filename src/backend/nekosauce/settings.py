@@ -16,6 +16,7 @@ import os
 import secrets
 
 import dotenv
+import grequests
 
 from nekosauce import utils
 

@@ -155,6 +155,7 @@ class Source(models.Model):
     name = models.CharField(max_length=255)
     website = models.URLField(max_length=255)
     api_docs = models.URLField(max_length=255, null=True, blank=True)
+    enabled = models.BooleanField(default=True)
 
     def __str__(self):
         return self.name

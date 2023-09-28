@@ -139,6 +139,7 @@ class SourceView(APIView):
                         "name": s.name,
                         "website": s.website,
                         "api_docs": s.api_docs,
+                        "enabled": s.enabled,
                     }
                     for s in Source.objects.all()
                 ],
