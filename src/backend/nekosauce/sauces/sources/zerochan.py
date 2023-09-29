@@ -49,7 +49,7 @@ class ZerochanFetcher(sources.BaseFetcher):
         self, start_from: int = 0, chunk_size: int = 1024
     ) -> typing.Iterator[Sauce]:
         last_page = (
-            grequests.map([self.request("GET", "/?json&p=1")])[0].json()[0]["id"] // 250
+            grequests.map([self.request("GET", "/?json&p=1&l=1")])[0].json()[0]["id"] // 250
         ) + 1
 
         if isinstance(start_from, Sauce):
