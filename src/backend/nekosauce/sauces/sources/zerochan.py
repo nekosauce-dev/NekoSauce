@@ -68,7 +68,7 @@ class ZerochanFetcher(sources.BaseFetcher):
         else:
             page = int(start_from) if start_from is not None else 1
     
-        for offset in range(page, last_page, 250):
+        for offset in range(page - 1, last_page + 1, 250):
             response = requests.get(f"https://zerochan.net/?json&l=250&o={offset}", headers={
                 "User-Agent": "NekoSauce"
             })
