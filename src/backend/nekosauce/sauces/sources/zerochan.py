@@ -73,7 +73,7 @@ class ZerochanFetcher(sources.BaseFetcher):
                 "GET",
                 f"/?json&l=250&o={offset}",
             )
-            for offset in range(1, last_page - page, 250)
+            for offset in range(page, last_page, 250)
         ]
 
         req_chunks = paginate(reqs, chunk_size)
