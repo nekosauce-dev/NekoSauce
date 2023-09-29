@@ -16,8 +16,17 @@ class ZerochanFetcher(sources.BaseFetcher):
     def get_url(self, path: str) -> str:
         return f"{self.base_url}{path}"
 
+    def request(self, method: str, path: str) -> grequests.AsyncRequest:
+        return grequests.request(
+            method,
+            self.get_url(path),
+            headers={
+                "User-Agent": "NekoSauce",
+            },
+        )
+
     def get_sauce_request(self, id: str) -> grequests.AsyncRequest:
-        return self.request("GET", f"{id}?json", headers={"User-Agent": "NekoSauce"})
+        return self.request("GET", f"{id}?json")
 
     def _get_new_sauce_from_response(self, post: dict) -> Sauce:
         site_urls = [
