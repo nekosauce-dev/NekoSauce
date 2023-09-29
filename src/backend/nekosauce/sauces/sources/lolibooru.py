@@ -98,7 +98,7 @@ class LolibooruFetcher(sources.BaseFetcher):
         req_chunks = paginate(reqs, chunk_size)
 
         while True:
-            for index, response in grequests.imap_enumerated(
+            for index, response in grequests.map_enumerated(
                 req_chunks[0],
                 size=self.async_reqs,
             ):

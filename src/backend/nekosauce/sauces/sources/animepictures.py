@@ -1,3 +1,5 @@
+import typing
+
 import grequests
 
 from nekosauce.sauces import sources
@@ -44,7 +46,7 @@ class AnimePicturesFetcher(sources.BaseFetcher):
                 f"animepictures:post:status-type:{post['status_type']}",
                 f"animepictures:post:artefacts-degree:{post['artefacts_degree']}",
                 f"animepictures:post:smooth-type:{post['smooth_degree']}",
-                f"animepictures:post:color:{','.join(post['color'])}",
+                f"animepictures:post:color:{','.join([str(c) for c in post['color']])}",
             ],
             is_nsfw=post["erotics"] is not None and post["erotics"] > 0,
             height=post.get("height", 0),
@@ -55,7 +57,7 @@ class AnimePicturesFetcher(sources.BaseFetcher):
         self, start_from: int = 0, chunk_size: int = 1024
     ) -> typing.Iterator[Sauce]:
         last_page = grequests.map(
-            [self.request("GET", "/api/v3/posts?posts_per_page=100")]
+            [self.request("GET", "/api/v3/posts?posts_per_page=100&page=1")]
         )[0].json()["max_pages"]
 
         if isinstance(start_from, Sauce):
@@ -74,7 +76,7 @@ class AnimePicturesFetcher(sources.BaseFetcher):
         req_chunks = paginate(reqs, chunk_size)
 
         while True:
-            for index, response in grequests.imap_enumerated(
+            for index, response in grequests.map_enumerated(
                 req_chunks[0],
                 size=self.async_reqs,
             ):
