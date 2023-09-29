@@ -6,33 +6,72 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('sauces', '0007_auto_20230817_0016'),
+        ("sauces", "0007_auto_20230817_0016"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Artist',
+            name="Artist",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('names', django.contrib.postgres.fields.ArrayField(base_field=models.CharField(max_length=255), blank=True, db_index=True, size=None)),
-                ('links', django.contrib.postgres.fields.ArrayField(base_field=models.URLField(max_length=255), size=None)),
-                ('tags', django.contrib.postgres.fields.ArrayField(base_field=models.CharField(blank=True, max_length=255), db_index=True, default=list, size=None)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "names",
+                    django.contrib.postgres.fields.ArrayField(
+                        base_field=models.CharField(max_length=255),
+                        blank=True,
+                        db_index=True,
+                        size=None,
+                    ),
+                ),
+                (
+                    "links",
+                    django.contrib.postgres.fields.ArrayField(
+                        base_field=models.URLField(max_length=255), size=None
+                    ),
+                ),
+                (
+                    "tags",
+                    django.contrib.postgres.fields.ArrayField(
+                        base_field=models.CharField(blank=True, max_length=255),
+                        db_index=True,
+                        default=list,
+                        size=None,
+                    ),
+                ),
             ],
         ),
         migrations.AddField(
-            model_name='sauce',
-            name='type',
-            field=models.PositiveSmallIntegerField(choices=[(0, 'Art'), (1, 'Animated'), (2, 'Manga'), (3, 'Doujinshi'), (4, 'Anime')], default=0),
+            model_name="sauce",
+            name="type",
+            field=models.PositiveSmallIntegerField(
+                choices=[
+                    (0, "Art"),
+                    (1, "Animated"),
+                    (2, "Manga"),
+                    (3, "Doujinshi"),
+                    (4, "Anime"),
+                ],
+                default=0,
+            ),
         ),
         migrations.AlterField(
-            model_name='sauce',
-            name='downloaded',
+            model_name="sauce",
+            name="downloaded",
             field=models.BooleanField(db_index=True, default=False),
         ),
         migrations.AddIndex(
-            model_name='hash',
-            index=django.contrib.postgres.indexes.BTreeIndex(['bits', 'method'], fillfactor=55, name='hash_idx'),
+            model_name="hash",
+            index=django.contrib.postgres.indexes.BTreeIndex(
+                ["bits", "method"], fillfactor=55, name="hash_idx"
+            ),
         ),
     ]

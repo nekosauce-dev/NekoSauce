@@ -1,17 +1,16 @@
 from django.contrib import admin
 
-from nekosauce.sauces.models import (
-    Sauce,
-    Source,
-    Hash
-)
+from nekosauce.sauces.models import Sauce, Source, Hash
 
 
 @admin.register(Sauce)
 class SauceAdmin(admin.ModelAdmin):
     list_display = ("title", "height", "width")
     search_fields = ("title", "source__name", "tags")
-    raw_id_fields = ("source", "hash",)
+    raw_id_fields = (
+        "source",
+        "hash",
+    )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

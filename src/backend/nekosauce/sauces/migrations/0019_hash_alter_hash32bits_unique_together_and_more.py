@@ -6,74 +6,86 @@ import nekosauce.sauces.utils.fields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('sauces', '0018_alter_sauce_downloaded'),
+        ("sauces", "0018_alter_sauce_downloaded"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Hash',
+            name="Hash",
             fields=[
-                ('bits', nekosauce.sauces.utils.fields.BitField(editable=False, max_length=64, primary_key=True, serialize=False, unique=True)),
+                (
+                    "bits",
+                    nekosauce.sauces.utils.fields.BitField(
+                        editable=False,
+                        max_length=64,
+                        primary_key=True,
+                        serialize=False,
+                        unique=True,
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Hash',
-                'verbose_name_plural': 'Hashes',
+                "verbose_name": "Hash",
+                "verbose_name_plural": "Hashes",
             },
         ),
         migrations.AlterUniqueTogether(
-            name='hash32bits',
+            name="hash32bits",
             unique_together=None,
         ),
         migrations.AlterUniqueTogether(
-            name='hash64bits',
+            name="hash64bits",
             unique_together=None,
         ),
         migrations.AlterUniqueTogether(
-            name='hash8bits',
+            name="hash8bits",
             unique_together=None,
         ),
         migrations.RemoveField(
-            model_name='sauce',
-            name='downloaded',
+            model_name="sauce",
+            name="downloaded",
         ),
         migrations.RemoveField(
-            model_name='sauce',
-            name='hashes_16bits',
+            model_name="sauce",
+            name="hashes_16bits",
         ),
         migrations.RemoveField(
-            model_name='sauce',
-            name='hashes_32bits',
+            model_name="sauce",
+            name="hashes_32bits",
         ),
         migrations.RemoveField(
-            model_name='sauce',
-            name='hashes_64bits',
+            model_name="sauce",
+            name="hashes_64bits",
         ),
         migrations.RemoveField(
-            model_name='sauce',
-            name='hashes_8bits',
+            model_name="sauce",
+            name="hashes_8bits",
         ),
         migrations.AddField(
-            model_name='sauce',
-            name='md5_hash',
+            model_name="sauce",
+            name="md5_hash",
             field=models.CharField(db_index=True, max_length=32, null=True),
         ),
         migrations.DeleteModel(
-            name='Hash16Bits',
+            name="Hash16Bits",
         ),
         migrations.DeleteModel(
-            name='Hash32Bits',
+            name="Hash32Bits",
         ),
         migrations.DeleteModel(
-            name='Hash64Bits',
+            name="Hash64Bits",
         ),
         migrations.DeleteModel(
-            name='Hash8Bits',
+            name="Hash8Bits",
         ),
         migrations.AddField(
-            model_name='sauce',
-            name='hash',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='sauces.hash'),
+            model_name="sauce",
+            name="hash",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to="sauces.hash",
+            ),
         ),
     ]

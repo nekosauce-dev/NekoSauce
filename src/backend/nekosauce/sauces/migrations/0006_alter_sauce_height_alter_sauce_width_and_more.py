@@ -4,24 +4,23 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('sauces', '0005_sauce_created_at_sauce_updated_at_alter_hash_method'),
+        ("sauces", "0005_sauce_created_at_sauce_updated_at_alter_hash_method"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='sauce',
-            name='height',
+            model_name="sauce",
+            name="height",
             field=models.PositiveIntegerField(),
         ),
         migrations.AlterField(
-            model_name='sauce',
-            name='width',
+            model_name="sauce",
+            name="width",
             field=models.PositiveIntegerField(),
         ),
         migrations.AlterUniqueTogether(
-            name='sauce',
-            unique_together={('source', 'source_site_id')},
+            name="sauce",
+            unique_together={("source", "source_site_id")},
         ),
     ]

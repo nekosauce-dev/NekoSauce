@@ -6,25 +6,38 @@ import nekosauce.sauces.utils.fields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('sauces', '0023_remove_sauce_hash_delete_hash'),
+        ("sauces", "0023_remove_sauce_hash_delete_hash"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Hash',
+            name="Hash",
             fields=[
-                ('bits', nekosauce.sauces.utils.fields.BitField(editable=False, max_length=1024, primary_key=True, serialize=False, unique=True)),
+                (
+                    "bits",
+                    nekosauce.sauces.utils.fields.BitField(
+                        editable=False,
+                        max_length=1024,
+                        primary_key=True,
+                        serialize=False,
+                        unique=True,
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Hash',
-                'verbose_name_plural': 'Hashes',
+                "verbose_name": "Hash",
+                "verbose_name_plural": "Hashes",
             },
         ),
         migrations.AddField(
-            model_name='sauce',
-            name='hash',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='sauces', to='sauces.hash'),
+            model_name="sauce",
+            name="hash",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="sauces",
+                to="sauces.hash",
+            ),
         ),
     ]

@@ -5,23 +5,27 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('sauces', '0002_entity_tags_sauce_tags'),
+        ("sauces", "0002_entity_tags_sauce_tags"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='entity',
-            options={'verbose_name': 'Entity', 'verbose_name_plural': 'Entities'},
+            name="entity",
+            options={"verbose_name": "Entity", "verbose_name_plural": "Entities"},
         ),
         migrations.AlterModelOptions(
-            name='hash',
-            options={'verbose_name': 'Hash', 'verbose_name_plural': 'Hashes'},
+            name="hash",
+            options={"verbose_name": "Hash", "verbose_name_plural": "Hashes"},
         ),
         migrations.AlterField(
-            model_name='artsauce',
-            name='artist',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='art_sauces', to='sauces.artist'),
+            model_name="artsauce",
+            name="artist",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="art_sauces",
+                to="sauces.artist",
+            ),
         ),
     ]

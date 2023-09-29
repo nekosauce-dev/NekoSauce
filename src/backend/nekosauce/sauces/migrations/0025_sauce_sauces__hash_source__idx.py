@@ -5,14 +5,15 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('sauces', '0024_hash_sauce_hash'),
+        ("sauces", "0024_hash_sauce_hash"),
     ]
 
     operations = [
         migrations.AddIndex(
-            model_name='sauce',
-            index=django.contrib.postgres.indexes.BTreeIndex(models.F('hash'), models.F('source'), name='sauces__hash_source__idx'),
+            model_name="sauce",
+            index=django.contrib.postgres.indexes.BTreeIndex(
+                models.F("hash"), models.F("source"), name="sauces__hash_source__idx"
+            ),
         ),
     ]

@@ -123,24 +123,28 @@ class ATFBooruFetcher(sources.BaseFetcher):
         sauce = self.get_sauce(id)
         return sauce.file_urls[0]
 
-    def get_sauces_iter(self, chunk_size: int = 1024, start_from = None) -> typing.Iterator[Sauce]:
-        greatest_id = requests.get("https://booru.allthefallen.moe/posts.json").json()[0]["id"]
+    def get_sauces_iter(
+        self, chunk_size: int = 1024, start_from=None
+    ) -> typing.Iterator[Sauce]:
+        greatest_id = requests.get("https://booru.allthefallen.moe/posts.json").json()[
+            0
+        ]["id"]
 
         if start_from is not None and (
             isinstance(start_from, Sauce) or not start_from.isnumeric()
         ):
-            page = ( 
-                f"a{start_from.source_site_id}" 
-                if isinstance(start_from, Sauce) 
-                else start_from 
-            ) 
-            ids = list(range(int(page[1:]) - 200, greatest_id + 200, 200)) 
-            reqs = [ 
-                self.request( 
-                    "GET", 
-                    "/posts.json?page=a{page}&limit=200".format(page=i), 
-                ) 
-                for i in ids 
+            page = (
+                f"a{start_from.source_site_id}"
+                if isinstance(start_from, Sauce)
+                else start_from
+            )
+            ids = list(range(int(page[1:]) - 200, greatest_id + 200, 200))
+            reqs = [
+                self.request(
+                    "GET",
+                    "/posts.json?page=a{page}&limit=200".format(page=i),
+                )
+                for i in ids
             ]
         else:
             page = int(start_from) if start_from is not None else 1
@@ -183,7 +187,7 @@ class ATFBooruFetcher(sources.BaseFetcher):
                 for sauce in new_sauces:
                     if sauce.source_site_id == str(greatest_id):
                         return
-            
+
             del req_chunks[0]
 
             if len(req_chunks) == 0:

@@ -4,20 +4,19 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('users', '0001_initial'),
+        ("users", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='user',
-            name='donation',
+            model_name="user",
+            name="donation",
             field=models.FloatField(default=0.0),
         ),
         migrations.AddField(
-            model_name='user',
-            name='donation_date',
+            model_name="user",
+            name="donation_date",
             field=models.DateTimeField(null=True),
         ),
     ]

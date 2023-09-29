@@ -38,9 +38,7 @@ def get_thumbnail_size(width: int, height: int, min_size: int = 256) -> tuple[in
 class Sauce(models.Model):
     class Meta:
         unique_together = ["source", "source_site_id"]
-        indexes = [
-            BTreeIndex("hash", "source", name="sauces__hash_source__idx")
-        ]
+        indexes = [BTreeIndex("hash", "source", name="sauces__hash_source__idx")]
 
     class SauceType(models.IntegerChoices):
         ART_STATIC = 0, "Art"
@@ -66,7 +64,7 @@ class Sauce(models.Model):
     type = models.PositiveSmallIntegerField(
         choices=SauceType.choices, default=SauceType.ART_STATIC
     )
-    is_nsfw = models.BooleanField(default=False)
+    is_nsfw = models.BooleanField(default=False, null=True)
 
     hash = models.ForeignKey(
         "sauces.Hash",
@@ -74,11 +72,7 @@ class Sauce(models.Model):
         null=True,
         related_name="sauces",
     )
-    sha512_hash = models.CharField(
-        max_length=128,
-        db_index=True,
-        null=True
-    )
+    sha512_hash = models.CharField(max_length=128, db_index=True, null=True)
 
     height = models.PositiveIntegerField()
     width = models.PositiveIntegerField()
@@ -108,7 +102,11 @@ class Sauce(models.Model):
         img_bytes = downloader().download(url)
         img = Image.open(io.BytesIO(img_bytes))
 
-        self.sha512_hash = hashlib.sha512(img_bytes).hexdigest() if self.sha512_hash is None else self.sha512_hash
+        self.sha512_hash = (
+            hashlib.sha512(img_bytes).hexdigest()
+            if self.sha512_hash is None
+            else self.sha512_hash
+        )
 
         self.height = img.height
         self.width = img.width
@@ -122,9 +120,7 @@ class Sauce(models.Model):
 
         thumbnail_path = f"images/thumbnails/{self.source.name.lower().replace(' ', '-')}/{self.sha512_hash}.webp"
 
-        if not default_storage.exists(
-            thumbnail_path
-        ):
+        if not default_storage.exists(thumbnail_path):
             img.thumbnail(get_thumbnail_size(img.width, img.height))
             with io.BytesIO() as output:
                 img.save(output, format="WEBP")
@@ -148,7 +144,9 @@ class Hash(models.Model):
             models.Index(fields=["-bits"], name="hash_bits_idx"),
         ]
 
-    bits = BitField(max_length=32 ** 2, null=False, blank=False, unique=True, primary_key=True, editable=False)
+    bits = BitField(
+        max_length=32**2, null=False, blank=False, unique=True, editable=False
+    )
 
 
 class Source(models.Model):

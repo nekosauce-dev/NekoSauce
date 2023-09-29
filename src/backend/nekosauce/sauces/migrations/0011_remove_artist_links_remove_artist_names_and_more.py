@@ -4,26 +4,25 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('sauces', '0010_hash16bits_hash32bits_hash64bits_hash8bits_and_more'),
+        ("sauces", "0010_hash16bits_hash32bits_hash64bits_hash8bits_and_more"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='artist',
-            name='links',
+            model_name="artist",
+            name="links",
         ),
         migrations.RemoveField(
-            model_name='artist',
-            name='names',
+            model_name="artist",
+            name="names",
         ),
         migrations.RemoveField(
-            model_name='artist',
-            name='sauces',
+            model_name="artist",
+            name="sauces",
         ),
         migrations.RemoveField(
-            model_name='artist',
-            name='tags',
+            model_name="artist",
+            name="tags",
         ),
     ]

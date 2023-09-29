@@ -4,26 +4,25 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('sauces', '0015_delete_sourcecache'),
+        ("sauces", "0015_delete_sourcecache"),
     ]
 
     operations = [
         migrations.AlterUniqueTogether(
-            name='hash16bits',
-            unique_together={('bits', 'algorithm')},
+            name="hash16bits",
+            unique_together={("bits", "algorithm")},
         ),
         migrations.AlterUniqueTogether(
-            name='hash32bits',
-            unique_together={('bits', 'algorithm')},
+            name="hash32bits",
+            unique_together={("bits", "algorithm")},
         ),
         migrations.AlterUniqueTogether(
-            name='hash64bits',
-            unique_together={('bits', 'algorithm')},
+            name="hash64bits",
+            unique_together={("bits", "algorithm")},
         ),
         migrations.AlterUniqueTogether(
-            name='hash8bits',
-            unique_together={('bits', 'algorithm')},
+            name="hash8bits",
+            unique_together={("bits", "algorithm")},
         ),
     ]

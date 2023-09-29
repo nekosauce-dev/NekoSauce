@@ -5,19 +5,31 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('sauces', '0013_alter_hash16bits_options_alter_hash32bits_options_and_more'),
+        ("sauces", "0013_alter_hash16bits_options_alter_hash32bits_options_and_more"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='SourceCache',
+            name="SourceCache",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(db_index=True, max_length=255)),
-                ('data', models.JSONField()),
-                ('source', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='sauces.source')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(db_index=True, max_length=255)),
+                ("data", models.JSONField()),
+                (
+                    "source",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="sauces.source"
+                    ),
+                ),
             ],
         ),
     ]

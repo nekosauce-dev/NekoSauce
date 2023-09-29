@@ -5,20 +5,27 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('sauces', '0001_initial'),
+        ("sauces", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='entity',
-            name='tags',
-            field=django.contrib.postgres.fields.ArrayField(base_field=models.CharField(blank=True, max_length=255), default=list, size=None),
+            model_name="entity",
+            name="tags",
+            field=django.contrib.postgres.fields.ArrayField(
+                base_field=models.CharField(blank=True, max_length=255),
+                default=list,
+                size=None,
+            ),
         ),
         migrations.AddField(
-            model_name='sauce',
-            name='tags',
-            field=django.contrib.postgres.fields.ArrayField(base_field=models.CharField(blank=True, max_length=255), default=list, size=None),
+            model_name="sauce",
+            name="tags",
+            field=django.contrib.postgres.fields.ArrayField(
+                base_field=models.CharField(blank=True, max_length=255),
+                default=list,
+                size=None,
+            ),
         ),
     ]

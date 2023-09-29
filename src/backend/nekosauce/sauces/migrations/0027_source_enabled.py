@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('sauces', '0026_hash_hash_bits_idx'),
+        ("sauces", "0026_hash_hash_bits_idx"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='source',
-            name='enabled',
+            model_name="source",
+            name="enabled",
             field=models.BooleanField(default=True),
         ),
     ]

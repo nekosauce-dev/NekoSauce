@@ -118,7 +118,7 @@ class YandereFetcher(sources.BaseFetcher):
                         "file_url" in post
                         and post["file_url"]
                         and post["status"] == "active"
-                        )
+                    )
                 ]
                 Sauce.objects.bulk_create(
                     new_sauces,

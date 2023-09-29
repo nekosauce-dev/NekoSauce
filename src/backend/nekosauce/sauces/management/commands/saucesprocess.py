@@ -14,7 +14,9 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         self.stdout.write(f"Processing sauces...")
 
-        sauces = Sauce.objects.filter(Q(hash__isnull=True) | Q(sha512_hash__isnull=True))[: options["limit"]]
+        sauces = Sauce.objects.filter(
+            Q(hash__isnull=True) | Q(sha512_hash__isnull=True)
+        )[: options["limit"]]
 
         for sauce in sauces:
             sauce_process.send(sauce.id)

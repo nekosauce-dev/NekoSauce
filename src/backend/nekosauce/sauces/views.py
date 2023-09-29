@@ -64,16 +64,13 @@ class SearchView(APIView):
 
         img = Image.open(file_obj)
 
-        image_hash = imagehash.whash(
-            img, hash_size=32
-        )
+        image_hash = imagehash.whash(img, hash_size=32)
         image_hash_bits = hash_to_bits(image_hash)
 
         limit = serializer.validated_data["limit"]
 
         results = (
-            Hash
-            .objects.prefetch_related("sauces__source")
+            Hash.objects.prefetch_related("sauces__source")
             .annotate(
                 similarity=Func(
                     F("bits"), RawSQL("B'%s'" % image_hash_bits, ()), function="HAMMING"

@@ -5,15 +5,18 @@ import nekosauce.users.models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('users', '0002_user_donation_user_donation_date'),
+        ("users", "0002_user_donation_user_donation_date"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='user',
-            name='api_key',
-            field=models.CharField(db_index=True, default=nekosauce.users.models.generate_api_key, max_length=86),
+            model_name="user",
+            name="api_key",
+            field=models.CharField(
+                db_index=True,
+                default=nekosauce.users.models.generate_api_key,
+                max_length=86,
+            ),
         ),
     ]

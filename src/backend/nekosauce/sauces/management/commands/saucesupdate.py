@@ -17,8 +17,12 @@ class Command(BaseCommand):
         parser.add_argument("--chunk-size", "-c", type=int, default=1024)
         parser.add_argument("--limit", "-l", type=int, default=100000)
 
-    def handle(self, source, async_reqs=3, chunk_size=1024, limit=100000, *args, **options):
-        fetchers = get_all_fetchers() if source == "all" else [get_fetcher(source.lower())]
+    def handle(
+        self, source, async_reqs=3, chunk_size=1024, limit=100000, *args, **options
+    ):
+        fetchers = (
+            get_all_fetchers() if source == "all" else [get_fetcher(source.lower())]
+        )
 
         for fetcher_class in fetchers:
             fetcher = fetcher_class(
@@ -26,9 +30,7 @@ class Command(BaseCommand):
             )
             source = fetcher.source
 
-            self.stdout.write(
-                f"\nFetching sauces from {source.name}"
-            )
+            self.stdout.write(f"\nFetching sauces from {source.name}")
 
             i = 0
 
@@ -47,6 +49,8 @@ class Command(BaseCommand):
                         break
             except:
                 self.stdout.write(
-                    self.style.ERROR(f"ERROR! Something went wrong fetching sauces from {source.name}.")
+                    self.style.ERROR(
+                        f"ERROR! Something went wrong fetching sauces from {source.name}."
+                    )
                 )
                 traceback.print_exc()

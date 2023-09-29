@@ -12,11 +12,12 @@ def drop_pg_similarity(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('sauces', '0006_alter_sauce_height_alter_sauce_width_and_more'),
+        ("sauces", "0006_alter_sauce_height_alter_sauce_width_and_more"),
     ]
 
     operations = [
-        migrations.RunPython(create_pg_similarity, reverse_code=drop_pg_similarity, atomic=True)
+        migrations.RunPython(
+            create_pg_similarity, reverse_code=drop_pg_similarity, atomic=True
+        )
     ]

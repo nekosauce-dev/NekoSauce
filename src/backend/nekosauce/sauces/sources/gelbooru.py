@@ -18,7 +18,9 @@ class GelbooruFetcher(sources.BaseFetcher):
     base_url: str = "https://gelbooru.com"
     source: Source = Source.objects.get(name="Gelbooru")
 
-    get_url = lambda self, path: f"{self.base_url}{path}&api_key={self.credentials['pass']}&user_id={self.credentials['user']}"
+    get_url = (
+        lambda self, path: f"{self.base_url}{path}&api_key={self.credentials['pass']}&user_id={self.credentials['user']}"
+    )
     last_page = property(lambda self: int(self.last_sauce.source_site_id))
 
     def get_sauce_request(self, id: str) -> grequests.AsyncRequest:

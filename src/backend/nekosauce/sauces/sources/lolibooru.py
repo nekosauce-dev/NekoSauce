@@ -90,7 +90,9 @@ class LolibooruFetcher(sources.BaseFetcher):
                 "GET",
                 f"/post.json?limit={page_range}&page={page}",
             )
-            for page in reversed(range(start_from // page_range, last_lolibooru_sauce_id // page_range))
+            for page in reversed(
+                range(start_from // page_range, last_lolibooru_sauce_id // page_range)
+            )
         ]
 
         req_chunks = paginate(reqs, chunk_size)
@@ -118,7 +120,7 @@ class LolibooruFetcher(sources.BaseFetcher):
                         "file_url" in post
                         and post["file_url"]
                         and post["status"] == "active"
-                        )
+                    )
                 ]
                 Sauce.objects.bulk_create(
                     new_sauces,

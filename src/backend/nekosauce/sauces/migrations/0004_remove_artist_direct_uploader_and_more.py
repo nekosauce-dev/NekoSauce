@@ -4,81 +4,88 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('sauces', '0003_alter_entity_options_alter_hash_options_and_more'),
+        ("sauces", "0003_alter_entity_options_alter_hash_options_and_more"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='artist',
-            name='direct_uploader',
+            model_name="artist",
+            name="direct_uploader",
         ),
         migrations.RemoveField(
-            model_name='artist',
-            name='entity_ptr',
+            model_name="artist",
+            name="entity_ptr",
         ),
         migrations.RemoveField(
-            model_name='artsauce',
-            name='artist',
+            model_name="artsauce",
+            name="artist",
         ),
         migrations.RemoveField(
-            model_name='artsauce',
-            name='sauce_ptr',
+            model_name="artsauce",
+            name="sauce_ptr",
         ),
         migrations.RemoveField(
-            model_name='entity',
-            name='polymorphic_ctype',
+            model_name="entity",
+            name="polymorphic_ctype",
         ),
         migrations.RemoveField(
-            model_name='mangasauce',
-            name='artist',
+            model_name="mangasauce",
+            name="artist",
         ),
         migrations.RemoveField(
-            model_name='mangasauce',
-            name='sauce_ptr',
+            model_name="mangasauce",
+            name="sauce_ptr",
         ),
         migrations.RemoveField(
-            model_name='uploader',
-            name='entity_ptr',
+            model_name="uploader",
+            name="entity_ptr",
         ),
         migrations.AlterModelOptions(
-            name='sauce',
+            name="sauce",
             options={},
         ),
         migrations.RemoveField(
-            model_name='hash',
-            name='crop_resistant',
+            model_name="hash",
+            name="crop_resistant",
         ),
         migrations.RemoveField(
-            model_name='sauce',
-            name='polymorphic_ctype',
+            model_name="sauce",
+            name="polymorphic_ctype",
         ),
         migrations.RemoveField(
-            model_name='sauce',
-            name='uploaders',
+            model_name="sauce",
+            name="uploaders",
         ),
         migrations.AlterField(
-            model_name='hash',
-            name='method',
-            field=models.IntegerField(choices=[(0, 'Perceptual Hash'), (1, 'Average Hash'), (2, 'Differential Hash'), (3, 'Wavelet Hash')], default=0),
+            model_name="hash",
+            name="method",
+            field=models.IntegerField(
+                choices=[
+                    (0, "Perceptual Hash"),
+                    (1, "Average Hash"),
+                    (2, "Differential Hash"),
+                    (3, "Wavelet Hash"),
+                ],
+                default=0,
+            ),
         ),
         migrations.DeleteModel(
-            name='AnimeSauce',
+            name="AnimeSauce",
         ),
         migrations.DeleteModel(
-            name='Artist',
+            name="Artist",
         ),
         migrations.DeleteModel(
-            name='ArtSauce',
+            name="ArtSauce",
         ),
         migrations.DeleteModel(
-            name='Entity',
+            name="Entity",
         ),
         migrations.DeleteModel(
-            name='MangaSauce',
+            name="MangaSauce",
         ),
         migrations.DeleteModel(
-            name='Uploader',
+            name="Uploader",
         ),
     ]

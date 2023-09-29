@@ -37,7 +37,9 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "bits",
-                    nekosauce.sauces.utils.fields.BitField(max_length=256, serialize=False),
+                    nekosauce.sauces.utils.fields.BitField(
+                        max_length=256, serialize=False
+                    ),
                 ),
             ],
             options={
@@ -71,7 +73,9 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "bits",
-                    nekosauce.sauces.utils.fields.BitField(max_length=1024, serialize=False),
+                    nekosauce.sauces.utils.fields.BitField(
+                        max_length=1024, serialize=False
+                    ),
                 ),
             ],
             options={
@@ -105,7 +109,9 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "bits",
-                    nekosauce.sauces.utils.fields.BitField(max_length=4096, serialize=False),
+                    nekosauce.sauces.utils.fields.BitField(
+                        max_length=4096, serialize=False
+                    ),
                 ),
             ],
             options={
@@ -139,7 +145,9 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "bits",
-                    nekosauce.sauces.utils.fields.BitField(max_length=64, serialize=False),
+                    nekosauce.sauces.utils.fields.BitField(
+                        max_length=64, serialize=False
+                    ),
                 ),
             ],
             options={

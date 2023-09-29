@@ -4,17 +4,16 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('sauces', '0022_remove_sauce_md5_hash_sauce_sha512_hash'),
+        ("sauces", "0022_remove_sauce_md5_hash_sauce_sha512_hash"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='sauce',
-            name='hash',
+            model_name="sauce",
+            name="hash",
         ),
         migrations.DeleteModel(
-            name='Hash',
+            name="Hash",
         ),
     ]

@@ -4,14 +4,13 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('sauces', '0025_sauce_sauces__hash_source__idx'),
+        ("sauces", "0025_sauce_sauces__hash_source__idx"),
     ]
 
     operations = [
         migrations.AddIndex(
-            model_name='hash',
-            index=models.Index(fields=['-bits'], name='hash_bits_idx'),
+            model_name="hash",
+            index=models.Index(fields=["-bits"], name="hash_bits_idx"),
         ),
     ]

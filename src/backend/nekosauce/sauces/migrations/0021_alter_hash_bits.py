@@ -5,15 +5,20 @@ import nekosauce.sauces.utils.fields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('sauces', '0020_alter_sauce_hash'),
+        ("sauces", "0020_alter_sauce_hash"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='hash',
-            name='bits',
-            field=nekosauce.sauces.utils.fields.BitField(editable=False, max_length=256, primary_key=True, serialize=False, unique=True),
+            model_name="hash",
+            name="bits",
+            field=nekosauce.sauces.utils.fields.BitField(
+                editable=False,
+                max_length=256,
+                primary_key=True,
+                serialize=False,
+                unique=True,
+            ),
         ),
     ]

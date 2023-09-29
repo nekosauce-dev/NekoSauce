@@ -4,13 +4,12 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('sauces', '0014_sourcecache'),
+        ("sauces", "0014_sourcecache"),
     ]
 
     operations = [
         migrations.DeleteModel(
-            name='SourceCache',
+            name="SourceCache",
         ),
     ]
