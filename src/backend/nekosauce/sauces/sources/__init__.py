@@ -19,6 +19,7 @@ def get_all_fetchers():
     from nekosauce.sauces.sources.gelbooru import GelbooruFetcher
     from nekosauce.sauces.sources.konachan import KonachanFetcher
     from nekosauce.sauces.sources.atfbooru import ATFBooruFetcher
+    from nekosauce.sauces.sources.zerochan import ZerochanFetcher
     from nekosauce.sauces.sources.yandere import YandereFetcher
     from nekosauce.sauces.sources.aibooru import AIBooruFetcher
     from nekosauce.sauces.sources.rule34 import Rule34Fetcher
@@ -30,6 +31,7 @@ def get_all_fetchers():
         DanbooruFetcher,
         KonachanFetcher,
         ATFBooruFetcher,
+        ZerochanFetcher,
         YandereFetcher,
         AIBooruFetcher,
         Rule34Fetcher,
@@ -61,6 +63,7 @@ def get_downloader(url: str) -> "BaseDownloader":
     from nekosauce.sauces.sources.gelbooru import GelbooruDownloader
     from nekosauce.sauces.sources.konachan import KonachanDownloader
     from nekosauce.sauces.sources.atfbooru import ATFBooruDownloader
+    from nekosauce.sauces.sources.zerochan import ZerochanDownloader
     from nekosauce.sauces.sources.yandere import YandereDownloader
     from nekosauce.sauces.sources.aibooru import AIBooruDownloader
     from nekosauce.sauces.sources.rule34 import Rule34Downloader
@@ -72,6 +75,7 @@ def get_downloader(url: str) -> "BaseDownloader":
         GelbooruDownloader,
         KonachanDownloader,
         ATFBooruDownloader,
+        ZerochanDownloader,
         YandereDownloader,
         AIBooruDownloader,
         Rule34Downloader,
@@ -99,6 +103,7 @@ def get_tags(links: typing.List[str]) -> typing.List[str]:
     from nekosauce.sauces.sources.gelbooru import GelbooruTagger
     from nekosauce.sauces.sources.konachan import KonachanTagger
     from nekosauce.sauces.sources.atfbooru import ATFBooruTagger
+    from nekosauce.sauces.sources.zerochan import ZerochanTagger
     from nekosauce.sauces.sources.yandere import YandereTagger
     from nekosauce.sauces.sources.aibooru import AIBooruTagger
     from nekosauce.sauces.sources.rule34 import Rule34Tagger
@@ -111,6 +116,7 @@ def get_tags(links: typing.List[str]) -> typing.List[str]:
         GelbooruTagger(),
         KonachanTagger(),
         ATFBooruTagger(),
+        ZerochanTagger(),
         YandereTagger(),
         AIBooruTagger(),
         Rule34Tagger(),
