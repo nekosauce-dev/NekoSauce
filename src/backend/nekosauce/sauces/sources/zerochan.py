@@ -54,6 +54,8 @@ class ZerochanFetcher(sources.BaseFetcher):
             width=post.get("width", 0),
         )
 
+        return sauce
+
     def get_sauces_iter(
         self, start_from: int = 0, chunk_size: int = 1024
     ) -> typing.Iterator[Sauce]:
