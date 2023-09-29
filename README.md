@@ -75,6 +75,14 @@ You'll see that everything is empty, except for the "users" table where you'll o
 The currently available sources are:
 - Danbooru
 - Gelbooru
+- Konachan
+- Yande.re
+- Lolibooru
+- AIBooru
+- All The Fallen Booru
+- Rule 34 (.xxx)
+- Anime Pictures
+- Zerochan
 
 ### Setting up cron jobs
 
