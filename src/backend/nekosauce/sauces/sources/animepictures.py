@@ -133,6 +133,4 @@ class AnimePicturesTagger(sources.BaseTagger):
     get_value = lambda self, url: url.path.split("/")[-1].split("?")[0]
 
     def check_url(self, url: str) -> bool:
-        return url.startswith("https://anime-pictures.net/") or url.startswith(
-            "https://anime-pictures.net/"
-        )
+        return url.startswith("https://anime-pictures.net/")
