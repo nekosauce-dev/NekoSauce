@@ -58,7 +58,10 @@ class ZerochanFetcher(sources.BaseFetcher):
         self, start_from: int = 0, chunk_size: int = 1024
     ) -> typing.Iterator[Sauce]:
         last_page = (
-            grequests.map([self.request("GET", "/?json&p=1&l=1")])[0].json()["items"][0]["id"] // 250
+            grequests.map([self.request("GET", "/?json&p=1&l=1")])[0].json()["items"][
+                0
+            ]["id"]
+            // 250
         ) + 1
 
         if isinstance(start_from, Sauce):
@@ -78,7 +81,7 @@ class ZerochanFetcher(sources.BaseFetcher):
         req_chunks = paginate(reqs, chunk_size)
 
         while True:
-            for index, response in grequests.map_enumerated(
+            for index, response in grequests.imap_enumerated(
                 req_chunks[0],
                 size=self.async_reqs,
             ):
