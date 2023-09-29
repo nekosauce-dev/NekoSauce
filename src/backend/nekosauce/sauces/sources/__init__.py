@@ -13,6 +13,7 @@ from nekosauce.sauces.models import Sauce, Source
 
 
 def get_all_fetchers():
+    from nekosauce.sauces.sources.animepictures import AnimePicturesFetcher
     from nekosauce.sauces.sources.lolibooru import LolibooruFetcher
     from nekosauce.sauces.sources.danbooru import DanbooruFetcher
     from nekosauce.sauces.sources.gelbooru import GelbooruFetcher
@@ -23,6 +24,7 @@ def get_all_fetchers():
     from nekosauce.sauces.sources.rule34 import Rule34Fetcher
 
     return [
+        AnimePicturesFetcher,
         LolibooruFetcher,
         GelbooruFetcher,
         DanbooruFetcher,
@@ -53,6 +55,7 @@ def get_downloader(url: str) -> "BaseDownloader":
     Returns:
         _type_: Downloader
     """
+    from nekosauce.sauces.sources.animepictures import AnimePicturesDownloader
     from nekosauce.sauces.sources.lolibooru import LolibooruDownloader
     from nekosauce.sauces.sources.danbooru import DanbooruDownloader
     from nekosauce.sauces.sources.gelbooru import GelbooruDownloader
@@ -63,6 +66,7 @@ def get_downloader(url: str) -> "BaseDownloader":
     from nekosauce.sauces.sources.rule34 import Rule34Downloader
 
     downloaders = [
+        AnimePicturesDownloader,
         LolibooruDownloader,
         DanbooruDownloader,
         GelbooruDownloader,
@@ -89,6 +93,7 @@ def get_tags(links: typing.List[str]) -> typing.List[str]:
     Returns:
         typing.List[str]: List of tags.
     """
+    from nekosauce.sauces.sources.animepictures import AnimePicturesTagger
     from nekosauce.sauces.sources.lolibooru import LolibooruTagger
     from nekosauce.sauces.sources.danbooru import DanbooruTagger
     from nekosauce.sauces.sources.gelbooru import GelbooruTagger
@@ -100,6 +105,7 @@ def get_tags(links: typing.List[str]) -> typing.List[str]:
     from nekosauce.sauces.sources.pixiv import PixivTagger
 
     taggers = [
+        AnimePicturesTagger(),
         LolibooruTagger(),
         DanbooruTagger(),
         GelbooruTagger(),
