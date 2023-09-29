@@ -97,6 +97,9 @@ class LolibooruFetcher(sources.BaseFetcher):
 
         req_chunks = paginate(reqs, chunk_size)
 
+        if len(req_chunks) == 0:
+            return
+
         while True:
             for index, response in grequests.imap_enumerated(
                 req_chunks[0],
