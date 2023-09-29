@@ -67,41 +67,26 @@ class ZerochanFetcher(sources.BaseFetcher):
             page = int(start_from.source_site_id)
         else:
             page = int(start_from) if start_from is not None else 1
+    
+        for offset in range(page, last_page, 250):
+            response = requests.get(f"https://zerochan.net/?json&l=250&o={offset}", headers={
+                "User-Agent": "NekoSauce"
+            })
 
-        reqs = [
-            self.request(
-                "GET",
-                f"/?json&l=250&o={offset}",
-            )
-            for offset in range(page, last_page, 250)
-        ]
+            if response is None:
+                return
 
-        req_chunks = paginate(reqs, chunk_size)
-
-        while True:
-            for index, response in grequests.imap_enumerated(
-                req_chunks[0],
-                size=self.async_reqs,
-            ):
-                if response is None:
-                    return
-
-                new_sauces = [
-                    self._get_new_sauce_from_response(
-                        post,
-                    )
-                    for post in response.json()["items"]
-                ]
-                Sauce.objects.bulk_create(
-                    new_sauces,
-                    ignore_conflicts=True,
+            new_sauces = [
+                self._get_new_sauce_from_response(
+                    post,
                 )
-                yield from new_sauces
-
-            del req_chunks[0]
-
-            if len(req_chunks) == 0:
-                break
+                for post in response.json()["items"]
+            ]
+            Sauce.objects.bulk_create(
+                new_sauces,
+                ignore_conflicts=True,
+            )
+            yield from new_sauces
 
 
 class ZerochanDownloader(sources.BaseFetcher):
