@@ -62,8 +62,9 @@ class ZerochanFetcher(sources.BaseFetcher):
                 "GET",
                 f"/?json&l=250&p={page}",
             )
-            for page in range(page, last_page)
+            for page in range(1, last_page - page)
         ]
+        reqs.reverse()
 
         req_chunks = paginate(reqs, chunk_size)
 
