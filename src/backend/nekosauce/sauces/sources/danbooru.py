@@ -161,7 +161,7 @@ class DanbooruFetcher(sources.BaseFetcher):
 
         req_chunks = paginate(reqs, chunk_size)
 
-        if Len(req_chunks) == 0:
+        if len(req_chunks) == 0:
             return
 
         while True:
