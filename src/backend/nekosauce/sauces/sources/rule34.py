@@ -59,7 +59,7 @@ class Rule34Fetcher(sources.BaseFetcher):
             + [f"rule34:tag:name:{tag}" for tag in post["tags"].split(" ")],
             is_nsfw=post["rating"] in ["questionable", "explicit"],
             height=post.get("height", 0),
-            width=post("width", 0),
+            width=post.get("width", 0),
         )
 
         return sauce
