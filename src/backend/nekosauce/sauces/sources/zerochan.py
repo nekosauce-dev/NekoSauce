@@ -57,24 +57,21 @@ class ZerochanFetcher(sources.BaseFetcher):
     def get_sauces_iter(
         self, start_from: int = 0, chunk_size: int = 1024
     ) -> typing.Iterator[Sauce]:
-        last_page = (
-            grequests.map([self.request("GET", "/?json&p=1&l=1")])[0].json()["items"][
-                0
-            ]["id"]
-            // 250
-        ) + 1
+        last_page = grequests.map([self.request("GET", "/?json&p=1&l=1")])[0].json()[
+            "items"
+        ][0]["id"]
 
         if isinstance(start_from, Sauce):
-            page = (int(start_from.source_site_id) // 250) - 1
+            page = int(start_from.source_site_id)
         else:
             page = int(start_from) if start_from is not None else 1
 
         reqs = [
             self.request(
                 "GET",
-                f"/?json&l=250&p={page}",
+                f"/?json&l=250&o={offset}",
             )
-            for page in range(1, last_page - page)
+            for offset in range(1, last_page - page, 250)
         ]
         reqs.reverse()
 
