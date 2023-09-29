@@ -2,7 +2,7 @@ import io
 import hashlib
 
 from django.db import models
-from django.db.models import Func
+from django.db.models import Func, F
 from django.core.files.storage import default_storage
 from django.contrib.postgres.fields import ArrayField
 from django.contrib.postgres.indexes import BTreeIndex
@@ -66,6 +66,12 @@ class Sauce(models.Model):
     )
     is_nsfw = models.BooleanField(default=False, null=True)
 
+    # hash = models.ForeignKey(
+    #     "sauces.Hash",
+    #     on_delete=models.SET_NULL,
+    #     null=True,
+    #     related_name="sauces",
+    # )
     hash = models.ForeignKey(
         "sauces.Hash",
         on_delete=models.SET_NULL,
@@ -145,7 +151,12 @@ class Hash(models.Model):
         ]
 
     bits = BitField(
-        max_length=32**2, null=False, blank=False, unique=True, editable=False
+        max_length=32**2,
+        null=False,
+        blank=False,
+        unique=True,
+        editable=False,
+        primary_key=True,
     )
 
 
