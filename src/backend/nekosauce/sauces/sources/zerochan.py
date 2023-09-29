@@ -75,7 +75,6 @@ class ZerochanFetcher(sources.BaseFetcher):
             )
             for offset in range(1, last_page - page, 250)
         ]
-        reqs.reverse()
 
         req_chunks = paginate(reqs, chunk_size)
 
