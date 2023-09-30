@@ -27,13 +27,24 @@ class Command(BaseCommand):
             ps = []
 
             for source in sources:
-                ps.append(subprocess.Popen("python3 manage.py saucesupdate --source \"%s\" --async-reqs %s --chunk-size %s --limit %s" % (
-                    source.site_name,
-                    async_reqs,
-                    chunk_size,
-                    limit
-                )))
-            
+                ps.append(
+                    subprocess.Popen(
+                        [
+                            "python3",
+                            "manage.py",
+                            "saucesupdate",
+                            "--source",
+                            source.site_name,
+                            "--async-reqs",
+                            str(async_reqs),
+                            "--chunk-size",
+                            str(chunk_size),
+                            "--limit",
+                            str(limit),
+                        ]
+                    )
+                )
+
             for p in ps:
                 p.wait()
 
