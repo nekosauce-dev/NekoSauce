@@ -532,6 +532,16 @@ PyWavelets = "*"
 scipy = "*"
 
 [[package]]
+name = "jstyleson"
+version = "0.0.2"
+description = "Library to parse JSON with js-style comments."
+optional = false
+python-versions = "*"
+files = [
+    {file = "jstyleson-0.0.2.tar.gz", hash = "sha256:680003f3b15a2959e4e6a351f3b858e3c07dd3e073a0d54954e34d8ea5e1308e"},
+]
+
+[[package]]
 name = "numpy"
 version = "1.25.2"
 description = "Fundamental package for array computing in Python"
@@ -1086,4 +1096,4 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "9420488b40f53c1e548db1ce8e5bba5b014fc9b165ff45bad950609e3ff4c1b0"
+content-hash = "0e186eebbf2a67d64b210c79f3068abea74e57ed18222ce16abbc76e6e7dadc5"

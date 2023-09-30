@@ -2,7 +2,7 @@ import io
 import hashlib
 
 from django.db import models
-from django.db.models import Func, F
+from django.db.models import Func, F, Q
 from django.core.files.storage import default_storage
 from django.contrib.postgres.fields import ArrayField
 from django.contrib.postgres.indexes import BTreeIndex
@@ -13,6 +13,7 @@ import imagehash
 
 from nekosauce.sauces.utils.fields import BitField
 from nekosauce.sauces.utils.hashing import hash_to_bits
+from nekosauce.sauces.utils.registry import registry
 
 
 ImageFile.LOAD_TRUNCATED_IMAGES = True
@@ -37,24 +38,23 @@ def get_thumbnail_size(width: int, height: int, min_size: int = 256) -> tuple[in
 
 class Sauce(models.Model):
     class Meta:
-        unique_together = ["source", "source_site_id"]
-        indexes = [BTreeIndex("hash", "source", name="sauces__hash_source__idx")]
-
-    class SauceType(models.IntegerChoices):
-        ART_STATIC = 0, "Art"
-        ART_ANIMATED = 1, "Animated"
-        MANGA = 2, "Manga"
-        DOUJINSHI = 3, "Doujinshi"
-        ANIME = 4, "Anime"
-
-    title = models.CharField(max_length=255)
+        unique_together = ["source_id", "source_site_id"]
+        indexes = [
+            BTreeIndex(
+                "hash",
+                condition=Q(source_id=source_id),
+                name=f"sauces__{source_id}_hashes__idx",
+            )
+            for source_id in [source["id"] for source in registry["sources"]]
+        ]
 
     site_urls = ArrayField(models.URLField(max_length=255, null=False))
     api_urls = ArrayField(models.URLField(max_length=255, null=False))
     file_urls = ArrayField(models.URLField(max_length=255, null=False))
 
-    source = models.ForeignKey(
-        "sauces.Source", on_delete=models.CASCADE, null=False, related_name="sauces"
+    source_id = models.SmallIntegerField(
+        choices=[(source["id"], source["name"]) for source in registry["sources"]],
+        verbose_name="Source",
     )
     source_site_id = models.CharField(max_length=255, null=False)
     tags = ArrayField(
@@ -62,22 +62,11 @@ class Sauce(models.Model):
     )
 
     type = models.PositiveSmallIntegerField(
-        choices=SauceType.choices, default=SauceType.ART_STATIC
+        choices=[(t["id"], t["name"]) for t in registry["sauce_types"]]
     )
     is_nsfw = models.BooleanField(default=False, null=True)
 
-    # hash = models.ForeignKey(
-    #     "sauces.Hash",
-    #     on_delete=models.SET_NULL,
-    #     null=True,
-    #     related_name="sauces",
-    # )
-    hash = models.ForeignKey(
-        "sauces.Hash",
-        on_delete=models.SET_NULL,
-        null=True,
-        related_name="sauces",
-    )
+    hash = BitField(max_length=32**2, null=True, db_index=True)
     sha512_hash = models.CharField(max_length=128, db_index=True, null=True)
 
     height = models.PositiveIntegerField()
@@ -86,13 +75,10 @@ class Sauce(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    def __str__(self):
-        return self.title
-
     def process(self, save: bool = True) -> bool:
         from nekosauce.sauces.sources import get_downloader
 
-        if self.hash_id is not None and self.sha512_hash is not None:
+        if self.hash is not None and self.sha512_hash is not None:
             return False, None
 
         downloaders = [(get_downloader(url), url) for url in self.file_urls]
@@ -117,11 +103,9 @@ class Sauce(models.Model):
         self.height = img.height
         self.width = img.width
 
-        if self.hash_id is None:
-            self.hash, created = Hash.objects.get_or_create(
-                bits=hash_to_bits(
-                    imagehash.whash(img, hash_size=32),
-                )
+        if self.hash is None:
+            self.hash = hash_to_bits(
+                imagehash.whash(img, hash_size=32),
             )
 
         thumbnail_path = f"images/thumbnails/{self.source.name.lower().replace(' ', '-')}/{self.sha512_hash}.webp"
@@ -140,31 +124,3 @@ class Sauce(models.Model):
             self.save()
 
         return True, None
-
-
-class Hash(models.Model):
-    class Meta:
-        verbose_name = "Hash"
-        verbose_name_plural = "Hashes"
-        indexes = [
-            models.Index(fields=["-bits"], name="hash_bits_idx"),
-        ]
-
-    bits = BitField(
-        max_length=32**2,
-        null=False,
-        blank=False,
-        unique=True,
-        editable=False,
-        primary_key=True,
-    )
-
-
-class Source(models.Model):
-    name = models.CharField(max_length=255)
-    website = models.URLField(max_length=255)
-    api_docs = models.URLField(max_length=255, null=True, blank=True)
-    enabled = models.BooleanField(default=True)
-
-    def __str__(self):
-        return self.name

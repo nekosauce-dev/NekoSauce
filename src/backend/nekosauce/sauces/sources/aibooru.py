@@ -38,7 +38,6 @@ class AIBooruFetcher(sources.BaseFetcher):
         )
 
         sauce = Sauce(
-            title=f"Artwork from AIBooru #{post['id']} - {post['file_url'].split('/')[-1] if 'file_url' in post else 'Unknown filename'}",
             site_urls=site_urls,
             api_urls=[f"https://aibooru.online/posts/{post['id']}.json"],
             file_urls=[post.get("file_url", post["source"])],

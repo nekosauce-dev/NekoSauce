@@ -47,7 +47,6 @@ class GelbooruFetcher(sources.BaseFetcher):
         )
 
         sauce = Sauce(
-            title=f"Artwork from Gelbooru #{post['id']} - {post['image']}",
             site_urls=site_urls,
             api_urls=[
                 f"https://gelbooru.com/index.php?page=dapi&q=index&json=1&s=post&id={post['id']}"

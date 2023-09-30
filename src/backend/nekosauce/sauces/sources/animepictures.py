@@ -20,7 +20,6 @@ class AnimePicturesFetcher(sources.BaseFetcher):
 
     def _get_new_sauce_from_response(self, post: dict) -> Sauce:
         return Sauce(
-            title=f"Artwork from Anime Pictures #{post['id']} - {post['md5']}",
             site_urls=[
                 f"https://anime-pictures.net/posts/{post['id']}",
             ],

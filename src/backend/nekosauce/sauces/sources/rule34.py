@@ -45,7 +45,6 @@ class Rule34Fetcher(sources.BaseFetcher):
         )
 
         sauce = Sauce(
-            title=f"Artwork from Rule 34 #{post['id']} - {post['image']}",
             site_urls=site_urls,
             api_urls=[
                 f"https://rule34.xxx/index.php?page=dapi&q=index&json=1&s=post&id={post['id']}"

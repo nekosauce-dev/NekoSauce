@@ -15,13 +15,10 @@ import requests
 import imagehash
 
 from nekosauce.exceptions import ValidationError, DownloadError
-from nekosauce.sauces.models import (
-    Sauce,
-    Source,
-    Hash,
-)
+from nekosauce.sauces.models import Sauce
 from nekosauce.sauces.serializers import SearchQuerySerializer
 from nekosauce.sauces.utils.hashing import hash_to_bits
+from nekosauce.sauces.utils.registry import registry, get_sauce_type
 
 
 class SearchView(APIView):
@@ -69,56 +66,42 @@ class SearchView(APIView):
 
         limit = serializer.validated_data["limit"]
 
-        results = (
-            Hash.objects.prefetch_related("sauces__source")
-            .annotate(
-                similarity=Func(
-                    F("bits"), RawSQL("B'%s'" % image_hash_bits, ()), function="HAMMING"
-                )
+        results = Sauce.objects.annotate(
+            similarity=Func(
+                F("hash"), RawSQL("B'%s'" % image_hash_bits, ()), function="HAMMING"
             )
-            .order_by("-similarity")[:limit]
-        )
-
-        sauces = []
-        for hash in results:
-            for sauce in hash.sauces.all():
-                sauces.append((sauce, hash))
+        ).order_by("-similarity")[:limit]
 
         return Response(
             {
                 "data": [
                     {
-                        "id": s.id,
-                        "similarity": h.similarity,
-                        "title": s.title,
-                        "hash": hex(int(h.bits, 2))[2:],
-                        "sha512_hash": s.sha512_hash,
+                        "id": sauce.id,
+                        "similarity": sauce.similarity,
+                        "hash": hex(int(sauce.hash, 2))[2:],
+                        "sha512_hash": sauce.sha512_hash,
                         "urls": {
-                            "site": s.site_urls,
-                            "api": s.api_urls,
-                            "file": s.file_urls,
+                            "site": sauce.site_urls,
+                            "api": sauce.api_urls,
+                            "file": sauce.file_urls,
                         },
-                        "source": {
-                            "id": s.source.id,
-                            "name": s.source.name,
-                            "website": s.source.website,
-                            "api_docs": s.source.api_docs,
-                        },
-                        "source_site_id": s.source_site_id,
-                        "tags": s.tags,
-                        "type": Sauce.SauceType(s.type).label.upper(),
-                        "is_nsfw": s.is_nsfw,
+                        "source": sauce.source_id,
+                        "source_site_id": sauce.source_site_id,
+                        "tags": sauce.tags,
+                        "type": get_sauce_type(sauce.type),
+                        "is_nsfw": sauce.is_nsfw,
                         "file_meta": {
-                            "height": s.height,
-                            "width": s.width,
+                            "height": sauce.height,
+                            "width": sauce.width,
+                            "mimetype": "image/webp",
                         },
-                        "created_at": s.created_at,
-                        "updated_at": s.updated_at,
+                        "created_at": sauce.created_at,
+                        "updated_at": sauce.updated_at,
                     }
-                    for s, h in sauces
+                    for sauce in results
                 ][:limit],
                 "meta": {
-                    "count": len(sauces),
+                    "count": len(results),
                     "hash": hex(int(image_hash_bits, 2))[2:],
                     "upload": serializer.validated_data.get("url"),
                 },
@@ -130,18 +113,9 @@ class SourceView(APIView):
     def get(self, request):
         return Response(
             {
-                "data": [
-                    {
-                        "id": s.id,
-                        "name": s.name,
-                        "website": s.website,
-                        "api_docs": s.api_docs,
-                        "enabled": s.enabled,
-                    }
-                    for s in Source.objects.all()
-                ],
+                "data": registry["sources"],
                 "meta": {
-                    "count": Source.objects.count(),
+                    "count": len(registry["sources"]),
                 },
             }
         )

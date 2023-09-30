@@ -34,7 +34,6 @@ class YandereFetcher(sources.BaseFetcher):
         ] + ([post["source"]] if post["source"] else [])
 
         sauce = Sauce(
-            title=f"Artwork from Yandere #{post['id']} - {post['md5']}",
             site_urls=site_urls,
             api_urls=[
                 f"https://yande.re/post.json?tags=id:{post['id']}",

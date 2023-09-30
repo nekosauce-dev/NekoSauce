@@ -66,7 +66,7 @@ class Command(BaseCommand):
             ):
                 self.stdout.write(
                     self.style.SUCCESS(f"ADDED")
-                    + f": ({source.name}) {sauce.source_site_id} - {sauce.title}"
+                    + f": ({source.name}) {sauce.source_site_id}"
                 )
 
                 i += 1

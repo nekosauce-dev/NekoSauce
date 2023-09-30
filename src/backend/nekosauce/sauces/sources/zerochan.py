@@ -35,7 +35,6 @@ class ZerochanFetcher(sources.BaseFetcher):
         ] + ([post["source"]] if post["source"] else [])
 
         sauce = Sauce(
-            title=f"Artwork from Zerochan #{post['id']}",
             site_urls=site_urls,
             api_urls=[
                 f"https://zerochan.net/{post['id']}?json",

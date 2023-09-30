@@ -1,0 +1,207 @@
+/*
+ * Add new sources to this registry! They'll be automatically added to the
+ * database and everything will be automatically set up after restart.
+ * You can copy-paste any of the sources below and modify it to add a new
+ * source.
+ */
+{
+    "sauce_types": [
+        {"id": 1, "name": "Illustration", "code": "illustration"},
+        {"id": 2, "name": "Illustration (Animated)", "code": "animated_illustration"},
+        {"id": 3, "name": "Manga", "code": "manga"},
+        {"id": 4, "name": "Doujinshi", "code": "doujinshi"},
+        {"id": 5, "name": "Anime", "code": "anime"},
+        {"id": 6, "name": "Visual Novel", "code": "visual_novel"},
+        {"id": 7, "name": "Light Novel", "code": "light_novel"},
+        {"id": 8, "name": "Other", "code": "other"}
+    ],
+    "sources": [
+        {
+            "id": 1,
+            "module": "nekosauce.sauces.sources.danbooru",
+            "name": "Danbooru",
+            "urls": {
+                "website": "https://danbooru.donmai.us/",
+                "documentation": "https://danbooru.donmai.us/wiki_pages/help:api"
+            },
+            "enabled": true,
+            "components": {
+                "fetcher": "DanbooruFetcher",
+                "downloader": "DanbooruDownloader",
+                "tagger": "DanbooruTagger"
+            },
+            "sauce_types": [1, 2],
+            "update_frequency": "default"
+        },
+        {
+            "id": 2,
+            "module": "nekosauce.sauces.sources.gelbooru",
+            "name": "Gelbooru",
+            "urls": {
+                "website": "https://gelbooru.com/",
+                "documentation": "https://gelbooru.com/docs/api"
+            },
+            "enabled": true,
+            "components": {
+                "fetcher": "GelbooruFetcher",
+                "downloader": "GelbooruDownloader",
+                "tagger": "GelbooruTagger"
+            },
+            "sauce_types": [1, 2],
+            "update_frequency": "default"
+        },
+        {
+            "id": 3,
+            "module": "nekosauce.sauces.sources.konachan",
+            "name": "Konachan",
+            "urls": {
+                "website": "https://konachan.com/",
+                "documentation": "https://konachan.com/api"
+            },
+            "enabled": true,
+            "components": {
+                "fetcher": "KonachanFetcher",
+                "downloader": "KonachanDownloader",
+                "tagger": "KonachanTagger"
+            },
+            "sauce_types": [1, 2],
+            "update_frequency": "default"
+        },
+        {
+            "id": 4,
+            "module": "nekosauce.sauces.sources.aibooru",
+            "name": "AIBooru",
+            "urls": {
+                "website": "https://aibooru.online/",
+                "documentation": "https://aibooru.online/api"
+            },
+            "enabled": true,
+            "components": {
+                "fetcher": "AIBooruFetcher",
+                "downloader": "AIBooruDownloader",
+                "tagger": "AIBooruTagger"
+            },
+            "sauce_types": ["illustration", "illustration_animated"],
+            "update_frequency": "default"
+        },
+        {
+            "id": 5,
+            "module": "nekosauce.sauces.sources.animepictures",
+            "name": "Anime Pictures",
+            "urls": {
+                "website": "https://anime-pictures.net/",
+                "documentation": "https://anime-pictures.net/api"
+            },
+            "enabled": true,
+            "components": {
+                "fetcher": "AnimePicturesFetcher",
+                "downloader": "AnimePicturesDownloader",
+                "tagger": "AnimePicturesTagger"
+            },
+            "sauce_types": [1, 2],
+            "update_frequency": "default"
+        },
+        {
+            "id": 6,
+            "module": "nekosauce.sauces.sources.atfbooru",
+            "name": "All The Fallen Booru",
+            "urls": {
+                "website": "https://booru.allthefallen.moe/",
+                "documentation": "https://booru.allthefallen.moe/api"
+            },
+            "enabled": true,
+            "components": {
+                "fetcher": "ATFBooruFetcher",
+                "downloader": "ATFBooruDownloader",
+                "tagger": "ATFBooruTagger"
+            },
+            "sauce_types": [1, 2],
+            "update_frequency": "default"
+        },
+        {
+            "id": 7,
+            "module": "nekosauce.sauces.sources.lolibooru",
+            "name": "Lolibooru",
+            "urls": {
+                "website": "https://lolibooru.moe/",
+                "documentation": "https://lolibooru.moe/api"
+            },
+            "enabled": true,
+            "components": {
+                "fetcher": "LolibooruFetcher",
+                "downloader": "LolibooruDownloader",
+                "tagger": "LolibooruTagger"
+            },
+            "sauce_types": [1, 2],
+            "update_frequency": "default"
+        },
+        {
+            "id": 8,
+            "module": "nekosauce.sauces.sources.pixiv",
+            "name": "Pixiv",
+            "urls": {
+                "website": "https://www.pixiv.net/",
+                "documentation": null
+            },
+            "enabled": true,
+            "components": {
+                "fetcher": null,
+                "downloader": null,
+                "tagger": "PixivTagger"
+            },
+            "sauce_types": [1],
+            "update_frequency": "default"
+        },
+        {
+            "id": 9,
+            "module": "nekosauce.sauces.sources.rule34",
+            "name": "Rule 34",
+            "urls": {
+                "website": "https://rule34.xxx/",
+                "documentation": "https://api.rule34.xxx/"
+            },
+            "enabled": true,
+            "components": {
+                "fetcher": "Rule34Fetcher",
+                "downloader": "Rule34Downloader",
+                "tagger": "Rule34Tagger"
+            },
+            "sauce_types": [1, 2],
+            "update_frequency": "default"
+        },
+        {
+            "id": 10,
+            "module": "nekosauce.sauces.sources.yandere",
+            "name": "Yande.re",
+            "urls": {
+                "website": "https://yande.re/",
+                "documentation": "https://yande.re/api"
+            },
+            "enabled": true,
+            "components": {
+                "fetcher": "YandeFetcher",
+                "downloader": "YandeDownloader",
+                "tagger": "YandeTagger"
+            },
+            "sauce_types": [1, 2],
+            "update_frequency": "default"
+        },
+        {
+            "id": 11,
+            "module": "nekosauce.sauces.sources.zerochan",
+            "name": "Zerochan",
+            "urls": {
+                "website": "https://www.zerochan.net/",
+                "documentation": "https://www.zerochan.net/api"
+            },
+            "enabled": true,
+            "components": {
+                "fetcher": "ZerochanFetcher",
+                "downloader": "ZerochanDownloader",
+                "tagger": "ZerochanTagger"
+            },
+            "sauce_types": [1, 2],
+            "update_frequency": "default"
+        }
+    ]
+}

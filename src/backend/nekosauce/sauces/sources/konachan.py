@@ -34,7 +34,6 @@ class KonachanFetcher(sources.BaseFetcher):
         ] + ([post["source"]] if post["source"] else [])
 
         sauce = Sauce(
-            title=f"Artwork from Konachan #{post['id']} - {post['md5']}",
             site_urls=site_urls,
             api_urls=[
                 f"https://konachan.com/post.json?tags=id:{post['id']}",
