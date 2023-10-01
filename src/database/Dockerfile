@@ -1,4 +1,4 @@
-FROM postgres:15.4
+FROM postgres:latest
 
 # Install necessary build tools and libraries
 RUN apt update && apt upgrade -y \
