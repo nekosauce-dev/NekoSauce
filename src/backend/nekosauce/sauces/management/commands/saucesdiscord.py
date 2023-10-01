@@ -4,7 +4,8 @@ from django.core.management.base import BaseCommand, CommandError
 
 import requests
 
-from nekosauce.sauces.models import Sauce, Hash, Source
+from nekosauce.sauces.models import Sauce
+from nekosauce.sauces.utils.registry import registry
 
 
 def format_large_number(number):
@@ -19,15 +20,19 @@ class Command(BaseCommand):
 
         self.stdout.write("Sending update (it can take a few seconds)...")
 
+        sources = [
+            (source["id"], source["name"]) for source in registry["sources"] if source["enabled"]
+        ]
+
         r = requests.post(
             os.getenv("BACKEND_DISCORD_DATABASE_UPDATES_WEBHOOK_URL"),
             json={
                 "content": (
                     "__**NekoSauce Database Update!**__\n\n"
                     f"Sauces: {format_large_number(Sauce.objects.count())}" + "\n"
-                    f"Hashes: {format_large_number(Hash.objects.count())}" + "\n\n"
+                    f"Hashes: {format_large_number(Sauce.objects.filter(hash__isnull=False).count())}" + "\n\n"
                     "**Which sources?**\n"
-                    f"{new_line.join([f'- {source.name}: {format_large_number(source.sauces.count())}' for source in Source.objects.filter(enabled=True).order_by('id')])}"
+                    f"{new_line.join([f'- {source[1]}: {format_large_number(Sauce.objects.filter(source_id={source[0]}).count())}' for source in sources])}"
                     "\n\n------\n\n"
                     "This update is automatic. NekoSauce will be released once the hashes amount matches (or almost matches) the amount of sauces."
                 )

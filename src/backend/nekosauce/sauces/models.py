@@ -13,7 +13,7 @@ import imagehash
 
 from nekosauce.sauces.utils.fields import BitField
 from nekosauce.sauces.utils.hashing import hash_to_bits
-from nekosauce.sauces.utils.registry import registry
+from nekosauce.sauces.utils.registry import registry, get_source, get_sauce_type_by_name
 
 
 ImageFile.LOAD_TRUNCATED_IMAGES = True
@@ -62,7 +62,8 @@ class Sauce(models.Model):
     )
 
     type = models.PositiveSmallIntegerField(
-        choices=[(t["id"], t["name"]) for t in registry["sauce_types"]]
+        choices=[(t["id"], t["name"]) for t in registry["sauce_types"]],
+        default=get_sauce_type_by_name("illustration")["id"],
     )
     is_nsfw = models.BooleanField(default=False, null=True)
 
@@ -108,7 +109,7 @@ class Sauce(models.Model):
                 imagehash.whash(img, hash_size=32),
             )
 
-        thumbnail_path = f"images/thumbnails/{self.source.name.lower().replace(' ', '-')}/{self.sha512_hash}.webp"
+        thumbnail_path = f"images/thumbnails/{get_source(self.source_id)['name'].lower().replace(' ', '-')}/{self.sha512_hash}.webp"
 
         if not default_storage.exists(thumbnail_path):
             img.thumbnail(get_thumbnail_size(img.width, img.height))

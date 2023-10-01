@@ -6,12 +6,11 @@ import requests
 
 from nekosauce.sauces import sources
 from nekosauce.sauces.utils import paginate
-from nekosauce.sauces.models import Sauce, Source
+from nekosauce.sauces.models import Sauce
 
 
 class KonachanFetcher(sources.BaseFetcher):
     site_name = "Konachan"
-    source = Source.objects.get(name="Konachan")
 
     def get_url(self, path: str) -> str:
         return f"https://konachan.com{path}"
@@ -20,7 +19,7 @@ class KonachanFetcher(sources.BaseFetcher):
         return self.request("GET", f"/posts/{id}.json")
 
     def get_file_url(self, id: str) -> str:
-        qs = Source.objects.filter(tags__overlap=[f"konachan:post:id:{id}"])
+        qs = Sauce.objects.filter(tags__overlap=[f"konachan:post:id:{id}"])
 
         if qs.exists():
             return qs[0].file_urls[0]
@@ -39,7 +38,7 @@ class KonachanFetcher(sources.BaseFetcher):
                 f"https://konachan.com/post.json?tags=id:{post['id']}",
             ],
             file_urls=[post["file_url"]],
-            source=self.source,
+            source_id=self.source_id,
             source_site_id=str(post["id"]),
             tags=sources.get_tags(site_urls)
             + [
@@ -106,9 +105,6 @@ class KonachanFetcher(sources.BaseFetcher):
                     return
 
                 if response.status_code == 520:
-                    print(
-                        f"({range(start_from, last_konachan_sauce_id + 1, page_range)[index]}-{range(start_from, last_konachan_sauce_id + 1, page_range)[index + 1]}) ERROR 520! Skipping..."
-                    )
                     continue
 
                 new_sauces = [

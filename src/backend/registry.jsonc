@@ -179,9 +179,9 @@
             },
             "enabled": true,
             "components": {
-                "fetcher": "YandeFetcher",
-                "downloader": "YandeDownloader",
-                "tagger": "YandeTagger"
+                "fetcher": "YandereFetcher",
+                "downloader": "YandereDownloader",
+                "tagger": "YandereTagger"
             },
             "sauce_types": [1, 2],
             "update_frequency": "default"

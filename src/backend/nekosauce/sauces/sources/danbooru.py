@@ -11,12 +11,11 @@ import validators
 
 from nekosauce.sauces import sources
 from nekosauce.sauces.utils import paginate
-from nekosauce.sauces.models import Sauce, Source
+from nekosauce.sauces.models import Sauce
 
 
 class DanbooruFetcher(sources.BaseFetcher):
     site_name = "Danbooru"
-    source = Source.objects.get(name="Danbooru")
 
     last_page = property(lambda self: f"a{self.last_sauce.source_site_id}")
 
@@ -44,7 +43,7 @@ class DanbooruFetcher(sources.BaseFetcher):
             site_urls=site_urls,
             api_urls=[f"https://danbooru.donmai.us/posts/{post['id']}.json"],
             file_urls=[post.get("file_url", post["source"])],
-            source=self.source,
+            source_id=self.source_id,
             source_site_id=post["id"],
             tags=sources.get_tags(
                 site_urls
@@ -117,7 +116,7 @@ class DanbooruFetcher(sources.BaseFetcher):
         return self._get_sauce_from_response(post)
 
     def get_file_url(self, id: str) -> str:
-        qs = Source.objects.filter(tags__overlap=[f"danbooru:post:id:{id}"])
+        qs = Sauce.objects.filter(tags__overlap=[f"danbooru:post:id:{id}"])
 
         if qs.exists():
             return qs[0].file_urls[0]

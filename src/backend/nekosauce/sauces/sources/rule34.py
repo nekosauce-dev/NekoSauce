@@ -10,13 +10,12 @@ import validators
 
 from nekosauce.sauces import sources
 from nekosauce.sauces.utils import paginate
-from nekosauce.sauces.models import Sauce, Source
+from nekosauce.sauces.models import Sauce
 
 
 class Rule34Fetcher(sources.BaseFetcher):
     site_name: str = "Rule 34"
     base_url: str = "https://api.rule34.xxx"
-    source: Source = Source.objects.get(name="Rule 34")
 
     get_url = lambda self, path: f"{self.base_url}{path}"
     last_page = property(lambda self: int(self.last_sauce.source_site_id))
@@ -52,7 +51,7 @@ class Rule34Fetcher(sources.BaseFetcher):
             file_urls=[post.get("file_url")]
             if post.get("file_url")
             else post["source"].split(" "),
-            source=self.source,
+            source_id=self.source_id,
             source_site_id=post["id"],
             tags=sources.get_tags(site_urls)
             + [f"rule34:tag:name:{tag}" for tag in post["tags"].split(" ")],
@@ -77,7 +76,7 @@ class Rule34Fetcher(sources.BaseFetcher):
         return sauce
 
     def get_file_url(self, id: str) -> str:
-        qs = Source.objects.filter(tags__overlap=[f"rule34:post:id:{id}"])
+        qs = Sauce.objects.filter(tags__overlap=[f"rule34:post:id:{id}"])
 
         if qs.exists():
             return qs[0].file_urls[0]

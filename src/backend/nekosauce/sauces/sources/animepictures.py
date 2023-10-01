@@ -4,12 +4,11 @@ import grequests
 
 from nekosauce.sauces import sources
 from nekosauce.sauces.utils import paginate
-from nekosauce.sauces.models import Sauce, Source
+from nekosauce.sauces.models import Sauce
 
 
 class AnimePicturesFetcher(sources.BaseFetcher):
     site_name = "Anime Pictures"
-    source = Source.objects.get(name="Anime Pictures")
     base_url = "https://anime-pictures.net"
 
     def get_url(self, path: str) -> str:
@@ -29,7 +28,7 @@ class AnimePicturesFetcher(sources.BaseFetcher):
             file_urls=[
                 f"https://images.anime-pictures.net/{post['md5'][:3]}/{post['md5']}{post['ext']}",
             ],
-            source=self.source,
+            source_id=self.source_id,
             source_site_id=str(post["id"]),
             tags=sources.get_tags(
                 [

@@ -7,6 +7,7 @@ from django.core.management.base import BaseCommand
 
 from nekosauce.sauces.models import Sauce
 from nekosauce.sauces.sources import get_fetcher, get_all_fetchers
+from nekosauce.sauces.utils.registry import get_source
 
 
 class Command(BaseCommand):
@@ -53,9 +54,11 @@ class Command(BaseCommand):
         fetcher = get_fetcher(source.lower())(
             async_reqs=async_reqs,
         )
-        source = fetcher.source
+        source = get_source(fetcher.source_id)
 
-        self.stdout.write(f"\nFetching sauces from {source.name}")
+        print("SOURCE", source, fetcher.source_id)
+
+        self.stdout.write(f"\nFetching sauces from {source['name']}")
 
         i = 0
 
@@ -66,7 +69,7 @@ class Command(BaseCommand):
             ):
                 self.stdout.write(
                     self.style.SUCCESS(f"ADDED")
-                    + f": ({source.name}) {sauce.source_site_id}"
+                    + f": ({source['name']}) {sauce.source_site_id}"
                 )
 
                 i += 1
@@ -75,7 +78,7 @@ class Command(BaseCommand):
         except:
             self.stdout.write(
                 self.style.ERROR(
-                    f"ERROR! Something went wrong fetching sauces from {source.name}."
+                    f"ERROR! Something went wrong fetching sauces from {source['name']}."
                 )
             )
             traceback.print_exc()

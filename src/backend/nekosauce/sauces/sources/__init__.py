@@ -4,38 +4,29 @@ from dataclasses import dataclass
 import os
 import io
 import typing
+import importlib
 import urllib.parse
 
 import grequests
 import requests
 
-from nekosauce.sauces.models import Sauce, Source
+from nekosauce.sauces.models import Sauce
+from nekosauce.sauces.utils.registry import registry, get_source_by_name
 
 
 def get_all_fetchers():
-    from nekosauce.sauces.sources.animepictures import AnimePicturesFetcher
-    from nekosauce.sauces.sources.lolibooru import LolibooruFetcher
-    from nekosauce.sauces.sources.danbooru import DanbooruFetcher
-    from nekosauce.sauces.sources.gelbooru import GelbooruFetcher
-    from nekosauce.sauces.sources.konachan import KonachanFetcher
-    from nekosauce.sauces.sources.atfbooru import ATFBooruFetcher
-    from nekosauce.sauces.sources.zerochan import ZerochanFetcher
-    from nekosauce.sauces.sources.yandere import YandereFetcher
-    from nekosauce.sauces.sources.aibooru import AIBooruFetcher
-    from nekosauce.sauces.sources.rule34 import Rule34Fetcher
+    fetchers = []
 
-    return [
-        AnimePicturesFetcher,
-        LolibooruFetcher,
-        GelbooruFetcher,
-        DanbooruFetcher,
-        KonachanFetcher,
-        ATFBooruFetcher,
-        ZerochanFetcher,
-        YandereFetcher,
-        AIBooruFetcher,
-        Rule34Fetcher,
-    ]
+    for source in registry["sources"]:
+        if source["components"]["fetcher"] is None:
+            continue
+        
+        module = importlib.import_module(source["module"])
+        fetcher = getattr(module, source["components"]["fetcher"])
+
+        fetchers.append(fetcher)
+
+    return fetchers
 
 
 def get_fetcher(name: str) -> "BaseFetcher":
@@ -57,29 +48,16 @@ def get_downloader(url: str) -> "BaseDownloader":
     Returns:
         _type_: Downloader
     """
-    from nekosauce.sauces.sources.animepictures import AnimePicturesDownloader
-    from nekosauce.sauces.sources.lolibooru import LolibooruDownloader
-    from nekosauce.sauces.sources.danbooru import DanbooruDownloader
-    from nekosauce.sauces.sources.gelbooru import GelbooruDownloader
-    from nekosauce.sauces.sources.konachan import KonachanDownloader
-    from nekosauce.sauces.sources.atfbooru import ATFBooruDownloader
-    from nekosauce.sauces.sources.zerochan import ZerochanDownloader
-    from nekosauce.sauces.sources.yandere import YandereDownloader
-    from nekosauce.sauces.sources.aibooru import AIBooruDownloader
-    from nekosauce.sauces.sources.rule34 import Rule34Downloader
+    downloaders = []
 
-    downloaders = [
-        AnimePicturesDownloader,
-        LolibooruDownloader,
-        DanbooruDownloader,
-        GelbooruDownloader,
-        KonachanDownloader,
-        ATFBooruDownloader,
-        ZerochanDownloader,
-        YandereDownloader,
-        AIBooruDownloader,
-        Rule34Downloader,
-    ]
+    for source in registry["sources"]:
+        if source["components"]["downloader"] is None:
+            continue
+        
+        module = importlib.import_module(source["module"])
+        downloader = getattr(module, source["components"]["downloader"])
+
+        downloaders.append(downloader)
 
     for downloader in downloaders:
         if downloader().check_url(url):
@@ -97,31 +75,16 @@ def get_tags(links: typing.List[str]) -> typing.List[str]:
     Returns:
         typing.List[str]: List of tags.
     """
-    from nekosauce.sauces.sources.animepictures import AnimePicturesTagger
-    from nekosauce.sauces.sources.lolibooru import LolibooruTagger
-    from nekosauce.sauces.sources.danbooru import DanbooruTagger
-    from nekosauce.sauces.sources.gelbooru import GelbooruTagger
-    from nekosauce.sauces.sources.konachan import KonachanTagger
-    from nekosauce.sauces.sources.atfbooru import ATFBooruTagger
-    from nekosauce.sauces.sources.zerochan import ZerochanTagger
-    from nekosauce.sauces.sources.yandere import YandereTagger
-    from nekosauce.sauces.sources.aibooru import AIBooruTagger
-    from nekosauce.sauces.sources.rule34 import Rule34Tagger
-    from nekosauce.sauces.sources.pixiv import PixivTagger
+    taggers = []
 
-    taggers = [
-        AnimePicturesTagger(),
-        LolibooruTagger(),
-        DanbooruTagger(),
-        GelbooruTagger(),
-        KonachanTagger(),
-        ATFBooruTagger(),
-        ZerochanTagger(),
-        YandereTagger(),
-        AIBooruTagger(),
-        Rule34Tagger(),
-        PixivTagger(),
-    ]
+    for source in registry["sources"]:
+        if source["components"]["tagger"] is None:
+            continue
+        
+        module = importlib.import_module(source["module"])
+        tagger = getattr(module, source["components"]["tagger"])
+
+        taggers.append(tagger())
 
     result = []
 
@@ -161,7 +124,7 @@ class BaseFetcher:
 
     site_name: str = None
     base_url: str = None
-    source: Source = None
+    source_id: int = None
 
     def __init__(self, async_reqs: int = 10):
         self.credentials = {
@@ -169,10 +132,12 @@ class BaseFetcher:
             "pass": os.getenv(f"BACKEND_SOURCE_{self.site_name.upper()}_PASSWORD"),
         }
         self.async_reqs = async_reqs
+        self.source_id = get_source_by_name(self.site_name)["id"]
+
 
     @property
     def last_sauce(self) -> Sauce:
-        return Sauce.objects.filter(source=self.source).order_by("-created_at").first()
+        return Sauce.objects.filter(source_id=self.source_id).order_by("-created_at").first()
 
     @property
     def last_page(self) -> int:

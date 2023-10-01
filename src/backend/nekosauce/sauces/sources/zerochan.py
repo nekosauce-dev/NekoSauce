@@ -6,12 +6,11 @@ import requests
 
 from nekosauce.sauces import sources
 from nekosauce.sauces.utils import paginate
-from nekosauce.sauces.models import Sauce, Source
+from nekosauce.sauces.models import Sauce
 
 
 class ZerochanFetcher(sources.BaseFetcher):
     site_name = "Zerochan"
-    source = Source.objects.get(name="Zerochan")
     base_url = "https://zerochan.net"
 
     def get_url(self, path: str) -> str:
@@ -42,7 +41,7 @@ class ZerochanFetcher(sources.BaseFetcher):
             file_urls=[
                 f"https://s1.zerochan.net/{urllib.parse.quote(post['tag'].replace(' ', '.'))}.full.{post['id']}.jpg",
             ],
-            source=self.source,
+            source_id=self.source_id,
             source_site_id=str(post["id"]),
             tags=sources.get_tags(site_urls)
             + [
