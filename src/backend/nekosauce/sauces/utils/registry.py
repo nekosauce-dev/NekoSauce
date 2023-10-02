@@ -26,3 +26,12 @@ def get_source_by_name(name: str):
     for source in registry["sources"]:
         if source["name"].lower() == name.lower():
             return source
+
+
+def get_source_by_module(module: str):
+    for source in registry["sources"]:
+        if (
+            source["module"].rsplit(".", 1)[-1].lower() == module.lower()
+            or source["module"].lower() == module
+        ):
+            return source
