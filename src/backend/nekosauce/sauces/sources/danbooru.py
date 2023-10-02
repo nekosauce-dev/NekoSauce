@@ -156,6 +156,7 @@ class DanbooruFetcher(sources.BaseFetcher):
                 )
                 for i in range(page, greatest_id // 200 + 1)
             ]
+            reqs.reverse()
 
         req_chunks = paginate(reqs, chunk_size)
 
