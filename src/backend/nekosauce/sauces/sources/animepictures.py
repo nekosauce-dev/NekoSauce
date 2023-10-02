@@ -61,7 +61,7 @@ class AnimePicturesFetcher(sources.BaseFetcher):
         if isinstance(start_from, Sauce):
             page = (int(start_from.source_site_id) // 100) - 1
         else:
-            page = last_page + 1 - int(start_from) * 100 if start_from is not None else last_page
+            page = last_page + 1 - int(start_from) * 100 if start_from is not None else 1
 
         reqs = [
             self.request(
