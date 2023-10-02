@@ -96,6 +96,8 @@ class GelbooruFetcher(sources.BaseFetcher):
             last = int(start_from.source_site_id)
         elif isinstance(start_from, int):
             last = start_from
+        else:
+            last = int(start_from)
 
         reqs = [
             self.request(
