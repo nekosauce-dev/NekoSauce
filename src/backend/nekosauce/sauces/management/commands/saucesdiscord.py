@@ -32,7 +32,7 @@ class Command(BaseCommand):
                     f"Sauces: {format_large_number(Sauce.objects.count())}" + "\n"
                     f"Hashes: {format_large_number(Sauce.objects.filter(hash__isnull=False).count())}" + "\n\n"
                     "**Which sources?**\n"
-                    f"{new_line.join([f'- {source[1]}: {format_large_number(Sauce.objects.filter(source_id={source[0]}).count())}' for source in sources])}"
+                    f"{new_line.join([f'- {source[1]}: {format_large_number(Sauce.objects.filter(source_id=source[0]).count())}' for source in sources])}"
                     "\n\n------\n\n"
                     "This update is automatic. NekoSauce will be released once the hashes amount matches (or almost matches) the amount of sauces."
                 )
