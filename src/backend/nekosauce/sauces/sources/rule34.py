@@ -95,7 +95,7 @@ class Rule34Fetcher(sources.BaseFetcher):
         elif isinstance(start_from, int):
             last = start_from
         else:
-            last = int(start_from)
+            last = int(start_from) if start_from is not None else 0
 
         reqs = [
             self.request(

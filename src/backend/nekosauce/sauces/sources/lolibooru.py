@@ -79,7 +79,7 @@ class LolibooruFetcher(sources.BaseFetcher):
         if isinstance(start_from, Sauce):
             start_from = int(start_from.source_site_id)
         else:
-            start_from = 0
+            start_from = int(start_from) if start_from is not None else 0
 
         page_range = 500
 
