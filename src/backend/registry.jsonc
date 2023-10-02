@@ -76,7 +76,7 @@
             "name": "AIBooru",
             "urls": {
                 "website": "https://aibooru.online/",
-                "documentation": None
+                "documentation": null
             },
             "enabled": true,
             "components": {
@@ -93,7 +93,7 @@
             "name": "Anime Pictures",
             "urls": {
                 "website": "https://anime-pictures.net/",
-                "documentation": None
+                "documentation": null
             },
             "enabled": true,
             "components": {
