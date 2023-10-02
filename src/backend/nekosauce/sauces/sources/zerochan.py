@@ -58,16 +58,16 @@ class ZerochanFetcher(sources.BaseFetcher):
     def get_sauces_iter(
         self, start_from: int = 0, chunk_size: int = 1024
     ) -> typing.Iterator[Sauce]:
-        last_page = grequests.map([self.request("GET", "/?json&p=1&l=1")])[0].json()[
+        last_id = grequests.map([self.request("GET", "/?json&p=1&l=1")])[0].json()[
             "items"
         ][0]["id"]
 
         if isinstance(start_from, Sauce):
             page = int(start_from.source_site_id)
         else:
-            page = last_page + 1 - int(start_from) * 250 if start_from is not None else last_page + 1
+            page = (last_id // 250 + 1) - int(start_from) if start_from is not None else (last_id // 250 + 1)
     
-        for offset in range(page - 1, last_page + 1, 250):
+        for offset in range(page - 1, last_id + 1, 250):
             response = requests.get(f"https://zerochan.net/?json&l=250&o={offset}", headers={
                 "User-Agent": "NekoSauce"
             })
