@@ -51,7 +51,7 @@ class Command(BaseCommand):
                             "--limit",
                             str(limit),
                         ]
-                        + (start_from and ["--start-from", start_from]),
+                        + (["--start-from", start_from] if start_from is not None else []),
                     )
                 )
 
