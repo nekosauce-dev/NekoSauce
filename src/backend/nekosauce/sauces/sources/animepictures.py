@@ -52,7 +52,7 @@ class AnimePicturesFetcher(sources.BaseFetcher):
         )
 
     def get_sauces_iter(
-        self, start_from: int = 0, chunk_size: int = 1024
+        self, start_from: int = None, chunk_size: int = 1024
     ) -> typing.Iterator[Sauce]:
         last_page = grequests.map(
             [self.request("GET", "/api/v3/posts?posts_per_page=100&page=1")]
