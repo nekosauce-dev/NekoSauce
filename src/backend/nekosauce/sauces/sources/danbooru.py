@@ -148,7 +148,7 @@ class DanbooruFetcher(sources.BaseFetcher):
                 for i in ids
             ]
         else:
-            page = int(start_from) if start_from is not None else 1
+            page = greatest_id // 200 + 1 - int(start_from) * 200 if start_from is not None else greatest_id // 200 + 1
             reqs = [
                 self.request(
                     "GET",
