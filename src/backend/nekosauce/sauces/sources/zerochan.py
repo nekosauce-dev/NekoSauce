@@ -65,7 +65,7 @@ class ZerochanFetcher(sources.BaseFetcher):
         if isinstance(start_from, Sauce):
             page = int(start_from.source_site_id)
         else:
-            page = last_id + int(start_from) if start_from is not None else 1
+            page = int(start_from) if start_from is not None else 1
     
         for offset in range(page - 1, last_id + 1, 250):
             response = requests.get(f"https://zerochan.net/?json&l=250&o={offset}", headers={
