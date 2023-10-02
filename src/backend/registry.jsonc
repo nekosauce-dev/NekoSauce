@@ -3,6 +3,9 @@
  * database and everything will be automatically set up after restart.
  * You can copy-paste any of the sources below and modify it to add a new
  * source.
+ *
+ * Remember to run `python manage.py makemigrations sauces && python manage.py migrate sauces`
+ * after modifying this file
  */
 {
     "sauce_types": [
