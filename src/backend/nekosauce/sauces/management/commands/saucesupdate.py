@@ -18,9 +18,17 @@ class Command(BaseCommand):
         parser.add_argument("--async-reqs", "-a", type=int, default=3)
         parser.add_argument("--chunk-size", "-c", type=int, default=1024)
         parser.add_argument("--limit", "-l", type=int, default=100000)
+        parser.add_argument("--start-from", type=str, default=None)
 
     def handle(
-        self, source, async_reqs=3, chunk_size=1024, limit=100000, *args, **options
+        self,
+        source,
+        async_reqs=3,
+        chunk_size=1024,
+        limit=100000,
+        start_from=None,
+        *args,
+        **options,
     ):
         if source == "all":
             sources = get_all_fetchers()
@@ -43,6 +51,7 @@ class Command(BaseCommand):
                             "--limit",
                             str(limit),
                         ]
+                        + (start_from and ["--start-from", start_from]),
                     )
                 )
 
@@ -56,8 +65,6 @@ class Command(BaseCommand):
         )
         source = get_source(fetcher.source_id)
 
-        print("SOURCE", source, fetcher.source_id)
-
         self.stdout.write(f"\nFetching sauces from {source['name']}")
 
         i = 0
@@ -65,7 +72,7 @@ class Command(BaseCommand):
         try:
             for sauce in fetcher.get_sauces_iter(
                 chunk_size=chunk_size,
-                start_from=fetcher.last_sauce,
+                start_from=fetcher.last_sauce if not start_from else start_from,
             ):
                 self.stdout.write(
                     self.style.SUCCESS(f"ADDED")
