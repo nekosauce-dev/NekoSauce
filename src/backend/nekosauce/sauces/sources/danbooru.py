@@ -154,7 +154,7 @@ class DanbooruFetcher(sources.BaseFetcher):
                     "GET",
                     "/posts.json?page={page}&limit=200".format(page=i),
                 )
-                for i in range(page, 100000)
+                for i in range(page, greatest_id // 200 + 1)
             ]
 
         req_chunks = paginate(reqs, chunk_size)
