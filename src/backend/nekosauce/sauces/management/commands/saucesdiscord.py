@@ -21,7 +21,7 @@ class Command(BaseCommand):
         self.stdout.write("Sending update (it can take a few seconds)...")
 
         sources = [
-            (source["id"], source["name"]) for source in registry["sources"] if source["enabled"]
+            (source["id"], source["name"]) for source in registry["sources"] if source["enabled"] and source["components"]["fetcher"]
         ]
 
         r = requests.post(
