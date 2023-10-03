@@ -72,7 +72,7 @@ class SearchView(APIView):
 
         limit = serializer.validated_data["limit"]
 
-        results = Sauce.objects.annotate(
+        results = Sauce.objects.filter(hash__isnull=False).annotate(
             similarity=Func(
                 F("hash"), RawSQL("B'%s'" % image_hash_bits, ()), function="HAMMING"
             )
