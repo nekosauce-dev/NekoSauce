@@ -8,7 +8,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
-from PIL import Image
+from PIL import Image, UnidentifiedImageError
 
 import requests
 
@@ -59,7 +59,13 @@ class SearchView(APIView):
 
             file_obj = io.BytesIO(file_bytes)
 
-        img = Image.open(file_obj)
+        try:
+            img = Image.open(file_obj)
+        except UnidentifiedImageError:
+            raise ValidationError(
+                detail="This doesn't seem to be an image! U sure u've checked correctly? Nya!",
+                code="invalid_image",
+            )
 
         image_hash = imagehash.whash(img, hash_size=32)
         image_hash_bits = hash_to_bits(image_hash)

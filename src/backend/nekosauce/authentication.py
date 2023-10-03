@@ -8,13 +8,13 @@ from nekosauce.users.models import User
 
 class ApiKeyAuthentication(authentication.BaseAuthentication):
     def authenticate(self, request):
-        authorization_header = request.META.get("HTTP_X_AUTHORIZATION")
+        authorization_header = request.META.get("HTTP_AUTHORIZATION")
 
         if not authorization_header:
             return None
 
         prog = re.compile(r"^ApiKey (?P<api_key>[a-zA-Z0-9_-]{86})$")
-        if not prog.fullmatch(regexp, authorization_header):
+        if not prog.fullmatch(authorization_header):
             raise exceptions.AuthenticationFailed(
                 "The header's value is invalid. Check it again, nya!",
                 code="invalid_header",
