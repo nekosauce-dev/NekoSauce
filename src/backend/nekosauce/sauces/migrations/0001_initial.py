@@ -12,6 +12,10 @@ class Migration(migrations.Migration):
     dependencies = []
 
     operations = [
+        migrations.RunSQL(
+            "CREATE EXTENSION pg_similarity;",
+            reverse_sql="DROP EXTENSION pg_similarity;",
+        ),
         migrations.CreateModel(
             name="Sauce",
             fields=[
