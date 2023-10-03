@@ -3,6 +3,9 @@
  * database and everything will be automatically set up after restart.
  * You can copy-paste any of the sources below and modify it to add a new
  * source.
+ *
+ * Remember to run `python manage.py makemigrations sauces && python manage.py migrate sauces`
+ * after modifying this file
  */
 {
     "sauce_types": [
@@ -39,7 +42,7 @@
             "name": "Gelbooru",
             "urls": {
                 "website": "https://gelbooru.com/",
-                "documentation": "https://gelbooru.com/docs/api"
+                "documentation": "https://gelbooru.com/index.php?page=wiki&s=view&id=18780"
             },
             "enabled": true,
             "components": {
@@ -56,7 +59,7 @@
             "name": "Konachan",
             "urls": {
                 "website": "https://konachan.com/",
-                "documentation": "https://konachan.com/api"
+                "documentation": "https://konachan.com/help/api"
             },
             "enabled": true,
             "components": {
@@ -73,7 +76,7 @@
             "name": "AIBooru",
             "urls": {
                 "website": "https://aibooru.online/",
-                "documentation": "https://aibooru.online/api"
+                "documentation": null
             },
             "enabled": true,
             "components": {
@@ -90,7 +93,7 @@
             "name": "Anime Pictures",
             "urls": {
                 "website": "https://anime-pictures.net/",
-                "documentation": "https://anime-pictures.net/api"
+                "documentation": null
             },
             "enabled": true,
             "components": {
@@ -107,7 +110,7 @@
             "name": "All The Fallen Booru",
             "urls": {
                 "website": "https://booru.allthefallen.moe/",
-                "documentation": "https://booru.allthefallen.moe/api"
+                "documentation": "https://booru.allthefallen.moe/wiki_pages/help:api"
             },
             "enabled": true,
             "components": {
@@ -124,7 +127,7 @@
             "name": "Lolibooru",
             "urls": {
                 "website": "https://lolibooru.moe/",
-                "documentation": "https://lolibooru.moe/api"
+                "documentation": "https://lolibooru.moe/help/api"
             },
             "enabled": true,
             "components": {
@@ -175,7 +178,7 @@
             "name": "Yande.re",
             "urls": {
                 "website": "https://yande.re/",
-                "documentation": "https://yande.re/api"
+                "documentation": "https://yande.re/help/api"
             },
             "enabled": true,
             "components": {
