@@ -42,6 +42,12 @@ class Sauce(models.Model):
         indexes = [
             BTreeIndex(
                 "hash",
+                condition=Q(hash__isnull=False),
+                name="sauces__hashes__idx",
+            )
+        ] + [
+            BTreeIndex(
+                "hash",
                 condition=Q(source_id=source_id),
                 name=f"sauces__{source_id}_hashes__idx",
             )
@@ -67,7 +73,7 @@ class Sauce(models.Model):
     )
     is_nsfw = models.BooleanField(default=False, null=True)
 
-    hash = BitField(max_length=32**2, null=True, db_index=True)
+    hash = BitField(max_length=32**2, null=True)
     sha512_hash = models.CharField(max_length=128, db_index=True, null=True)
 
     height = models.PositiveIntegerField()
