@@ -67,7 +67,7 @@ class SearchView(APIView):
                 code="invalid_image",
             )
 
-        image_hash = imagehash.whash(img, hash_size=32)
+        image_hash = imagehash.whash(img, hash_size=16)
         image_hash_bits = hash_to_bits(image_hash)
 
         limit = serializer.validated_data["limit"]
@@ -85,7 +85,7 @@ class SearchView(APIView):
                         "id": sauce.id,
                         "similarity": sauce.similarity,
                         "hash": hex(int(sauce.hash, 2))[2:],
-                        "sha512_hash": sauce.sha512_hash,
+                        "sha512": sauce.sha512.hex(),
                         "urls": {
                             "site": sauce.site_urls,
                             "api": sauce.api_urls,

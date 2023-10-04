@@ -13,20 +13,13 @@ class SearchQuerySerializer(serializers.Serializer):
     threshold = serializers.FloatField(
         validators=[MinValueValidator(0), MaxValueValidator(1)], required=False
     )
-    sources = serializers.ListField(
-        child=serializers.ChoiceField(
-            choices=[
-                source["id"] for source in registry["sources"]
-            ]
-        ),
-        required=False,
+    source = serializers.ChoiceField(
+        choices=[source["id"] for source in registry["sources"]], required=False
     )
     nsfw = serializers.BooleanField(required=False)
     types = serializers.ListField(
         child=serializers.ChoiceField(
-            choices=[
-                t["id"] for t in registry["sauce_types"]
-            ]
+            choices=[t["id"] for t in registry["sauce_types"]]
         ),
         required=False,
     )

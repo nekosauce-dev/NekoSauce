@@ -48,7 +48,7 @@ class Sauce(models.Model):
         ] + [
             BTreeIndex(
                 "hash",
-                condition=Q(source_id=source_id),
+                condition=Q(source_id=source_id, hash__isnull=False),
                 name=f"sauces__{source_id}_hashes__idx",
             )
             for source_id in [source["id"] for source in registry["sources"]]
@@ -73,8 +73,8 @@ class Sauce(models.Model):
     )
     is_nsfw = models.BooleanField(default=False, null=True)
 
-    hash = BitField(max_length=32**2, null=True)
-    sha512_hash = models.CharField(max_length=128, db_index=True, null=True)
+    hash = BitField(max_length=16**2, null=True)
+    sha512 = models.BinaryField(null=True, editable=True)
 
     height = models.PositiveIntegerField()
     width = models.PositiveIntegerField()
@@ -85,7 +85,7 @@ class Sauce(models.Model):
     def process(self, save: bool = True) -> bool:
         from nekosauce.sauces.sources import get_downloader
 
-        if self.hash is not None and self.sha512_hash is not None:
+        if self.hash is not None and self.sha512 is not None:
             return False, None
 
         downloaders = [(get_downloader(url), url) for url in self.file_urls]
@@ -101,10 +101,10 @@ class Sauce(models.Model):
         img_bytes = downloader().download(url)
         img = Image.open(io.BytesIO(img_bytes))
 
-        self.sha512_hash = (
-            hashlib.sha512(img_bytes).hexdigest()
-            if self.sha512_hash is None
-            else self.sha512_hash
+        self.sha512 = (
+            hashlib.sha512(img_bytes).digest()
+            if self.sha512 is None
+            else self.sha512
         )
 
         self.height = img.height
@@ -112,10 +112,10 @@ class Sauce(models.Model):
 
         if self.hash is None:
             self.hash = hash_to_bits(
-                imagehash.whash(img, hash_size=32),
+                imagehash.whash(img, hash_size=16),
             )
 
-        thumbnail_path = f"images/thumbnails/{get_source(self.source_id)['name'].lower().replace(' ', '-')}/{self.sha512_hash}.webp"
+        thumbnail_path = f"images/thumbnails/{get_source(self.source_id)['name'].lower().replace(' ', '-')}/{self.sha512.hex()}.webp"
 
         if not default_storage.exists(thumbnail_path):
             img.thumbnail(get_thumbnail_size(img.width, img.height))
