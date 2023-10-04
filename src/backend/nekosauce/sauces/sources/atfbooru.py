@@ -197,7 +197,7 @@ class ATFBooruFetcher(sources.BaseFetcher):
 
 class ATFBooruDownloader(sources.BaseFetcher):
     fetcher = ATFBooruFetcher
-    site_name = "ATFBooru"
+    site_name = "All The Fallen Booru"
 
     def check_url(self, url: str) -> bool:
         return url.startswith("https://booru.allthefallen.moe")
