@@ -28,9 +28,9 @@ class Command(BaseCommand):
             total_count = Sauce.objects.filter(source_id=source[0]).count()
             processed_count = Sauce.objects.filter(source_id=source[0], hash__isnull=False).count()
 
-            processed_percentage = processed_count / total_count * 100
+            processed_percentage = processed_count / total_count * 100 if total_count > 0 else 0
 
-            return f"- {source[1]}: {format_large_number(total_count)} ({format_large_number(processed_percentage)}%)"
+            return f"- {source[1]}: {format_large_number(total_count)} ({processed_percentage}%)"
 
         r = requests.post(
             os.getenv("BACKEND_DISCORD_DATABASE_UPDATES_WEBHOOK_URL"),
