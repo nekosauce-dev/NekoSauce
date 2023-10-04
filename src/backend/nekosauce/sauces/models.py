@@ -44,6 +44,11 @@ class Sauce(models.Model):
                 "hash",
                 condition=Q(hash__isnull=False),
                 name="sauces__hashes__idx",
+            ),
+            BTreeIndex(
+                "source_id",
+                "source_site_id",
+                name="sauces__source_id__source_site_id__idx",
             )
         ] + [
             BTreeIndex(
