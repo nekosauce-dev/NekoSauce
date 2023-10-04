@@ -39,7 +39,7 @@ class ZerochanFetcher(sources.BaseFetcher):
                 f"https://zerochan.net/{post['id']}?json",
             ],
             file_urls=[
-                f"https://s1.zerochan.net/{urllib.parse.quote(post['tag'].replace(' ', '.'))}.full.{post['id']}.jpg",
+                f"https://static.zerochan.net/{urllib.parse.quote(post['tag'].replace(' ', '.'))}.full.{post['id']}.jpg",
             ],
             source_id=self.source_id,
             source_site_id=str(post["id"]),
@@ -93,7 +93,7 @@ class ZerochanDownloader(sources.BaseFetcher):
     site_name = "Zerochan"
 
     def check_url(self, url: str) -> bool:
-        return url.startswith("https://s1.zerochan.net/")
+        return url.startswith("https://static.zerochan.net/")
 
     def get_sauce_id(url: str) -> str:
         return urllib.parse.urlparse(url).path.split("/")[1].split("?")[0]
