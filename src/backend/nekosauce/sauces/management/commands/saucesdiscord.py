@@ -28,7 +28,7 @@ class Command(BaseCommand):
             total_count = Sauce.objects.filter(source_id=source[0]).count()
             processed_count = Sauce.objects.filter(source_id=source[0], hash__isnull=False).count()
 
-            processed_percentage = processed_count / total_count * 100 if total_count > 0 else 0
+            processed_percentage = processed_count / total_count * 100 if total_count > 0 else 0.0
 
             return f"- {source[1]}: {format_large_number(total_count)} ({processed_percentage}%)"
 
