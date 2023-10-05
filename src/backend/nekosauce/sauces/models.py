@@ -67,7 +67,7 @@ class Sauce(models.Model):
         choices=[(source["id"], source["name"]) for source in registry["sources"]],
         verbose_name="Source",
     )
-    source_site_id = models.CharField(max_length=255, null=False)
+    source_site_id = models.CharField(max_length=255, null=False, verbose_name="(Source) ID")
     tags = ArrayField(
         models.CharField(max_length=255, null=False, blank=True), default=list
     )
