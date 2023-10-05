@@ -6,6 +6,7 @@ from nekosauce.sauces.utils.registry import registry
 
 class ProcessedSauceListFilter(admin.SimpleListFilter):
     title = "Processed"
+    parameter_name = "processed"
 
     def lookups(self, request, model_admin):
         return (
@@ -24,6 +25,7 @@ class ProcessedSauceListFilter(admin.SimpleListFilter):
 
 class SourceListFilter(admin.SimpleListFilter):
     title = "Source"
+    parameter_name = "source"
 
     def lookups(self, request, model_admin):
         return [(source["id"], source["name"]) for source in registry["sources"]]
