@@ -1,6 +1,7 @@
 from django.contrib import admin
 
 from nekosauce.sauces.models import Sauce
+from nekosauce.sauces.utils.registry import registry
 
 
 class ProcessedSauceListFilter(admin.SimpleListFilter):
@@ -21,11 +22,21 @@ class ProcessedSauceListFilter(admin.SimpleListFilter):
         )
 
 
+class SourceListFilter(admin.SimpleListFilter):
+    title = "Source"
+
+    def lookups(self, request, model_admin):
+        return [(source["id"], source["name"]) for source in registry["sources"]]
+
+    def queryset(self, request, queryset):
+        return queryset.filter(source_id=self.value())
+
+
 @admin.register(Sauce)
 class SauceAdmin(admin.ModelAdmin):
     list_display = ("id", "source_id", "source_site_id", "height", "width")
     search_fields = ("id", "source_site_id", "source_id", "tags")
-    list_filter = ("source_id", ProcessedSauceListFilter)
+    list_filter = (SourceListFilter, ProcessedSauceListFilter)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
