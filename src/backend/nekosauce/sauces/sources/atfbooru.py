@@ -15,7 +15,7 @@ from nekosauce.sauces.models import Sauce
 
 
 class ATFBooruFetcher(sources.BaseFetcher):
-    site_name = "All The Fallen Booru"
+    site_name = "ATFBooru"
 
     last_page = property(lambda self: f"a{self.last_sauce.source_site_id}")
 
@@ -145,7 +145,11 @@ class ATFBooruFetcher(sources.BaseFetcher):
                 for i in ids
             ]
         else:
-            page = greatest_id // 200 + 1 - int(start_from) * 200 if start_from is not None else greatest_id // 200 + 1
+            page = (
+                greatest_id // 200 + 1 - int(start_from) * 200
+                if start_from is not None
+                else greatest_id // 200 + 1
+            )
             reqs = [
                 self.request(
                     "GET",
@@ -197,7 +201,7 @@ class ATFBooruFetcher(sources.BaseFetcher):
 
 class ATFBooruDownloader(sources.BaseFetcher):
     fetcher = ATFBooruFetcher
-    site_name = "All The Fallen Booru"
+    site_name = "ATFBooru"
 
     def check_url(self, url: str) -> bool:
         return url.startswith("https://booru.allthefallen.moe")

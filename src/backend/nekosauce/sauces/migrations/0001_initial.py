@@ -55,7 +55,7 @@ class Migration(migrations.Migration):
                             (3, "Konachan"),
                             (4, "AIBooru"),
                             (5, "Anime Pictures"),
-                            (6, "All The Fallen Booru"),
+                            (6, "ATFBooru"),
                             (7, "Lolibooru"),
                             (8, "Pixiv"),
                             (9, "Rule 34"),

@@ -8,11 +8,11 @@ An anime & manga source finder. Made with Django and Next.js.
 
 The project is small but uses a bunch of different tools to handle different things.
 
-- **Database**: PostgreSQL
-- **Backend (API)**: Django
-- **Frontend**: Next.js + TailwindCSS
-- **Message Broker**: RabbitMQ (used together with dramatiq to update the database with new sauces)
-- **Cache**: Redis (Rate limits, general caching)
+-   **Database**: PostgreSQL
+-   **Backend (API)**: Django
+-   **Frontend**: Next.js + TailwindCSS
+-   **Message Broker**: RabbitMQ (used together with dramatiq to update the database with new sauces)
+-   **Cache**: Redis (Rate limits, general caching)
 
 ## Deployment
 
@@ -46,7 +46,7 @@ Enter the project directory (`cd NekoSauce`). It'll be easier to follow the next
 
 If everything was set up correctly, the next commands should run without any issues:
 
-```bash	
+```bash
 # Build the project with the current settings
 docker compose build
 
@@ -73,23 +73,24 @@ Go to the administration site at `https://mydomain.uwu/admin/`. You'll need to l
 You'll see that everything is empty, except for the "users" table where you'll only be able to see yourself. Go to `/admin/sauces/source/`, which will be empty. To enable a source, you need to create it (otherwise, you won't be able to fetch sauces from that source). Sources are internally identified by their name (despite them having a numeric ID). For example, to enable Danbooru, you must create a new source named `Danbooru` (case insensitive, but check for typos or it won't be detected).
 
 The currently available sources are:
-- Danbooru
-- Gelbooru
-- Konachan
-- Yande.re
-- Lolibooru
-- AIBooru
-- All The Fallen Booru
-- Rule 34 (.xxx)
-- Anime Pictures
-- Zerochan
+
+-   Danbooru
+-   Gelbooru
+-   Konachan
+-   Yande.re
+-   Lolibooru
+-   AIBooru
+-   ATFBooru
+-   Rule 34 (.xxx)
+-   Anime Pictures
+-   Zerochan
 
 ### Setting up cron jobs
 
 Now that you have the server correctly set up, you just need to set up cron jobs to update the database with new sauces/hashes/thumbnails/etc. There are 3 commands you need to set up:
 
-- `docker exec nekosauce-backend-1 python manage.py saucesupdate`: Will fetch new sauces from all sources, or from one source if passed as an argument.
-- `docker exec nekosauce-backend-1 python manage.py saucesprocess`: Will download the fetched sauces (the file) from their source's CDN or however they serve their images, calculate their hash, and update the thumbnails and their sha512 hash.
+-   `docker exec nekosauce-backend-1 python manage.py saucesupdate`: Will fetch new sauces from all sources, or from one source if passed as an argument.
+-   `docker exec nekosauce-backend-1 python manage.py saucesprocess`: Will download the fetched sauces (the file) from their source's CDN or however they serve their images, calculate their hash, and update the thumbnails and their sha512 hash.
 
 You can get more info about them adding `--help` at the end of each command. It's up to you to decide how frequently each of them will run, but you should do some benchmarking to see what works best for you.
 

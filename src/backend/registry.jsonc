@@ -9,14 +9,18 @@
  */
 {
     "sauce_types": [
-        {"id": 1, "name": "Illustration", "code": "illustration"},
-        {"id": 2, "name": "Illustration (Animated)", "code": "animated_illustration"},
-        {"id": 3, "name": "Manga", "code": "manga"},
-        {"id": 4, "name": "Doujinshi", "code": "doujinshi"},
-        {"id": 5, "name": "Anime", "code": "anime"},
-        {"id": 6, "name": "Visual Novel", "code": "visual_novel"},
-        {"id": 7, "name": "Light Novel", "code": "light_novel"},
-        {"id": 8, "name": "Other", "code": "other"}
+        { "id": 1, "name": "Illustration", "code": "illustration" },
+        {
+            "id": 2,
+            "name": "Illustration (Animated)",
+            "code": "animated_illustration"
+        },
+        { "id": 3, "name": "Manga", "code": "manga" },
+        { "id": 4, "name": "Doujinshi", "code": "doujinshi" },
+        { "id": 5, "name": "Anime", "code": "anime" },
+        { "id": 6, "name": "Visual Novel", "code": "visual_novel" },
+        { "id": 7, "name": "Light Novel", "code": "light_novel" },
+        { "id": 8, "name": "Other", "code": "other" }
     ],
     "sources": [
         {
@@ -107,7 +111,7 @@
         {
             "id": 6,
             "module": "nekosauce.sauces.sources.atfbooru",
-            "name": "All The Fallen Booru",
+            "name": "ATFBooru",
             "urls": {
                 "website": "https://booru.allthefallen.moe/",
                 "documentation": "https://booru.allthefallen.moe/wiki_pages/help:api"
