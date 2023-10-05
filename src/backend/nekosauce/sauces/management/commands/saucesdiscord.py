@@ -89,7 +89,7 @@ class Command(BaseCommand):
                 value=processed_count,
             )
 
-            return f"- [{source['id']}](<{source['link']}>): {format_large_number(total_count)}s ({format_large_number(processed_count)}h, {precentage_display}%, {modification(source['last_sauce_count'], total_count)})"
+            return f"- [{source['name']}](<{source['link']}>): {format_large_number(total_count)}s ({format_large_number(processed_count)}h, {precentage_display}%, {modification(source['last_sauce_count'], total_count)})"
 
         current_total = Sauce.objects.count()
         current_processed = Sauce.objects.filter(hash__isnull=False).count()
