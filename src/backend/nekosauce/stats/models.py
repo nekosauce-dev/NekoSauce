@@ -4,6 +4,11 @@ from django.db import models
 
 
 class Statistic(models.Model):
+    class Meta:
+        indexes = [
+            models.Index(fields=["resource", "attribute"]),
+        ]
+
     resource = models.CharField(max_length=255, editable=False)
     attribute = models.CharField(max_length=255, editable=False)
     value = models.CharField(max_length=255, editable=False)
