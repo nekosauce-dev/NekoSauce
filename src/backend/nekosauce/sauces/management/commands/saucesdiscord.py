@@ -68,7 +68,7 @@ class Command(BaseCommand):
         ]
 
         def stats(source: int) -> str:
-            total_count = Sauce.objects.filter(source_id=source[0]).count()
+            total_count = Sauce.objects.filter(source_id=source["id"]).count()
             processed_count = Sauce.objects.filter(
                 source_id=source["id"], hash__isnull=False
             ).count()
