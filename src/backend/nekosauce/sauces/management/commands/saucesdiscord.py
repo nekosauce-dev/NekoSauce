@@ -42,25 +42,31 @@ class Command(BaseCommand):
                 "id": source["id"],
                 "name": source["name"],
                 "link": source["urls"]["website"],
-                "last_sauce_count": getattr(
-                    Statistic.objects.filter(
-                        resource="Sauce",
-                        attribute="total-count:source_id={}".format(source["id"]),
+                "last_sauce_count": int(
+                    getattr(
+                        Statistic.objects.filter(
+                            resource="Sauce",
+                            attribute="total-count:source_id={}".format(source["id"]),
+                        )
+                        .order_by("created_at")
+                        .last(),
+                        "value",
+                        0,
                     )
-                    .order_by("created_at")
-                    .last(),
-                    "value",
-                    0,
                 ),
-                "last_hash_count": getattr(
-                    Statistic.objects.filter(
-                        resource="Sauce",
-                        attribute="processed-count:source_id={}".format(source["id"]),
+                "last_hash_count": int(
+                    getattr(
+                        Statistic.objects.filter(
+                            resource="Sauce",
+                            attribute="processed-count:source_id={}".format(
+                                source["id"]
+                            ),
+                        )
+                        .order_by("created_at")
+                        .last(),
+                        "value",
+                        0,
                     )
-                    .order_by("created_at")
-                    .last(),
-                    "value",
-                    0,
                 ),
             }
             for source in registry["sources"]
