@@ -209,6 +209,23 @@
             },
             "sauce_types": [1, 2],
             "update_frequency": "default"
+        },
+        {
+            "id": 12,
+            "module": "nekosauce.sauces.sources.safebooru",
+            "name": "Safebooru",
+            "urls": {
+                "website": "https://safebooru.com/",
+                "documentation": "https://safebooru.org/index.php?page=help&topic=dapi"
+            },
+            "enabled": true,
+            "components": {
+                "fetcher": "SafebooruFetcher",
+                "downloader": "SafebooruDownloader",
+                "tagger": "SafebooruTagger"
+            },
+            "sauce_types": [1],
+            "update_frequency": "default"
         }
     ]
 }
