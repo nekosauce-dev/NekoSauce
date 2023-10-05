@@ -19,6 +19,7 @@ class Command(BaseCommand):
         parser.add_argument("--chunk-size", "-c", type=int, default=1024)
         parser.add_argument("--limit", "-l", type=int, default=100000)
         parser.add_argument("--start-from", type=str, default=None)
+        parser.add_argument("--async", type=bool, default=False)
 
     def handle(
         self,
@@ -33,11 +34,39 @@ class Command(BaseCommand):
         if source == "all":
             sources = get_all_fetchers()
 
-            ps = []
+            if options["async"]:
+                ps = []
 
-            for source in sources:
-                ps.append(
-                    subprocess.Popen(
+                for source in sources:
+                    ps.append(
+                        subprocess.Popen(
+                            [
+                                "python3",
+                                "manage.py",
+                                "saucesupdate",
+                                "--source",
+                                source.site_name,
+                                "--async-reqs",
+                                str(async_reqs),
+                                "--chunk-size",
+                                str(chunk_size),
+                                "--limit",
+                                str(limit),
+                            ]
+                            + (
+                                ["--start-from", start_from]
+                                if start_from is not None
+                                else []
+                            ),
+                        )
+                    )
+
+                for p in ps:
+                    p.wait()
+
+            else:
+                for source in sources:
+                    p = subprocess.Popen(
                         [
                             "python3",
                             "manage.py",
@@ -51,12 +80,13 @@ class Command(BaseCommand):
                             "--limit",
                             str(limit),
                         ]
-                        + (["--start-from", start_from] if start_from is not None else []),
+                        + (
+                            ["--start-from", start_from]
+                            if start_from is not None
+                            else []
+                        ),
                     )
-                )
-
-            for p in ps:
-                p.wait()
+                    p.wait()
 
             return
 
