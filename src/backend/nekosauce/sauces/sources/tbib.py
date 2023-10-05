@@ -88,7 +88,7 @@ class TBIBFetcher(sources.BaseFetcher):
     def get_sauces_iter(self, chunk_size: int = 1024, start_from=None):
         count = grequests.map(
             [self.request("GET", "/index.php?page=dapi&q=index&json=1&s=post&limit=1")]
-        )[0].json()["post"][0]["id"]
+        )[0].json()[0]["id"]
         last = 0
 
         if isinstance(start_from, Sauce):
@@ -119,7 +119,7 @@ class TBIBFetcher(sources.BaseFetcher):
                     return
 
                 new_sauces = []
-                for post in response.json()["post"]:
+                for post in response.json():
                     new_sauces.append(self.get_new_sauce_from_response(post))
 
                 Sauce.objects.bulk_create(
