@@ -215,7 +215,7 @@
             "module": "nekosauce.sauces.sources.safebooru",
             "name": "Safebooru",
             "urls": {
-                "website": "https://safebooru.com/",
+                "website": "https://safebooru.org/",
                 "documentation": "https://safebooru.org/index.php?page=help&topic=dapi"
             },
             "enabled": true,
@@ -232,7 +232,7 @@
             "module": "nekosauce.sauces.sources.tbib",
             "name": "TBIB",
             "urls": {
-                "website": "https://tbib.com/",
+                "website": "https://tbib.org/",
                 "documentation": "https://tbib.org/index.php?page=help&topic=dapi"
             },
             "enabled": true,
