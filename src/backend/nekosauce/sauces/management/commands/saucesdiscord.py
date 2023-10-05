@@ -94,8 +94,8 @@ class Command(BaseCommand):
         current_total = Sauce.objects.count()
         current_processed = Sauce.objects.filter(hash__isnull=False).count()
 
-        last_total = sum([source["last_count"] for source in sources])
-        last_processed = sum([source["last_processed"] for source in sources])
+        last_total = sum([source["last_sauce_count"] for source in sources])
+        last_processed = sum([source["last_hash_count"] for source in sources])
 
         r = requests.post(
             os.getenv("BACKEND_DISCORD_DATABASE_UPDATES_WEBHOOK_URL"),
