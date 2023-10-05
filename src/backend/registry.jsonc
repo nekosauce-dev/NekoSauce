@@ -226,6 +226,23 @@
             },
             "sauce_types": [1],
             "update_frequency": "default"
+        },
+        {
+            "id": 13,
+            "module": "nekosauce.sauces.sources.tbib",
+            "name": "TBIB",
+            "urls": {
+                "website": "https://tbib.com/",
+                "documentation": "https://tbib.org/index.php?page=help&topic=dapi"
+            },
+            "enabled": true,
+            "components": {
+                "fetcher": "TBIBFetcher",
+                "downloader": "TBIBDownloader",
+                "tagger": "TBIBTagger"
+            },
+            "sauce_types": [1],
+            "update_frequency": "default"
         }
     ]
 }
