@@ -18,6 +18,7 @@ services:
       - static:/static
     secrets:
       - BACKEND_SECRET_KEY
+      - BACKEND_INTERNAL_KEY
       - DATABASE_PASSWORD
     env_file:
       - .env
@@ -100,6 +101,8 @@ services:
 secrets:
   BACKEND_SECRET_KEY:
     file: ./secrets/BACKEND_SECRET_KEY.txt
+  BACKEND_INTERNAL_KEY:
+    file: ./secrets/BACKEND_INTERNAL_KEY.txt
   DATABASE_PASSWORD:
     file: ./secrets/DATABASE_PASSWORD.txt
   NGINX_CERT_CERTIFICATE:

@@ -243,6 +243,23 @@
             },
             "sauce_types": [1],
             "update_frequency": "default"
+        },
+        {
+            "id": 14,
+            "module": "nekosauce.sauces.sources.eshuushuu",
+            "name": "E-shuushuu",
+            "urls": {
+                "website": "https://e-shuushuu.net/",
+                "documentation": null
+            },
+            "enabled": true,
+            "components": {
+                "fetcher": "EshuushuuFetcher",
+                "downloader": "EshuushuuDownloader",
+                "tagger": "EshuushuuTagger"
+            },
+            "sauce_types": [1],
+            "update_frequency": "default"
         }
     ]
 }
