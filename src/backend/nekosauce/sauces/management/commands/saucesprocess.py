@@ -16,7 +16,7 @@ class Command(BaseCommand):
 
         sauces = Sauce.objects.filter(
             Q(hash__isnull=True) | Q(sha512__isnull=True)
-        ).order_by("source_id", "source_site_id")[: options["limit"]]
+        )[: options["limit"]]
 
         for sauce in sauces:
             sauce_process.send(sauce.id)
