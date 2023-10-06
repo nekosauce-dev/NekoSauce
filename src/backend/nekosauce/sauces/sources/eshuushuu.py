@@ -105,8 +105,10 @@ class EshuushuuFetcher(sources.BaseFetcher):
                 if response is None:
                     return
 
+                new_sauces = self._get_sauces_in_page(response.content)
+
                 Sauce.objects.bulk_create(
-                    self._get_sauces_in_page(response.content),
+                    new_sauces,
                     ignore_conflicts=True,
                 )
                 yield from new_sauces
