@@ -85,7 +85,7 @@ class EshuushuuFetcher(sources.BaseFetcher):
                 1,
                 greatest_id // 15
                 if not start_from
-                else greatest_id // 15 - int(start_from.source_site_id) // 15
+                else (greatest_id // 15 - int(start_from.source_site_id) // 15)
                 if isinstance(start_from, Sauce)
                 else int(start_from),
             )
