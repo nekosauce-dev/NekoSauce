@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     "debug_toolbar",
     "django_dramatiq",
     "django_bunny",
+    "corsheaders",
     "nekosauce.sauces.apps.SaucesConfig",
     "nekosauce.users.apps.UsersConfig",
     "nekosauce.stats.apps.StatsConfig",
@@ -60,7 +61,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    # "nekosauce.middleware.DisableCSRFMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -76,6 +77,8 @@ CSRF_TRUSTED_ORIGINS = os.getenv(
 CSRF_COOKIE_SECURE = True
 
 ROOT_URLCONF = "nekosauce.urls"
+
+CORS_ALLOW_ALL_ORIGINS = True
 
 TEMPLATES = [
     {

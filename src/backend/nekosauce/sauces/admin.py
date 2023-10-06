@@ -17,9 +17,13 @@ class ProcessedSauceListFilter(admin.SimpleListFilter):
         )
 
     def queryset(self, request, queryset):
-        return queryset.filter(
-            hash__isnull=self.value() in ["3", "4"],
-            sha512__isnull=self.value() in ["2", "4"],
+        return (
+            queryset.filter(
+                hash__isnull=self.value() in ["3", "4"],
+                sha512__isnull=self.value() in ["2", "4"],
+            )
+            if self.value() is not None
+            else queryset
         )
 
 
@@ -31,7 +35,11 @@ class SourceListFilter(admin.SimpleListFilter):
         return [(source["id"], source["name"]) for source in registry["sources"]]
 
     def queryset(self, request, queryset):
-        return queryset.filter(source_id=self.value())
+        return (
+            queryset.filter(source_id=self.value())
+            if self.value() is not None
+            else queryset
+        )
 
 
 @admin.register(Sauce)
