@@ -28,7 +28,9 @@ def sauce_process(sauce_id: int):
     
     if sauce is not None:
         try:
-            sauce.process(save=True)
+            success, msg = sauce.process(save=True)
+            if not success and msg:
+                raise Exception(msg)
         except Exception as e:
             sauce.status = Sauce.Status.FAILED
             sauce.save()

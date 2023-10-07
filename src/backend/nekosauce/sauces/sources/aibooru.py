@@ -201,6 +201,8 @@ class AIBooruDownloader(sources.BaseFetcher):
     def check_url(self, url: str) -> bool:
         return url.startswith("https://cdn.aibooru.online") or url.startswith(
             "https://cdn.aibooru.space"
+        ) or url.startswith(
+            "https://cdn.aibooru.download"
         )
 
     def get_sauce_id(url: str) -> str:
