@@ -60,9 +60,9 @@ class Sauce(models.Model):
         ]
 
     class Status(models.IntegerChoices):
-        NOT_PROCESSED = 0
-        PROCESSED = 1
-        FAILED = 2
+        NOT_PROCESSED = 0, "Not processed"
+        PROCESSED = 1, "Processed"
+        FAILED = 2, "Failed"
 
     site_urls = ArrayField(models.URLField(max_length=255, null=False))
     api_urls = ArrayField(models.URLField(max_length=255, null=False))

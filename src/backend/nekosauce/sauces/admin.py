@@ -44,9 +44,9 @@ class SourceListFilter(admin.SimpleListFilter):
 
 @admin.register(Sauce)
 class SauceAdmin(admin.ModelAdmin):
-    list_display = ("id", "source_id", "source_site_id", "created_at")
+    list_display = ("id", "source_id", "source_site_id", "status", "created_at")
     search_fields = ("id", "source_site_id", "source_id", "tags")
-    list_filter = (SourceListFilter, ProcessedSauceListFilter)
+    list_filter = (SourceListFilter, ProcessedSauceListFilter, "status")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
