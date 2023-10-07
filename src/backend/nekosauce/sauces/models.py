@@ -142,6 +142,8 @@ class Sauce(models.Model):
                     output,
                 )
 
+        self.status = self.Status.PROCESSED
+
         if save:
             self.save()
 
