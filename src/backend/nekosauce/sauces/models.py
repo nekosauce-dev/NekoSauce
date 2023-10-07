@@ -87,8 +87,8 @@ class Sauce(models.Model):
     sha512 = models.BinaryField(null=True, editable=True)
 
     status = models.PositiveSmallIntegerField(
-        choices=Sauce.Status.choices,
-        default=Sauce.Status.NOT_PROCESSED,
+        choices=Status.choices,
+        default=Status.NOT_PROCESSED,
         db_index=True,
     )
 
