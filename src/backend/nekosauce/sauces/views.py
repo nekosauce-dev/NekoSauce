@@ -107,9 +107,7 @@ class SearchView(APIView):
                     for sauce in results
                 ][:limit],
                 "meta": {
-                    "count": len(results),
-                    "hash": hex(int(image_hash_bits, 2))[2:],
-                    "upload": serializer.validated_data.get("url"),
+                    "count": len(results)
                 },
             }
         )

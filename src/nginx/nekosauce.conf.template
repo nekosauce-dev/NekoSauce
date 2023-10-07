@@ -5,16 +5,13 @@ server {
     ssl_certificate /run/secrets/NGINX_CERT_CERTIFICATE;
     ssl_certificate_key /run/secrets/NGINX_CERT_PRIVATE_KEY;
 
-    location /static {
-        alias /static/;
+    if (${NGINX_CF_ONLY} = "true") {
+        include /app/cf-ips.conf;
+        deny all;
     }
 
-    location ~ ^/api/internal/ {
-        rewrite /api/internal/(.*) /404  break;
-        proxy_pass http://backend:8000;
-        proxy_redirect off;
-        proxy_set_header Host $host;
-        proxy_pass_request_headers on;
+    location /static {
+        alias /static/;
     }
 
     location ~ ^/(api|admin|__debug__) {

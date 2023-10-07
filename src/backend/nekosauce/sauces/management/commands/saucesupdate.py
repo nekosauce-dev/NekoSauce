@@ -19,7 +19,7 @@ class Command(BaseCommand):
         parser.add_argument("--chunk-size", "-c", type=int, default=1024)
         parser.add_argument("--limit", "-l", type=int, default=100000)
         parser.add_argument("--start-from", type=str, default=None)
-        parser.add_argument("--async", type=bool, default=False)
+        parser.add_argument("--async", action="store_true", default=False)
 
     def handle(
         self,

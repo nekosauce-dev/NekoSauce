@@ -59,6 +59,11 @@ class Sauce(models.Model):
             for source_id in [source["id"] for source in registry["sources"]]
         ]
 
+    class Status(models.IntegerChoices):
+        NOT_PROCESSED = 0
+        PROCESSED = 1
+        FAILED = 2
+
     site_urls = ArrayField(models.URLField(max_length=255, null=False))
     api_urls = ArrayField(models.URLField(max_length=255, null=False))
     file_urls = ArrayField(models.URLField(max_length=255, null=False))
@@ -81,11 +86,16 @@ class Sauce(models.Model):
     hash = BitField(max_length=16**2, null=True)
     sha512 = models.BinaryField(null=True, editable=True)
 
+    status = models.PositiveSmallIntegerField(
+        choices=Sauce.Status.choices,
+        default=Sauce.Status.NOT_PROCESSED,
+        db_index=True,
+    )
+
     height = models.PositiveIntegerField()
     width = models.PositiveIntegerField()
 
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
-    updated_at = models.DateTimeField(auto_now=True)
 
     def process(self, save: bool = True) -> bool:
         from nekosauce.sauces.sources import get_downloader
