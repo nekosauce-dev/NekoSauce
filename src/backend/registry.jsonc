@@ -277,6 +277,23 @@
             },
             "sauce_types": [1, 2],
             "update_frequency": "default"
+        },
+        {
+            "id": 16,
+            "module": "nekosauce.sauces.sources.hypnohub",
+            "name": "HypnoHub",
+            "urls": {
+                "website": "https://hypnohub.net/",
+                "documentation": "https://hypnohub.net/index.php?page=help&topic=dapi"
+            },
+            "enabled": true,
+            "components": {
+                "fetcher": "HypnoHubFetcher",
+                "downloader": "HypnoHubDownloader",
+                "tagger": "HypnoHubTagger"
+            },
+            "sauce_types": [1],
+            "update_frequency": "default"
         }
     ]
 }
