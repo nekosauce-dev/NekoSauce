@@ -260,6 +260,23 @@
             },
             "sauce_types": [1],
             "update_frequency": "default"
+        },
+        {
+            "id": 15,
+            "module": "nekosauce.sauces.sources.xbooru",
+            "name": "Xbooru",
+            "urls": {
+                "website": "https://xbooru.com/",
+                "documentation": "https://xbooru.com/index.php?page=help&topic=dapi"
+            },
+            "enabled": true,
+            "components": {
+                "fetcher": "XbooruFetcher",
+                "downloader": "XbooruDownloader",
+                "tagger": "XbooruTagger"
+            },
+            "sauce_types": [1, 2],
+            "update_frequency": "default"
         }
     ]
 }
