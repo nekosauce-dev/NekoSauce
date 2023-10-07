@@ -38,18 +38,14 @@ class XbooruFetcher(sources.BaseFetcher):
     def get_new_sauce_from_response(self, post: dict) -> Sauce:
         site_urls = [
             f"https://xbooru.com/index.php?page=post&s=view&id={post['id']}"
-        ] + (
-            post.get("source").split(" ") if validators.url(post.get("source")) else []
-        )
+        ]
 
         sauce = Sauce(
             site_urls=site_urls,
             api_urls=[
                 f"https://xbooru.com/index.php?page=dapi&q=index&json=1&s=post&id={post['id']}"
             ],
-            file_urls=[f"https://img.xbooru.com/images/{post['directory']}/{post['image']}"]
-            if post.get("file_url")
-            else post["source"].split(" "),
+            file_urls=[f"https://img.xbooru.com/images/{post['directory']}/{post['image']}"],
             source_id=self.source_id,
             source_site_id=post["id"],
             tags=sources.get_tags(site_urls)
