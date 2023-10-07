@@ -44,7 +44,7 @@ class SourceListFilter(admin.SimpleListFilter):
 
 @admin.register(Sauce)
 class SauceAdmin(admin.ModelAdmin):
-    list_display = ("id", "source_id", "source_site_id", "height", "width")
+    list_display = ("id", "source_id", "source_site_id", "created_at")
     search_fields = ("id", "source_site_id", "source_id", "tags")
     list_filter = (SourceListFilter, ProcessedSauceListFilter)
 
