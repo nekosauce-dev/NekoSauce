@@ -22,7 +22,7 @@ def get_or_none(klass, **kwargs):
         return None
 
 
-@dramatiq.actor(max_retries=0)
+@dramatiq.actor(max_retries=3)
 def sauce_process(sauce_id: int):
     sauce = get_or_none(Sauce, id=sauce_id)
     
