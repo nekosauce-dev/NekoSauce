@@ -64,17 +64,17 @@ class Sauce(models.Model):
         PROCESSED = 1, "Processed"
         FAILED = 2, "Failed"
 
-    site_urls = ArrayField(models.URLField(max_length=255, null=False))
-    api_urls = ArrayField(models.URLField(max_length=255, null=False))
-    file_urls = ArrayField(models.URLField(max_length=255, null=False))
+    site_urls = ArrayField(models.TextField(null=False))
+    api_urls = ArrayField(models.TextField(null=False))
+    file_urls = ArrayField(models.TextField(null=False))
 
-    source_id = models.SmallIntegerField(
+    source_id = models.PositiveSmallIntegerField(
         choices=[(source["id"], source["name"]) for source in registry["sources"]],
         verbose_name="Source",
     )
-    source_site_id = models.CharField(max_length=255, null=False, verbose_name="(Source) ID")
+    source_site_id = models.TextField(null=False, verbose_name="(Source) ID")
     tags = ArrayField(
-        models.CharField(max_length=255, null=False, blank=True), default=list
+        models.TextField(null=False), default=list
     )
 
     type = models.PositiveSmallIntegerField(
