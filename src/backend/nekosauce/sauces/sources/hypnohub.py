@@ -137,7 +137,7 @@ class HypnoHubDownloader(sources.BaseDownloader):
     site_name = "HypnoHub"
 
     def check_url(self, url: str) -> bool:
-        return url.startswith("https://hypnohub.com/")
+        return url.startswith("https://hypnohub.net/")
 
     def get_sauce_id(url: str) -> str:
         return urllib.parse.parse_qs(urllib.parse.urlparse(url).query)["id"][0]
