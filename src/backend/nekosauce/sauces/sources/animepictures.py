@@ -1,6 +1,7 @@
 import typing
 
 import grequests
+import requests
 
 from nekosauce.sauces import sources
 from nekosauce.sauces.utils import paginate

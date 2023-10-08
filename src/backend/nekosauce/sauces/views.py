@@ -1,6 +1,5 @@
 import io
 
-from django.conf import settings
 from django.db.models import Func, F, Value
 from django.db.models.expressions import RawSQL
 
@@ -40,7 +39,7 @@ class SearchView(APIView):
         if not file_obj:
             r = requests.get(
                 serializer.validated_data.get("url"),
-                headers={"User-Agent": f"NekoSauce/{settings.VERSION}"},
+                headers={"User-Agent": "NekoSauce"},
                 stream=True,
                 timeout=5,
             )
