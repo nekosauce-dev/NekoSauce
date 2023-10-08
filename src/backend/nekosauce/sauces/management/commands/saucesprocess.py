@@ -14,9 +14,9 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         self.stdout.write(f"Processing sauces...")
 
-        sauces = Sauce.objects.filter(status=Sauce.Status.NOT_PROCESSED)[
-            : options["limit"]
-        ].order_by("source_id", "source_site_id")
+        sauces = Sauce.objects.filter(status=Sauce.Status.NOT_PROCESSED).order_by(
+            "source_id", "source_site_id"
+        )[: options["limit"]]
 
         for sauce in sauces:
             sauce_process.send(sauce.id)
