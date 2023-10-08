@@ -35,5 +35,4 @@ def sauce_process(sauce_id: int):
             sauce.status = Sauce.Status.FAILED
             sauce.save()
             
-            print("Worker raised an error.")
-            print(e)
+            raise e
