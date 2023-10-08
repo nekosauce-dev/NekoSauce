@@ -144,7 +144,11 @@ class AIBooruFetcher(sources.BaseFetcher):
                 for i in ids
             ]
         else:
-            page = greatest_id // 200 + 1 - int(start_from) * 200 if start_from is not None else greatest_id // 200 + 1
+            page = (
+                greatest_id // 200 + 1 - int(start_from) * 200
+                if start_from is not None
+                else greatest_id // 200 + 1
+            )
             reqs = [
                 self.request(
                     "GET",
@@ -199,10 +203,10 @@ class AIBooruDownloader(sources.BaseFetcher):
     site_name = "AIBooru"
 
     def check_url(self, url: str) -> bool:
-        return url.startswith("https://cdn.aibooru.online") or url.startswith(
-            "https://cdn.aibooru.space"
-        ) or url.startswith(
-            "https://cdn.aibooru.download"
+        return (
+            url.startswith("https://cdn.aibooru.online")
+            or url.startswith("https://cdn.aibooru.space")
+            or url.startswith("https://cdn.aibooru.download")
         )
 
     def get_sauce_id(url: str) -> str:
@@ -228,6 +232,8 @@ class AIBooruTagger(sources.BaseTagger):
     get_value = lambda self, url: url.path.split("/")[-1].split(".")[0]
 
     def check_url(self, url: str) -> bool:
-        return url.startswith("https://aibooru.online/") or url.startswith(
-            "https://aibooru.space/"
+        return (
+            url.startswith("https://aibooru.online/")
+            or url.startswith("https://aibooru.space/")
+            or url.startswith("https://aibooru.download")
         )

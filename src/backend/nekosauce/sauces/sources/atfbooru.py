@@ -210,15 +210,9 @@ class ATFBooruDownloader(sources.BaseFetcher):
         return urllib.parse.urlparse(url).path.split("/")[-1].split(".")[0]
 
     def download_request(self, url: str):
-        if urllib.parse.urlparse(url).netloc == "booru.allthefallen.moe":
-            url = self.fetcher.get_file_url(ATFBooruDownloader.get_sauce_id(url))
-
         return grequests.get(url)
 
     def download(self, url: str) -> bytes:
-        if urllib.parse.urlparse(url).netloc == "booru.allthefallen.moe":
-            url = self.fetcher.get_file_url(ATFBooruDownloader.get_sauce_id(url))
-
         r = requests.get(url)
         r.raise_for_status()
 
