@@ -11,6 +11,11 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
+from nekosauce.sauces.tree import load_tree
+
+
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "nekosauce.settings")
 
 application = get_wsgi_application()
+
+load_tree()

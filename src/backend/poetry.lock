@@ -787,6 +787,16 @@ files = [
 ]
 
 [[package]]
+name = "pybktree"
+version = "1.1"
+description = "BK-tree data structure to allow fast querying of \"close\" matches"
+optional = false
+python-versions = "*"
+files = [
+    {file = "pybktree-1.1.tar.gz", hash = "sha256:eec0037cdd3d7553e6d72435a4379bede64be17c6712f149e485169638154d2b"},
+]
+
+[[package]]
 name = "pycparser"
 version = "2.21"
 description = "C parser in Python"
@@ -1139,4 +1149,4 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "514878050318c8eb2de7a83a8e814cc328f0ad5fbb43cd8db6d2df26aaf57830"
+content-hash = "fb79a027cdc016b095508a32b87a80efbfa882976ae1880403f496bb4138cac6"

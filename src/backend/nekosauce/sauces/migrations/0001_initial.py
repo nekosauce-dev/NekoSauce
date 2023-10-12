@@ -12,10 +12,6 @@ class Migration(migrations.Migration):
     dependencies = []
 
     operations = [
-        migrations.RunSQL(
-            "CREATE EXTENSION IF NOT EXISTS pg_similarity;",
-            reverse_sql="DROP EXTENSION IF EXISTS pg_similarity;",
-        ),
         migrations.CreateModel(
             name="Sauce",
             fields=[

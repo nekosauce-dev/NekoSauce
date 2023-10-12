@@ -41,22 +41,10 @@ class Sauce(models.Model):
         unique_together = ["source_id", "source_site_id"]
         indexes = [
             BTreeIndex(
-                "hash",
-                condition=Q(hash__isnull=False),
-                name="sauces__hashes__idx",
-            ),
-            BTreeIndex(
                 "source_id",
                 "source_site_id",
                 name="sauces__source_site_id__idx",
             )
-        ] + [
-            BTreeIndex(
-                "hash",
-                condition=Q(source_id=source_id, hash__isnull=False),
-                name=f"sauces__{source_id}_hashes__idx",
-            )
-            for source_id in [source["id"] for source in registry["sources"]]
         ]
 
     class Status(models.IntegerChoices):
