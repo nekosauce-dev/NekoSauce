@@ -8,15 +8,13 @@ from nekosauce.sauces.models import Sauce
 
 
 def distance(x, y):
-    return pybktree.hamming_distance(x.bits, y.bits)
+    return pybktree.hamming_distance(x[0], y[0])
 
 def load():
-    Hash = collections.namedtuple("Hash", "bits id")
-
     return pybktree.BKTree(
         distance,
         [
-            Hash(int(sauce.hash, 2), sauce.id)
+            (int(sauce.hash, 2), sauce.id)
             for sauce in Sauce.objects.filter(status=Sauce.Status.PROCESSED).iterator()
         ],
     )
