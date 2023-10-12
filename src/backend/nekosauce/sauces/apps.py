@@ -1,3 +1,5 @@
+import sys
+
 from django.apps import AppConfig
 from django.conf import settings
 
@@ -7,6 +9,9 @@ class SaucesConfig(AppConfig):
     name = "nekosauce.sauces"
 
     def ready(self):
+        if "collectstatic" in sys.argv:
+            return
+
         from nekosauce.sauces import tree
         
         if getattr(settings.MEMORY, "tree", None) is None and getattr(settings.MEMORY, "status", None) is None:
