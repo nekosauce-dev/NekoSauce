@@ -43,6 +43,7 @@ ALLOWED_HOSTS = os.getenv("BACKEND_ALLOWED_HOSTS", "127.0.0.1 localhost").split(
 # Application definition
 
 INSTALLED_APPS = [
+    "daphne",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",

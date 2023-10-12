@@ -13,8 +13,4 @@ class SaucesConfig(AppConfig):
             return
 
         from nekosauce.sauces import tree
-        
-        if getattr(settings.MEMORY, "tree", None) is None and getattr(settings.MEMORY, "status", None) is None:
-            settings.MEMORY.status = False
-            settings.MEMORY.tree = tree.load()
-            settings.MEMORY.status = True
+        tree.load()
