@@ -27,6 +27,7 @@ django-cors-headers = "^4.2.0"
 beautifulsoup4 = "^4.12.2"
 pybktree = "^1.1"
 daphne = "^4.0.0"
+channels = "^4.0.0"
 
 
 [build-system]
