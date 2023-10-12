@@ -7,11 +7,11 @@ import pybktree
 from nekosauce.sauces.models import Sauce
 
 
+def distance(x, y):
+    return pybktree.hamming_distance(x.bits, y.bits)
+
 def load():
     Hash = collections.namedtuple("Hash", "bits id")
-
-    def distance(x, y):
-        return pybktree.hamming_distance(x.bits, y.bits)
 
     return pybktree.BKTree(
         distance,
