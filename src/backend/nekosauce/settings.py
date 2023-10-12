@@ -14,6 +14,7 @@ from pathlib import Path
 
 import os
 import secrets
+import multiprocessing
 
 import dotenv
 # import grequests
@@ -212,3 +213,6 @@ STORAGES = {
         "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
     },
 }
+
+
+MEMORY = multiprocessing.Manager().Namespace()
