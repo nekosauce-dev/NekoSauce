@@ -1,8 +1,6 @@
 import traceback
 import subprocess
 
-import grequests
-
 from django.core.management.base import BaseCommand
 
 from nekosauce.sauces.models import Sauce

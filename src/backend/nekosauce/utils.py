@@ -1,9 +1,6 @@
 import os
 import random
 
-import grequests
-import requests
-
 
 def getsecret(name: str, default=None, env_fallback: bool = True):
     """Returns a Docker secret's value.
