@@ -16,7 +16,7 @@ cd /app
 python manage.py migrate
 
 # Start Gunicorn with multiple workers and binding address
-gunicorn -w $BACKEND_GUNICORN_WORKERS -b 0.0.0.0:8000 nekosauce.wsgi:application &
+gunicorn -w $BACKEND_GUNICORN_WORKERS -b 0.0.0.0:8000 nekosauce.wsgi:application --timeout 300 &
 gunicorn_pid=$!
 
 
