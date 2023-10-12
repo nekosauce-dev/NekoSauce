@@ -23,7 +23,7 @@ services:
     ports:
       - "3000:3000"
   database:
-    build: ./src/database
+    image: postgres:latest
     environment:
       - POSTGRES_USER=nekosauce
       - POSTGRES_PASSWORD=nekosauce

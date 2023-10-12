@@ -44,7 +44,7 @@ services:
     env_file:
       - .env
   database:
-    build: ./src/database
+    image: postgres:latest
     environment:
       POSTGRES_PASSWORD_FILE: /run/secrets/DATABASE_PASSWORD
       POSTGRES_USER: ${DATABASE_USERNAME}

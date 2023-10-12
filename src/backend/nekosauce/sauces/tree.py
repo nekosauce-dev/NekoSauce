@@ -18,7 +18,7 @@ def load_tree():
             lambda x, y: pybktree.hamming_distance(x.bits, y.bits),
             [
                 Hash(int(sauce.hash, 2), sauce.id)
-                for sauce in Sauce.objects.filter(status=Sauce.Status.PROCESSED)
+                for sauce in Sauce.objects.filter(status=Sauce.Status.PROCESSED).iterator()
             ],
         )
 

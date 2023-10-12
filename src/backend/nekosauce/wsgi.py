@@ -10,12 +10,16 @@ https://docs.djangoproject.com/en/4.2/howto/deployment/wsgi/
 import os
 
 from django.core.wsgi import get_wsgi_application
-
-from nekosauce.sauces.tree import load_tree
+from django.conf import settings
 
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "nekosauce.settings")
+settings.configure()
 
-application = get_wsgi_application()
+
+from nekosauce.sauces.tree import load_tree
 
 load_tree()
+
+
+application = get_wsgi_application()
