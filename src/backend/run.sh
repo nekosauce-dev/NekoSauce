@@ -3,7 +3,7 @@
 # Function to clean up and stop all processes
 cleanup_and_stop() {
     echo "Stopping all processes..."
-    kill -TERM $gunicorn_pid $dramatiq_worker_pid
+    kill -TERM $gunicorn_pid $dramatiq_worker_pid $bktree_pid
 }
 
 # Trap the exit signals and call the cleanup function
@@ -23,6 +23,11 @@ gunicorn_pid=$!
 # Start Dramatiq worker
 python manage.py rundramatiq --processes $BACKEND_DRAMATIQ_WORKERS --threads $BACKEND_DRAMATIQ_THREADS &
 dramatiq_worker_pid=$!
+
+
+# Start BK tree server
+python manage.py runbktree &
+bktree_pid=$!
 
 # Wait for any of the processes to finish
 wait -n

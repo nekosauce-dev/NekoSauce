@@ -28,6 +28,7 @@ beautifulsoup4 = "^4.12.2"
 pybktree = "^1.1"
 daphne = "^4.0.0"
 channels = "^4.0.0"
+fastapi = {extras = ["uvicorn"], version = "^0.103.2"}
 
 
 [build-system]
