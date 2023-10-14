@@ -130,8 +130,5 @@ class SourceView(APIView):
         return Response(
             {
                 "data": registry["sources"],
-                "meta": {
-                    "count": len(registry["sources"]),
-                },
             }
         )
