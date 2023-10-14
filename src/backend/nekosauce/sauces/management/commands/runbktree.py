@@ -1,3 +1,6 @@
+import time
+import threading
+
 from django.core.management.base import BaseCommand, CommandError
 
 from fastapi import FastAPI
@@ -17,15 +20,18 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         app = FastAPI(title="NekoSauce BK Tree")
 
+        global tree
         tree = pybktree.BKTree(lambda x, y: pybktree.hamming_distance(x[0], y[0]))
 
-        for sauce in track(
-            Sauce.objects.filter(status=Sauce.Status.PROCESSED),
-            "Adding hashes to tree...",
-        ):
-            tree.add(
-                (int(sauce.hash, 2), sauce.id),
-            )
+        def update_tree():
+            while True:
+                global tree
+                tree = pybktree.BKTree(lambda x, y: pybktree.hamming_distance(x[0], y[0]), [
+                    (int(sauce.hash, 2), sauce.id) for sauce in Sauce.objects.filter(status=Sauce.Status.PROCESSED).iterator()
+                ])
+                time.sleep(60 * 15)
+
+        threading.Thread(target=update_tree).start()
 
         @app.get("/find")
         async def find(bits: str, distance: int):
