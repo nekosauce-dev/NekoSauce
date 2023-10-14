@@ -30,5 +30,5 @@ class SearchQuerySerializer(serializers.Serializer):
     threshold = serializers.FloatField(
         validators=[MinValueValidator(1), MaxValueValidator(100)], required=False
     )
-    sources = SourcesField(required=False, default=','.join([source["id"] for source in registry["sources"]]))
+    sources = SourcesField(required=False, default=','.join([str(source["id"]) for source in registry["sources"]]))
     nsfw = serializers.BooleanField(required=False)
