@@ -69,45 +69,58 @@ class SearchView(APIView):
         image_hash = imagehash.whash(img, hash_size=16)
         image_hash_bits = hash_to_bits(image_hash)
 
-        limit = serializer.validated_data["limit"]
+        query = requests.get(
+            "http://127.0.0.1:7171/find",
+            params={
+                "bits": image_hash_bits,
+                "distance": 256
+                - (int(100 / serializer.validated_data["threshold"] * 256)),
+            },
+        ).json()
 
-        results = Sauce.objects.filter(hash__isnull=False).annotate(
-            similarity=Func(
-                F("hash"), RawSQL("B'%s'" % image_hash_bits, ()), function="HAMMING"
-            )
-        ).order_by("-similarity")[:limit]
+        results = Sauce.objects.filter(
+            id__in=[item["id"] for item in query[: serializer.validated_data["limit"]]],
+            source_id__in=serializer.validated_data["sources"],
+        )
+
+        if serializer.validated_data["nsfw"] is not None:
+            results = results.filter(is_nsfw=serializer.validated_data["nsfw"])
+
+        get_similarity = lambda x: 100 - (
+            next((item for item in query if item["id"] == x.id), None)["d"] / 100 * 256
+        )
 
         return Response(
             {
-                "data": [
-                    {
-                        "id": sauce.id,
-                        "similarity": sauce.similarity,
-                        "hash": hex(int(sauce.hash, 2))[2:],
-                        "sha512": sauce.sha512.hex(),
-                        "urls": {
-                            "site": sauce.site_urls,
-                            "api": sauce.api_urls,
-                            "file": sauce.file_urls,
-                        },
-                        "source": sauce.source_id,
-                        "source_site_id": sauce.source_site_id,
-                        "tags": sauce.tags,
-                        "type": get_sauce_type(sauce.type),
-                        "is_nsfw": sauce.is_nsfw,
-                        "file_meta": {
-                            "height": sauce.height,
-                            "width": sauce.width,
-                            "mimetype": "image/webp",
-                        },
-                        "created_at": sauce.created_at,
-                        "updated_at": sauce.updated_at,
-                    }
-                    for sauce in results
-                ][:limit],
-                "meta": {
-                    "count": len(results)
-                },
+                "data": sorted(
+                    [
+                        {
+                            "id": sauce.id,
+                            "similarity": sauce.similarity,
+                            "hash": hex(int(sauce.hash, 2))[2:],
+                            "sha512": sauce.sha512.hex(),
+                            "urls": {
+                                "site": sauce.site_urls,
+                                "api": sauce.api_urls,
+                                "file": sauce.file_urls,
+                            },
+                            "source": sauce.source_id,
+                            "source_site_id": sauce.source_site_id,
+                            "tags": sauce.tags,
+                            "type": get_sauce_type(sauce.type),
+                            "is_nsfw": sauce.is_nsfw,
+                            "file_meta": {
+                                "height": sauce.height,
+                                "width": sauce.width,
+                                "mimetype": "image/webp",
+                            },
+                            "created_at": sauce.created_at,
+                            "updated_at": sauce.updated_at,
+                        }
+                        for sauce in results
+                    ],
+                    key=get_similarity,
+                ),
             }
         )
 

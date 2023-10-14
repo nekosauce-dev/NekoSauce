@@ -34,10 +34,10 @@ class Command(BaseCommand):
         threading.Thread(target=update_tree).start()
 
         @app.get("/find")
-        async def find(bits: str, distance: int):
+        async def find(bits: str, distance: int, limit: int = 50):
             return [
                 {"d": item[0], "id": item[1][1]}
                 for item in sorted(tree.find((int(bits, 2), 0), distance))
-            ]
+            ][:limit]
 
         uvicorn.run(app, host="0.0.0.0", port=7171)
