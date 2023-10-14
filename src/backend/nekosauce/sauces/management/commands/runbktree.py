@@ -30,7 +30,7 @@ class Command(BaseCommand):
         @app.get("/find")
         async def find(bits: str, distance: int):
             return [
-                {"d": item[0], "h": item[1][0], "id": item[1][1]}
+                {"d": item[0], "id": item[1][1]}
                 for item in sorted(tree.find((int(bits, 2), 0), distance))
             ]
 
