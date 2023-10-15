@@ -12,8 +12,8 @@ class User(AbstractUser):
     class DonationTier(models.IntegerChoices):
         NONE = 0, "None"
         CHAN = 3, "Supporter-chan"
-        SENPAI = 5, "Senpai"
-        SAMA = 10, "Sama"
+        SENPAI = 5, "Supporter-senpai"
+        SAMA = 10, "Supporter-sama"
 
     donation = models.FloatField(
         default=DonationTier.NONE, choices=DonationTier.choices
