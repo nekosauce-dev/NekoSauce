@@ -79,7 +79,7 @@ class SearchQuerySerializer(serializers.Serializer):
         default=10, validators=[MinValueValidator(1), MaxValueValidator(50)]
     )
     threshold = FloatField(
-        validators=[MinValueValidator(1), MaxValueValidator(100)], required=False
+        validators=[MinValueValidator(1), MaxValueValidator(100)], default=90
     )
     sources = SourcesField(
         required=False,
