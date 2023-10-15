@@ -10,4 +10,4 @@ class UwUserAdmin(UserAdmin):
     )
 
 
-admin.site.register(User, UserAdmin)
+admin.site.register(User, UwUserAdmin)
