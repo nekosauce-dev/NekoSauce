@@ -18,6 +18,6 @@ class User(AbstractUser):
     donation = models.FloatField(
         default=DonationTier.NONE, choices=DonationTier.choices
     )
-    donation_date = models.DateTimeField(null=True)
+    donation_date = models.DateTimeField(null=True, blank=True)
 
     api_key = models.CharField(default=generate_api_key, max_length=86, db_index=True)
