@@ -3,7 +3,11 @@ from django.contrib.auth.admin import UserAdmin
 
 from nekosauce.users.models import *
 
-# Register your models here.
+
+class UwUserAdmin(UserAdmin):
+    fieldsets = UserAdmin.fieldsets + (
+        (None, {"fields": ("api_key", "donation", "donation_date")}),
+    )
 
 
 admin.site.register(User, UserAdmin)
