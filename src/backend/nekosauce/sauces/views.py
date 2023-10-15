@@ -115,7 +115,6 @@ class SearchView(APIView):
                                 "mimetype": "image/webp",
                             },
                             "created_at": sauce.created_at,
-                            "updated_at": sauce.updated_at,
                         }
                         for sauce in results
                     ],
