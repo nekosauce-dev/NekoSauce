@@ -26,7 +26,7 @@ class ApiKeyAuthentication(authentication.BaseAuthentication):
             user = User.objects.get(api_key=api_key)
         except User.DoesNotExist:
             raise exceptions.AuthenticationFailed(
-                "Where do you think you're going? Are you sure that you're using the correct API key? Because it doesn't seem like it... *sad face*",
+                "Is that a valid API key, nyan? I cannot find anyone with that key!",
                 code="invalid_api_key",
             )
 

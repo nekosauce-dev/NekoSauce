@@ -22,6 +22,7 @@ from nekosauce import views
 admin.site.site_header = "NekoSauce"
 
 urlpatterns = [
+    path("api", views.index),
     path("api/", include("nekosauce.sauces.urls")),
     path("admin/", admin.site.urls),
     path("__debug__/", include("debug_toolbar.urls")),

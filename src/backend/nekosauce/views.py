@@ -32,7 +32,7 @@ def error_403(request, exception):
                 "errors": [
                     {
                         "status": "forbidden",
-                        "message": "I got you! Are you sure you have permission to go there? Something is telling me you're not allowed... >:)",
+                        "message": "Oopsie! Seems like u r not allowed in here :/ Go get more power in Rise of Kingdoms and try again later >:)",
                         "code": 403,
                     },
                 ]
@@ -49,7 +49,7 @@ def error_404(request, exception):
                 "errors": [
                     {
                         "status": "not_found",
-                        "message": "Welcome dev kitten! Looking for some sauces? Then you may want to read the docs at `https://docs.nekosauce.org/` :)",
+                        "message": "Not found, nya! U sure it was here? >.<",
                         "code": 404,
                     },
                 ],
@@ -65,12 +65,29 @@ def error_500(request):
             {
                 "errors": [
                     {
-                        "status": "server_error",
-                        "message": "Oopsie! Seems like something went wrong on our side :/ Maybe you want to report this error in our Discord server?",
+                        "status": "internal_server_error",
+                        "message": "Looks like the sauce searching catgirl broke something :/ Try again later, nyan!",
                         "code": 500,
                     }
                 ],
             }
         ),
         status=500,
+    )
+
+
+def index(request, exception):
+    return HttpResponse(
+        json.dumps(
+            {
+                "errors": [
+                    {
+                        "status": "not_found",
+                        "message": "Welcome dev kitten! Looking for some sauces? Then you may want to read the docs at `https://docs.nekosauce.org/` :)",
+                        "code": 404,
+                    },
+                ],
+            }
+        ),
+        status=404,
     )

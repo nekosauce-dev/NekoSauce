@@ -17,19 +17,19 @@ class DownloadError(APIException):
 
 class Forbidden(APIException):
     default_code = "forbidden"
-    default_detail = "Forbidden"
+    default_detail = "Oopsie! Seems like u r not allowed in here :/ Go get more power in Rise of Kingdoms and try again later >:)"
     status_code = 403
 
 
 class NotFound(APIException):
     default_code = "not_found"
-    default_detail = "Not found"
+    default_detail = "Not found, nya! U sure it was here? >.<"
     status_code = 404
 
 
-class ServerInternalError(APIException):
-    default_code = "server_error"
-    default_detail = "Internal server error"
+class InternalServerError(APIException):
+    default_code = "internal_server_error"
+    default_detail = "Looks like the sauce searching catgirl broke something :/ Try again later, nyan!"
     status_code = 500
 
 
