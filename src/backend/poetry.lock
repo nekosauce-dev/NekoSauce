@@ -1060,6 +1060,17 @@ files = [
 ]
 
 [[package]]
+name = "py-vptree"
+version = "1.0.0"
+description = "A Python library to create vantage point trees (VP-trees)"
+optional = false
+python-versions = ">=3.6,<4.0"
+files = [
+    {file = "py_vptree-1.0.0-py3-none-any.whl", hash = "sha256:cdfe7b61814b85b2618bd6f0f62c095e080595d1b0161558fca431eae3776326"},
+    {file = "py_vptree-1.0.0.tar.gz", hash = "sha256:7691868eedcad7cc70c865d8bc65813aa45e3e2ca1f469c1c3306b7179fb0d8c"},
+]
+
+[[package]]
 name = "pyasn1"
 version = "0.5.0"
 description = "Pure-Python implementation of ASN.1 types and DER/BER/CER codecs (X.208)"
@@ -1083,16 +1094,6 @@ files = [
 
 [package.dependencies]
 pyasn1 = ">=0.4.6,<0.6.0"
-
-[[package]]
-name = "pybktree"
-version = "1.1"
-description = "BK-tree data structure to allow fast querying of \"close\" matches"
-optional = false
-python-versions = "*"
-files = [
-    {file = "pybktree-1.1.tar.gz", hash = "sha256:eec0037cdd3d7553e6d72435a4379bede64be17c6712f149e485169638154d2b"},
-]
 
 [[package]]
 name = "pycparser"
@@ -1781,4 +1782,4 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "8a11b3f7515d81b5bb10dd08ebf1e301a2794c5201506a66927b435ba53a3301"
+content-hash = "fa7dd9d1063eb916f385b0564d345a3ffecb48d6c9c17462352eecf94f83d98e"

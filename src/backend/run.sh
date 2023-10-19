@@ -26,7 +26,7 @@ dramatiq_worker_pid=$!
 
 
 # Start BK tree server
-python manage.py runbktree &
+python manage.py runvptree &
 bktree_pid=$!
 
 # Wait for any of the processes to finish
