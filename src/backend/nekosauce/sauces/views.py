@@ -80,7 +80,6 @@ class SearchView(APIView):
 
         results = Sauce.objects.filter(
             id__in=[item["id"] for item in query[: serializer.validated_data["limit"]]],
-            source_id__in=serializer.validated_data["sources"],
         )
 
         if serializer.validated_data["nsfw"] is not None:
