@@ -81,4 +81,4 @@ class SearchQuerySerializer(serializers.Serializer):
     threshold = FloatField(
         validators=[MinValueValidator(1), MaxValueValidator(100)], default=90
     )
-    nsfw = BooleanField(required=False)
+    nsfw = BooleanField(required=False, default=None)
