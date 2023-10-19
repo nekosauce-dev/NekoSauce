@@ -27,8 +27,8 @@ class NotFound(APIException):
     status_code = 404
 
 
-class InternalServerError(APIException):
-    default_code = "internal_server_error"
+class ServerInternalError(APIException):
+    default_code = "server_internal_error"
     default_detail = "Looks like the sauce searching catgirl broke something :/ Try again later, nyan!"
     status_code = 500
 
