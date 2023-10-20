@@ -73,8 +73,7 @@ class SearchView(APIView):
             "http://127.0.0.1:7171/find",
             params={
                 "bits": image_hash_bits,
-                "distance": 256
-                - (int(100 / serializer.validated_data["threshold"] * 256)),
+                "distance": int(256 * (serializer.validated_data["threshold"] / 100)),
             },
         ).json()
 
