@@ -76,7 +76,7 @@ def error_500(request):
     )
 
 
-def index(request, exception):
+def index(request):
     return HttpResponse(
         json.dumps(
             {
